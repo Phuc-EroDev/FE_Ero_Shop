@@ -44,7 +44,7 @@ const NavBarComponent = () => {
           return <WrapperTextPrice key={index}>{option}</WrapperTextPrice>;
         });
       default:
-        return null;
+        return {};
     }
   };
 
@@ -52,20 +52,6 @@ const NavBarComponent = () => {
     <div>
       <WrapperLabelText>Label</WrapperLabelText>
       <WrapperContent>{renderContent('text', ['Laptop', 'Phone', 'TV'])}</WrapperContent>
-      <WrapperContent>
-        {renderContent('checkbox', [
-          {
-            value: 'a',
-            label: 'A',
-          },
-          {
-            value: 'b',
-            label: 'B',
-          },
-        ])}
-      </WrapperContent>
-      <WrapperContent>{renderContent('star', [3, 4.5, 5])}</WrapperContent>
-      <WrapperContent>{renderContent('price', ['duoi 40.000', 'tren 40.000'])}</WrapperContent>
     </div>
   );
 };

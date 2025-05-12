@@ -3,11 +3,11 @@ import styled from "styled-components";
 export const WrapperLabelText = styled.h4`
     font-weight: 500;
     font-size: 14px;
-    color: #171414;
+    color: #FDF6EC;
 `
 
 export const WrapperTextValue = styled.span`
-    color: #171414;
+    color: #FDF6EC;
     font-size: 12px;
     font-weight: 400;
 `
