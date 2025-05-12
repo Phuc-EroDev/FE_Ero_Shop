@@ -5,7 +5,6 @@ import { WrapperButtonMore, WrapperProducts, WrapperTypeProduct } from './style'
 import slider1 from '../../assets/images/slider1.png';
 import slider2 from '../../assets/images/slider2.png';
 import CardComponent from '../../components/CardComponent/CardComponent';
-import NavBarComponent from '../../components/NavBarComponent/NavBarComponent';
 
 const HomePage = () => {
   const arr = ['TV', 'Laptop', 'Phone'];
