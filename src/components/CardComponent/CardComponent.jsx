@@ -18,7 +18,7 @@ const CardComponent = () => {
         <span style={{ marginRight: '4px' }}>
           <span>4.99</span> <StarFilled style={{ fontSize: '12px', color: 'yellow' }} />
         </span>
-        <span> | Da ban 1000+</span>
+        <WrapperStyleTextSell> | Da ban 1000+</WrapperStyleTextSell>
       </WrapperReportText>
       <WrapperPriceText>
         1.000.000 VND <WrapperDiscountText>-50%</WrapperDiscountText>
