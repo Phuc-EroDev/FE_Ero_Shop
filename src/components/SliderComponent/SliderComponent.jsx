@@ -1,6 +1,6 @@
 import React from 'react';
 import { Image } from 'antd';
-import Slider from 'react-slick';
+import { WrapperSliderStyle } from './style';
 
 const SliderComponent = ({ arrImages }) => {
   const settings = {
@@ -15,11 +15,11 @@ const SliderComponent = ({ arrImages }) => {
   };
 
   return (
-    <Slider {...settings}>
+    <WrapperSliderStyle {...settings}>
       {arrImages.map((image, index) => {
         return <Image src={image} alt={`Slider`} key={index} preview={false} width={'100%'} height={'auto'} />;
       })}
-    </Slider>
+    </WrapperSliderStyle>
   );
 };
 

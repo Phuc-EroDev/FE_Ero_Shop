@@ -36,4 +36,5 @@ export const TextWelcomeShop = styled.h4`
 export const WrapperTextLight = styled.span`
     color: #c57622;
     font-size: 13px;
+    cursor: pointer;
 `

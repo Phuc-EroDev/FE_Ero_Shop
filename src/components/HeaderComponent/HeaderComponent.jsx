@@ -9,13 +9,13 @@ const HeaderComponent = () => {
   return (
     <div>
       <WrapperHeader>
-        <Col span={6}>
+        <Col span={5}>
           <WrapperTextHeader>ERO-SHOP</WrapperTextHeader>
         </Col>
-        <Col span={12}>
+        <Col span={13}>
           <ButtonInputSearch size="large" placeholder="input search text" textButton="Search" allowClear />
         </Col>
-        <Col span={6} style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
+        <Col span={6} style={{ display: 'flex', gap: '54px', alignItems: 'center' }}>
           <WrapperHeaderAccount>
             <UserOutlined style={{ fontSize: '30px' }} />
             <div>

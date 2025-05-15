@@ -10,38 +10,40 @@ const HomePage = () => {
   const arr = ['TV', 'Laptop', 'Phone'];
   return (
     <>
-      <div style={{ padding: '0 120px' }}>
+      <div style={{ margin: '0 auto', padding: '0 120px' }}>
         <WrapperTypeProduct>
           {arr.map((item) => {
             return <TypeProduct key={item} name={item} />;
           })}
         </WrapperTypeProduct>
       </div>
-      <div id="container" style={{ backgroundColor: ' #333131', padding: '0 120px', height: '1000px', width: '100%' }}>
-        <SliderComponent arrImages={[slider1, slider2]} />
-        <WrapperProducts>
-          <CardComponent />
-          <CardComponent />
-          <CardComponent />
-          <CardComponent />
-          <CardComponent />
-          <CardComponent />
-          <CardComponent />
-          <CardComponent />
-          <CardComponent />
-        </WrapperProducts>
-        <div style={{ width: '100%', display: 'flex', justifyContent: 'center', marginTop: '10px' }}>
-          <WrapperButtonMore
-            textButton="Xem them"
-            type="outline"
-            style={{
-              color: ' #D29B63',
-              border: '1px solid #D29B63',
-              width: '240px',
-              height: '38px',
-              fontWeight: '500',
-            }}
-          />
+      <div className="body" style={{ width: '100%', backgroundColor: ' #333131' }}>
+        <div id="container" style={{ margin: '0 auto', padding: '0 120px', height: '1000px', width: '100%' }}>
+          <SliderComponent arrImages={[slider1, slider2]} />
+          <WrapperProducts>
+            <CardComponent />
+            <CardComponent />
+            <CardComponent />
+            <CardComponent />
+            <CardComponent />
+            <CardComponent />
+            <CardComponent />
+            <CardComponent />
+            <CardComponent />
+          </WrapperProducts>
+          <div style={{ width: '100%', display: 'flex', justifyContent: 'center', marginTop: '10px' }}>
+            <WrapperButtonMore
+              textButton="Xem them"
+              type="outline"
+              style={{
+                color: ' #D29B63',
+                border: '1px solid #D29B63',
+                width: '240px',
+                height: '38px',
+                fontWeight: '500',
+              }}
+            />
+          </div>
         </div>
       </div>
     </>
