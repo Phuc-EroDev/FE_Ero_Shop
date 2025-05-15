@@ -103,7 +103,7 @@ const ProductDetailsComponent = () => {
               fontWeight: '600',
               width: '220px',
             }}
-            textButton={'Chọn mua'}
+            textButton={'Mua ngay'}
           />
           <ButtonComponent
             size={'large'}

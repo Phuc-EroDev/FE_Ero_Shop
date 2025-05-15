@@ -1,6 +1,13 @@
 import React from 'react';
 import { StarFilled } from '@ant-design/icons';
-import { StyleNameProduct, WrapperCardStyle, WrapperDiscountText, WrapperPriceText, WrapperReportText } from './style';
+import {
+  StyleNameProduct,
+  WrapperCardStyle,
+  WrapperDiscountText,
+  WrapperPriceText,
+  WrapperReportText,
+  WrapperStyleTextSell,
+} from './style';
 import labelCard from '../../assets/images/labelCard.png';
 
 const CardComponent = () => {
