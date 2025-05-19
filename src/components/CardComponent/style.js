@@ -8,10 +8,15 @@ export const WrapperCardStyle = styled(Card)`
       height: 200px;
     },
     position: relative;
+
+    .ant-card-body {
+        padding: 10px;
+        background-color: #dfdedd;
+    }
 `
 
 export const StyleNameProduct = styled.div`
-    font-weight: 400;
+    font-weight: 600;
     font-size: 12px;
     line-height: 16px;
     color: #171414;

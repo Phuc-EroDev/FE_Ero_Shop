@@ -9,16 +9,11 @@ import {
   WrapperStyleTextSell,
 } from './style';
 import labelCard from '../../assets/images/labelCard.png';
+import Product from '../../assets/images/product1.png';
 
 const CardComponent = () => {
   return (
-    <WrapperCardStyle
-      hoverable
-      headStyle={{ width: '200px', height: '200px' }}
-      style={{ width: 200 }}
-      bodyStyle={{ padding: '10px' }}
-      cover={<img alt="example" src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png" />}
-    >
+    <WrapperCardStyle hoverable cover={<img alt="example" src={Product} />}>
       <img src={labelCard} style={{ width: '25px', height: '18px', position: 'absolute', top: '5px', left: '-4px' }} />
       <StyleNameProduct>IPhone</StyleNameProduct>
       <WrapperReportText>
