@@ -4,6 +4,9 @@ import InputFormComponent from '../../components/InputFormComponent/InputFormCom
 import ButtonComponent from '../../components/ButtonComponent/ButtonComponent';
 import { EyeFilled, EyeInvisibleFilled } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
+import * as UserService from '../../services/UserService';
+import { useMutationHook } from '../../hooks/useMutationHook';
+import Loading from '../../components/LoadingComponent/Loading';
 
 const SignUpPage = () => {
   const [isShowPassword, setIsShowPassword] = useState(false);
@@ -31,8 +34,15 @@ const SignUpPage = () => {
     navigate('/sign-in');
   };
 
+  const mutation = useMutationHook((data) => UserService.registerUser(data));
+  const { data, isPending } = mutation;
+
   const handleSignUp = () => {
-    console.log('sign up', email, password, confirmPassword);
+    mutation.mutate({
+      email,
+      password,
+      confirmPassword,
+    });
   };
 
   return (
@@ -106,20 +116,23 @@ const SignUpPage = () => {
               type={isShowConfirmPassword ? 'text' : 'password'}
             />
           </div>
-          <ButtonComponent
-            onClick={handleSignUp}
-            disabled={!email.length || !password.length || !confirmPassword}
-            size={'large'}
-            style={{
-              backgroundColor: disabled ? '#ccc' : '#C68642',
-              borderRadius: '4px',
-              color: '#FDF6EC',
-              fontWeight: '600',
-              width: '100%',
-              margin: '26px 0 10px',
-            }}
-            textButton={'Đăng ký'}
-          />
+          {data?.status === 'ERR' && <span style={{ color: 'red' }}>{data?.message}</span>}
+          <Loading isPending={isPending}>
+            <ButtonComponent
+              onClick={handleSignUp}
+              disabled={!email.length || !password.length || !confirmPassword}
+              size={'large'}
+              style={{
+                backgroundColor: disabled ? '#ccc' : '#C68642',
+                borderRadius: '4px',
+                color: '#FDF6EC',
+                fontWeight: '600',
+                width: '100%',
+                margin: '26px 0 10px',
+              }}
+              textButton={'Đăng ký'}
+            />
+          </Loading>
           <p>
             Bạn đã có tài khoản? <WrapperTextLight onClick={handleNavigateLogin}> Đăng nhập!</WrapperTextLight>
           </p>
