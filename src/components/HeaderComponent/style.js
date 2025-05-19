@@ -23,4 +23,5 @@ export const WrapperHeaderAccount = styled.div`
 export const WrapperTextHeaderSmall = styled.span`
     color: #FDF6EC;
     font-size: 12px;
+    cursor: pointer;
 `

@@ -16,7 +16,7 @@ function App() {
   };
 
   const query = useQuery({ queryKey: ['todos'], queryFn: fetchApi });
-  console.log('q', query);
+  // console.log(query);
 
   return (
     <div>
