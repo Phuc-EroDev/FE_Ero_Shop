@@ -3,7 +3,7 @@ import axios from "axios"
 export const axiosJWT = axios.create()
 
 export const loginUser = async (data) => {
-    const res = await axios.post(`${import.meta.env.VITE_BACKEND_API}/user/sign-in`, data);
+    const res = await axios.post(`${import.meta.env.VITE_BACKEND_API}/user/sign-in`, data, { withCredentials: true });
     return res.data;
 }
 
@@ -22,7 +22,7 @@ export const getDetailsUser = async (id, access_token) => {
 }
 
 export const refreshToken = async () => {
-    const res = await axios.post(`${import.meta.env.VITE_BACKEND_API}/user/refresh-token`, {
+    const res = await axios.post(`${import.meta.env.VITE_BACKEND_API}/user/refresh-token`, {}, {
         withCredentials: true,
     });
     return res.data;
