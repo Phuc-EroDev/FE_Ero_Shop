@@ -7,6 +7,13 @@ export const loginUser = async (data) => {
     return res.data;
 }
 
+export const logoutUser = async () => {
+    const res = await axios.post(`${import.meta.env.VITE_BACKEND_API}/user/log-out`, {}, {
+        withCredentials: true,
+    });
+    return res.data;
+}
+
 export const registerUser = async (data) => {
     const res = await axios.post(`${import.meta.env.VITE_BACKEND_API}/user/sign-up`, data);
     return res.data;
