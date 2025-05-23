@@ -4,9 +4,10 @@ import InputFormComponent from '../../components/InputFormComponent/InputFormCom
 import ButtonComponent from '../../components/ButtonComponent/ButtonComponent';
 import * as UserService from '../../services/UserService';
 import * as message from '../../components/MessageComponent/Message';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useMutationHook } from '../../hooks/useMutationHook';
 import Loading from '../../components/LoadingComponent/Loading';
+import { updateUser } from '../../redux/slides/userSlide';
 
 const ProfilePage = () => {
   const user = useSelector((state) => state.user);
@@ -16,10 +17,10 @@ const ProfilePage = () => {
   const [address, setAddress] = useState('');
   const [avatar, setAvatar] = useState('');
 
+  const dispatch = useDispatch();
+
   const mutation = useMutationHook((id, data) => UserService.updateUser(id, data));
-  console.log(mutation);
   const { data, isPending, isSuccess, isError } = mutation;
-  console.log(data);
 
   const handleOnChangeEmail = (value) => {
     setEmail(value);
@@ -38,11 +39,11 @@ const ProfilePage = () => {
   };
   const handleUpdate = () => {
     mutation.mutate(user?.id, { email, name, phone, address, avatar });
-    if (isSuccess) {
-      message.success();
-    } else if (isError) {
-      message.error();
-    }
+  };
+
+  const handleGetDetailsUser = async (id, token) => {
+    const res = await UserService.getDetailsUser(id, token);
+    dispatch(updateUser({ ...res?.data, access_token: token }));
   };
 
   useEffect(() => {
@@ -52,6 +53,15 @@ const ProfilePage = () => {
     setAddress(user?.address);
     setAvatar(user?.avatar);
   }, [user]);
+
+  useEffect(() => {
+    if (isSuccess) {
+      message.success();
+      handleGetDetailsUser(user?.id, user?.access_token);
+    } else if (isError) {
+      message.error();
+    }
+  }, [isSuccess, isError]);
 
   return (
     <div style={{ width: '100%', height: '1500px', margin: '0 auto', padding: '0 120px', backgroundColor: ' #333131' }}>
