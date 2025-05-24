@@ -1,3 +1,4 @@
+import { Upload } from "antd";
 import styled from "styled-components";
 
 export const WrapperHeader = styled.h1`
@@ -30,4 +31,15 @@ export const WrapperLabel = styled.label`
     width: 60px;
     text-align: left;
     font-weight: 600;
+`
+
+export const WrapperUploadFile = styled(Upload)`
+    & .ant-upload.ant-upload-select.ant-upload-select-picture-card {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+    }
+    & .ant-upload-list.ant-upload-list-text {
+        display: none;
+    }
 `

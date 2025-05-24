@@ -18,6 +18,7 @@ import Loading from '../LoadingComponent/Loading.jsx';
 const HeaderComponent = () => {
   const [loading, setLoading] = useState(false);
   const [userName, setUserName] = useState('');
+  const [userAvatar, setUserAvatar] = useState('');
 
   const navigate = useNavigate();
   const user = useSelector((state) => state.user);
@@ -41,8 +42,11 @@ const HeaderComponent = () => {
   );
 
   useEffect(() => {
+    setLoading(true);
     setUserName(user?.name);
-  }, [user?.name]);
+    setUserAvatar(user?.avatar);
+    setLoading(false);
+  }, [user?.name, user?.avatar]);
 
   return (
     <div>
@@ -56,7 +60,15 @@ const HeaderComponent = () => {
         <Col span={6} style={{ display: 'flex', gap: '54px', alignItems: 'center' }}>
           <Loading isPending={loading}>
             <WrapperHeaderAccount>
-              <UserOutlined style={{ fontSize: '30px' }} />
+              {userAvatar ? (
+                <img
+                  src={userAvatar}
+                  alt="Avatar"
+                  style={{ height: '30px', width: '30px', borderRadius: '50%', objectFit: 'cover' }}
+                />
+              ) : (
+                <UserOutlined style={{ fontSize: '30px' }} />
+              )}
               {user?.access_token ? (
                 <>
                   <Popover content={content} trigger="click">
