@@ -19,8 +19,12 @@ export const registerUser = async (data) => {
     return res.data;
 }
 
-export const updateUser = async (id,data) => {
-    const res = await axios.put(`${import.meta.env.VITE_BACKEND_API}/user/update-user/${id}`, data);
+export const updateUser = async (id, data, access_token) => {
+    const res = await axiosJWT.put(`${import.meta.env.VITE_BACKEND_API}/user/update-user/${id}`, data, {
+        headers: {
+            token: `Bearer ${access_token}`,
+        }
+    });
     return res.data;
 }
 

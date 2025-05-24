@@ -19,7 +19,10 @@ const ProfilePage = () => {
 
   const dispatch = useDispatch();
 
-  const mutation = useMutationHook((id, data) => UserService.updateUser(id, data));
+  const mutation = useMutationHook((data) => {
+    const { id, access_token, ...rests } = data;
+    return UserService.updateUser(id, rests, access_token);
+  });
   const { data, isPending, isSuccess, isError } = mutation;
 
   const handleOnChangeEmail = (value) => {
@@ -38,7 +41,7 @@ const ProfilePage = () => {
     setAvatar(value);
   };
   const handleUpdate = () => {
-    mutation.mutate(user?.id, { email, name, phone, address, avatar });
+    mutation.mutate({ id: user?.id, email, name, phone, address, avatar, access_token: user?.access_token });
   };
 
   const handleGetDetailsUser = async (id, token) => {

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Badge, Col, Popover } from 'antd';
 import {
   WrapperHeader,
@@ -17,6 +17,7 @@ import Loading from '../LoadingComponent/Loading.jsx';
 
 const HeaderComponent = () => {
   const [loading, setLoading] = useState(false);
+  const [userName, setUserName] = useState('');
 
   const navigate = useNavigate();
   const user = useSelector((state) => state.user);
@@ -39,6 +40,10 @@ const HeaderComponent = () => {
     </div>
   );
 
+  useEffect(() => {
+    setUserName(user?.name);
+  }, [user?.name]);
+
   return (
     <div>
       <WrapperHeader>
@@ -52,10 +57,10 @@ const HeaderComponent = () => {
           <Loading isPending={loading}>
             <WrapperHeaderAccount>
               <UserOutlined style={{ fontSize: '30px' }} />
-              {user?.name ? (
+              {user?.access_token ? (
                 <>
                   <Popover content={content} trigger="click">
-                    <div style={{ cursor: 'pointer' }}>{user.name}</div>
+                    <div style={{ cursor: 'pointer' }}>{userName?.length ? userName : user?.email}</div>
                   </Popover>
                 </>
               ) : (
