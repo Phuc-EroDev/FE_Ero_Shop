@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { routes } from './routes';
 import DefaultComponent from './components/DefaultComponent/DefaultComponent';
@@ -8,20 +8,21 @@ import { isJsonString } from './utils';
 import { jwtDecode } from 'jwt-decode';
 import * as UserService from './services/UserService';
 import { updateUser } from './redux/slides/userSlide';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import Loading from './components/LoadingComponent/Loading';
 
 function App() {
-  // useEffect(() => {
-  //   fetchApi();
-  // }, []);
-
+  const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
+  const user = useSelector((state) => state.user);
 
   useEffect(() => {
+    setIsLoading(true);
     const { decoded, storageData } = handleDecoded();
     if (decoded?.id) {
       handleGetDetailsUser(decoded?.id, storageData);
     }
+    setIsLoading(false);
   }, []);
 
   const handleDecoded = () => {
@@ -56,35 +57,32 @@ function App() {
     dispatch(updateUser({ ...res?.data, access_token: token }));
   };
 
-  const fetchApi = async () => {
-    const res = await axios.get(`${import.meta.env.VITE_BACKEND_API}/product/get-all`);
-    return res.data;
-  };
-
-  const query = useQuery({ queryKey: ['todos'], queryFn: fetchApi });
-  // console.log(query);
-
   return (
     <div>
-      <Router>
-        <Routes>
-          {routes.map((route, index) => {
-            const Page = route.page;
-            const Layout = route.isShowHeader ? DefaultComponent : React.Fragment;
-            return (
-              <Route
-                key={index}
-                path={route.path}
-                element={
-                  <Layout>
-                    <Page />
-                  </Layout>
-                }
-              />
-            );
-          })}
-        </Routes>
-      </Router>
+      <Loading isPending={isLoading}>
+        <Router>
+          <Routes>
+            {routes.map((route, index) => {
+              const Page = route.page;
+              const isCheckAuth = !route.isPrivate || user.isAdmin;
+              const Layout = route.isShowHeader ? DefaultComponent : React.Fragment;
+              return (
+                <Route
+                  key={index}
+                  // path={route.path}
+                  // path={isCheckAuth ? route.path : '*'}
+                  path={isCheckAuth ? route.path : '/not-found/ahihi-liuliu'}
+                  element={
+                    <Layout>
+                      <Page />
+                    </Layout>
+                  }
+                />
+              );
+            })}
+          </Routes>
+        </Router>
+      </Loading>
     </div>
   );
 }
