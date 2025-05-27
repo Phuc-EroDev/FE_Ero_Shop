@@ -69,7 +69,7 @@ function App() {
               return (
                 <Route
                   key={index}
-                  // path={route.path}
+                  // path={isCheckAuth && route.path}
                   // path={isCheckAuth ? route.path : '*'}
                   path={isCheckAuth ? route.path : '/not-found/ahihi-liuliu'}
                   element={

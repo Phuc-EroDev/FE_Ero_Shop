@@ -15,7 +15,7 @@ import * as UserService from '../../services/UserService';
 import { resetUser } from '../../redux/slides/userSlide.js';
 import Loading from '../LoadingComponent/Loading.jsx';
 
-const HeaderComponent = () => {
+const HeaderComponent = ({ isHiddenSearch = false, isHiddenCard = false }) => {
   const [loading, setLoading] = useState(false);
   const [userName, setUserName] = useState('');
   const [userAvatar, setUserAvatar] = useState('');
@@ -36,8 +36,11 @@ const HeaderComponent = () => {
 
   const content = (
     <div>
-      <WrapperContentPopup onClick={handleLogout}>Đăng xuất</WrapperContentPopup>
       <WrapperContentPopup onClick={() => navigate('/profile-user')}>Thông tin người dùng</WrapperContentPopup>
+      {user?.isAdmin && (
+        <WrapperContentPopup onClick={() => navigate('/system/admin')}>Quản Lý Hệ Thống</WrapperContentPopup>
+      )}
+      <WrapperContentPopup onClick={handleLogout}>Đăng xuất</WrapperContentPopup>
     </div>
   );
 
@@ -50,13 +53,15 @@ const HeaderComponent = () => {
 
   return (
     <div>
-      <WrapperHeader>
+      <WrapperHeader style={{ justifyContent: isHiddenSearch && isHiddenCard ? 'space-between' : 'unset' }}>
         <Col span={5}>
           <WrapperTextHeader>ERO-SHOP</WrapperTextHeader>
         </Col>
-        <Col span={13}>
-          <ButtonInputSearch size="large" placeholder="input search text" textButton="Search" allowClear />
-        </Col>
+        {!isHiddenSearch && (
+          <Col span={13}>
+            <ButtonInputSearch size="large" placeholder="input search text" textButton="Search" allowClear />
+          </Col>
+        )}
         <Col span={6} style={{ display: 'flex', gap: '54px', alignItems: 'center' }}>
           <Loading isPending={loading}>
             <WrapperHeaderAccount>
@@ -86,12 +91,14 @@ const HeaderComponent = () => {
               )}
             </WrapperHeaderAccount>
           </Loading>
-          <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-            <Badge count={5} size="small">
-              <ShoppingCartOutlined style={{ fontSize: '30px', color: '#FDF6EC' }} />
-            </Badge>
-            <WrapperTextHeaderSmall>Giỏ hàng</WrapperTextHeaderSmall>
-          </div>
+          {!isHiddenCard && (
+            <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+              <Badge count={5} size="small">
+                <ShoppingCartOutlined style={{ fontSize: '30px', color: '#FDF6EC' }} />
+              </Badge>
+              <WrapperTextHeaderSmall>Giỏ hàng</WrapperTextHeaderSmall>
+            </div>
+          )}
         </Col>
       </WrapperHeader>
     </div>
