@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useMutationHook } from '../../hooks/useMutationHook';
 import Loading from '../../components/LoadingComponent/Loading';
 import { updateUser } from '../../redux/slides/userSlide';
-import { Button, Upload } from 'antd';
+import { Button } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import { getBase64 } from '../../utils';
 
