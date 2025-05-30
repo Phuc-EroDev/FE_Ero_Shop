@@ -22,6 +22,7 @@ const TableComponent = (props) => {
           rowSelection={Object.assign({ type: selectionType }, rowSelection)}
           columns={columns}
           dataSource={data}
+          {...props}
         />
       </Loading>
     </div>

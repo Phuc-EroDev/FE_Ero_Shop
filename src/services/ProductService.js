@@ -5,6 +5,11 @@ export const getAllProduct = async () => {
     return res.data;
 }
 
+export const getDetailsProduct = async (id) => {
+    const res = await axios.get(`${import.meta.env.VITE_BACKEND_API}/product/get-details/${id}`);
+    return res.data;
+}
+
 export const createProduct = async (data) => {
     const res = await axios.post(`${import.meta.env.VITE_BACKEND_API}/product/create`, data);
     return res.data;
