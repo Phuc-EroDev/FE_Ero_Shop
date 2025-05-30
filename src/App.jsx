@@ -14,7 +14,7 @@ import Loading from './components/LoadingComponent/Loading';
 function App() {
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.user);
+  const user = useSelector((state) => state?.user);
 
   useEffect(() => {
     setIsLoading(true);

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { use, useEffect, useState } from 'react';
 import { WrapperHeader, WrapperUploadFile } from './style';
 import { Button, Form, Modal } from 'antd';
 import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
@@ -12,11 +12,13 @@ import { useMutationHook } from '../../hooks/useMutationHook';
 import Loading from '../LoadingComponent/Loading';
 import { useQuery } from '@tanstack/react-query';
 import DrawerComponent from '../DrawerComponent/DrawerComponent';
+import { useSelector } from 'react-redux';
 
 const AdminProduct = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [rowSelected, setRowSelected] = useState('');
   const [isOpenDrawer, setIsOpenDrawer] = useState(false);
+  const [isPendingUpdate, setIsPendingUpdate] = useState(false);
   const [stateProduct, setStateProduct] = useState({
     name: '',
     type: '',
@@ -36,11 +38,20 @@ const AdminProduct = () => {
     image: '',
   });
 
+  const user = useSelector((state) => state?.user);
+
   const [form] = Form.useForm();
 
   const mutation = useMutationHook((data) => {
     const { name, type, countInStock, price, rating, description, image } = data;
     return ProductService.createProduct({ name, type, countInStock, price, rating, description, image });
+  });
+
+  const mutationUpdate = useMutationHook((data) => {
+    const { _id, access_token, ...rests } = data;
+    const newData = rests.stateProductDetails;
+    console.log('rests', rests);
+    return ProductService.updateProduct(_id, newData, access_token);
   });
 
   const fetchProductAll = async () => {
@@ -61,20 +72,26 @@ const AdminProduct = () => {
         image: response?.data?.image,
       });
     }
+    setIsPendingUpdate(false);
     return response;
   };
 
-  console.log(stateProductDetails);
-
   const handleDetailProduct = () => {
     if (rowSelected?._id) {
+      setIsPendingUpdate(true);
       fetchDetailsProduct();
+      setIsOpenDrawer(true);
     }
-    setIsOpenDrawer(true);
-    console.log('rowSelected', rowSelected);
   };
 
   const { data, isPending, isSuccess, isError } = mutation;
+  const {
+    data: dataUpdated,
+    isPending: isPendingUpdated,
+    isSuccess: isSuccessUpdated,
+    isError: isErrorUpdated,
+  } = mutationUpdate;
+  // console.log('dataUpdated', dataUpdated);
 
   const { isLoading, data: products } = useQuery({
     queryKey: ['product'],
@@ -144,6 +161,10 @@ const AdminProduct = () => {
     console.log('finish', stateProduct);
   };
 
+  const onUpdateProduct = () => {
+    mutationUpdate.mutate({ _id: rowSelected?._id, stateProductDetails, access_token: user?.access_token });
+  };
+
   const handleOnChange = (e) => {
     setStateProduct({
       ...stateProduct,
@@ -167,6 +188,20 @@ const AdminProduct = () => {
       ...stateProduct,
       image: file.preview,
     });
+  };
+
+  const handleCloseDrawer = () => {
+    setIsOpenDrawer(false);
+    setStateProductDetails({
+      name: '',
+      type: '',
+      countInStock: '',
+      price: '',
+      rating: '',
+      description: '',
+      image: '',
+    });
+    form.resetFields();
   };
 
   const handleOnChangeImageDetails = async ({ fileList }) => {
@@ -199,6 +234,15 @@ const AdminProduct = () => {
       message.error('Tạo sản phẩm thất bại');
     }
   }, [isSuccess, isError]);
+
+  useEffect(() => {
+    if (isSuccessUpdated && dataUpdated.status === 'OK') {
+      message.success('Cập nhật sản phẩm thành công');
+      handleCloseDrawer();
+    } else if (isErrorUpdated) {
+      message.error('Cập nhật sản phẩm thất bại');
+    }
+  }, [isSuccessUpdated, isErrorUpdated]);
 
   return (
     <div>
@@ -301,12 +345,12 @@ const AdminProduct = () => {
         width="90%"
         onClose={() => setIsOpenDrawer(false)}
       >
-        <Loading isPending={isPending}>
+        <Loading isPending={isPendingUpdate}>
           <Form
             name="basic"
             labelCol={{ span: 2 }}
             wrapperCol={{ span: 22 }}
-            onFinish={onFinish}
+            onFinish={onUpdateProduct}
             autoComplete="on"
             form={form}
           >
@@ -371,7 +415,7 @@ const AdminProduct = () => {
 
             <Form.Item label={null} wrapperCol={{ offset: 20, span: 16 }}>
               <Button type="primary" htmlType="submit">
-                Submit
+                Apply
               </Button>
             </Form.Item>
           </Form>
