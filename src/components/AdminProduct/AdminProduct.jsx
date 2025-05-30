@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { WrapperHeader, WrapperUploadFile } from './style';
 import { Button, Form, Modal } from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
 import TableComponent from '../TableComponent/TableComponent';
 import InputComponent from '../InputComponent/InputComponent';
 import { getBase64 } from '../../utils';
@@ -10,6 +10,7 @@ import * as message from '../../components/MessageComponent/Message';
 // import { useDispatch, useSelector } from 'react-redux';
 import { useMutationHook } from '../../hooks/useMutationHook';
 import Loading from '../LoadingComponent/Loading';
+import { useQuery } from '@tanstack/react-query';
 
 const AdminProduct = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -29,7 +30,60 @@ const AdminProduct = () => {
     const { name, type, countInStock, price, rating, description, image } = data;
     return ProductService.createProduct({ name, type, countInStock, price, rating, description, image });
   });
+
+  const fetchProductAll = async () => {
+    const response = await ProductService.getAllProduct();
+    return response;
+  };
+
   const { data, isPending, isSuccess, isError } = mutation;
+
+  const { isLoading, data: products } = useQuery({
+    queryKey: ['product'],
+    queryFn: fetchProductAll,
+    retry: 1,
+    retryDelay: 1000,
+  });
+
+  const renderAction = () => {
+    return (
+      <div>
+        <EditOutlined style={{ color: 'orange', fontSize: '24px', marginRight: '12px', cursor: 'pointer' }} />
+        <DeleteOutlined style={{ color: 'red', fontSize: '24px', cursor: 'pointer' }} />
+      </div>
+    );
+  };
+
+  const columns = [
+    {
+      title: 'Name',
+      dataIndex: 'name',
+      render: (text) => <a>{text}</a>,
+    },
+    {
+      title: 'Price',
+      dataIndex: 'price',
+    },
+    {
+      title: 'Rating',
+      dataIndex: 'rating',
+    },
+    {
+      title: 'Type',
+      dataIndex: 'type',
+    },
+    {
+      title: 'Action',
+      dataIndex: 'action',
+      render: renderAction,
+    },
+  ];
+
+  const dataTable =
+    products?.data?.length > 0 &&
+    products?.data?.map((product) => {
+      return { ...product, key: product._id };
+    });
 
   const handleCancel = () => {
     setIsModalOpen(false);
@@ -56,7 +110,7 @@ const AdminProduct = () => {
     });
   };
 
-  const handleOnChangeAvatar = async ({ fileList }) => {
+  const handleOnChangeImage = async ({ fileList }) => {
     const file = fileList[0];
     if (!file.url && !file.preview) {
       file.preview = await getBase64(file.originFileObj);
@@ -88,7 +142,7 @@ const AdminProduct = () => {
         </Button>
       </div>
       <div style={{ marginTop: '20px' }}>
-        <TableComponent />
+        <TableComponent columns={columns} data={dataTable} isLoading={isLoading} />
       </div>
       <Modal title="Tạo sản phẩm" open={isModalOpen} onCancel={handleCancel} footer={null}>
         <Loading isPending={isPending}>
@@ -133,8 +187,8 @@ const AdminProduct = () => {
               <InputComponent value={stateProduct.description} onChange={handleOnChange} name="description" />
             </Form.Item>
 
-            <Form.Item label="Avatar" name="avatar" rules={[{ required: true, message: 'Please input your Avatar!' }]}>
-              <WrapperUploadFile onChange={handleOnChangeAvatar} maxCount={1}>
+            <Form.Item label="Image" name="image" rules={[{ required: true, message: 'Please input your Image!' }]}>
+              <WrapperUploadFile onChange={handleOnChangeImage} maxCount={1}>
                 <Button>Select File</Button>
                 {stateProduct?.image && (
                   <img

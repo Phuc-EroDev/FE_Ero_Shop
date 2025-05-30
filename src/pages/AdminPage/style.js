@@ -3,7 +3,6 @@ import styled from "styled-components";
 
 export const WrapperMenu = styled(Menu)`
     width: 256px;
-    height: 100vh;
     box-shadow: 1px 1px 2px #0b0909 !important;
     background: #1d1d1d;
     && .ant-menu-item {
