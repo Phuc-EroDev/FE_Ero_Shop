@@ -203,11 +203,45 @@ const AdminProduct = () => {
       title: 'Price',
       dataIndex: 'price',
       sorter: (a, b) => a.price - b.price,
+      filters: [
+        {
+          text: '>= 500',
+          value: '>=',
+        },
+        {
+          text: '<= 500',
+          value: '<=',
+        },
+      ],
+      onFilter: (value, record) => {
+        if (value === '>=') {
+          return record.price >= 500;
+        } else if (value === '<=') {
+          return record.price <= 500;
+        }
+      },
     },
     {
       title: 'Rating',
       dataIndex: 'rating',
       sorter: (a, b) => a.rating - b.rating,
+      filters: [
+        {
+          text: '>= 3',
+          value: '>=',
+        },
+        {
+          text: '<= 3',
+          value: '<=',
+        },
+      ],
+      onFilter: (value, record) => {
+        if (value === '>=') {
+          return record.rating >= 3;
+        } else if (value === '<=') {
+          return record.rating <= 3;
+        }
+      },
     },
     {
       title: 'Type',
