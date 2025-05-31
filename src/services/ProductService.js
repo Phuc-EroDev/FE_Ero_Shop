@@ -25,3 +25,13 @@ export const updateProduct = async (id, data, access_token) => {
     });
     return res.data;
 }
+
+export const deleteProduct = async (id, access_token) => {
+    const res = await axiosJWT.delete(`${import.meta.env.VITE_BACKEND_API}/product/delete/${id}`, {}, {
+        headers: {
+            'Content-Type': 'application/json',
+            token: `Bearer ${access_token}`,
+        }
+    });
+    return res.data;
+}
