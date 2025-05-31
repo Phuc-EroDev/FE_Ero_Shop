@@ -131,14 +131,17 @@ const AdminProduct = () => {
       title: 'Name',
       dataIndex: 'name',
       render: (text) => <a>{text}</a>,
+      sorter: (a, b) => a.name.length - b.name.length,
     },
     {
       title: 'Price',
       dataIndex: 'price',
+      sorter: (a, b) => a.price - b.price,
     },
     {
       title: 'Rating',
       dataIndex: 'rating',
+      sorter: (a, b) => a.rating - b.rating,
     },
     {
       title: 'Type',
