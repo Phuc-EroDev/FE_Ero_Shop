@@ -1,4 +1,4 @@
-import React, { use, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { WrapperHeader, WrapperUploadFile } from './style';
 import { Button, Form, Space } from 'antd';
 import { DeleteOutlined, EditOutlined, PlusOutlined, SearchOutlined } from '@ant-design/icons';
@@ -21,8 +21,8 @@ const AdminProduct = () => {
   const [isModalOpenDelete, setIsModalOpenDelete] = useState(false);
   const [rowSelected, setRowSelected] = useState('');
   const [isOpenDrawer, setIsOpenDrawer] = useState(false);
-  const [searchText, setSearchText] = useState('');
-  const [searchedColumn, setSearchedColumn] = useState('');
+  // const [searchText, setSearchText] = useState('');
+  // const [searchedColumn, setSearchedColumn] = useState('');
   const [stateProduct, setStateProduct] = useState({
     name: '',
     type: '',
@@ -132,12 +132,12 @@ const AdminProduct = () => {
 
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
-    setSearchText(selectedKeys[0]);
-    setSearchedColumn(dataIndex);
+    // setSearchText(selectedKeys[0]);
+    // setSearchedColumn(dataIndex);
   };
   const handleReset = (clearFilters) => {
     clearFilters();
-    setSearchText('');
+    // setSearchText('');
   };
   const getColumnSearchProps = (dataIndex) => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
@@ -410,7 +410,7 @@ const AdminProduct = () => {
       <div style={{ marginTop: '20px' }}>
         <TableComponent columns={columns} data={dataTable} isLoading={isLoading} />
       </div>
-      <ModalComponent title="Tạo sản phẩm" open={isModalOpen} onCancel={handleCancel} footer={null}>
+      <ModalComponent forceRender title="Tạo sản phẩm" open={isModalOpen} onCancel={handleCancel} footer={null}>
         <Loading isPending={isPending}>
           <Form
             name="basic"
@@ -563,6 +563,7 @@ const AdminProduct = () => {
         </Loading>
       </DrawerComponent>
       <ModalComponent
+        forceRender
         title="Xoá sản phẩm"
         open={isModalOpenDelete}
         onCancel={handleCancelDelete}
