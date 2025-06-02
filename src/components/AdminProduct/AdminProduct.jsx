@@ -19,10 +19,10 @@ const AdminProduct = () => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalOpenDelete, setIsModalOpenDelete] = useState(false);
+  const [isModalOpenDeleteMany, setIsModalOpenDeleteMany] = useState(false);
+  const [idsDelete, setIdsDelete] = useState([]);
   const [rowSelected, setRowSelected] = useState('');
   const [isOpenDrawer, setIsOpenDrawer] = useState(false);
-  // const [searchText, setSearchText] = useState('');
-  // const [searchedColumn, setSearchedColumn] = useState('');
   const [stateProduct, setStateProduct] = useState({
     name: '',
     type: '',
@@ -60,6 +60,11 @@ const AdminProduct = () => {
   const mutationDelete = useMutationHook((data) => {
     const { _id, access_token } = data;
     return ProductService.deleteProduct(_id, access_token);
+  });
+
+  const mutationDeleteMany = useMutationHook((data) => {
+    const { ids, access_token } = data;
+    return ProductService.deleteManyProduct(ids, access_token);
   });
 
   const fetchProductAll = async () => {
@@ -100,6 +105,12 @@ const AdminProduct = () => {
     isSuccess: isSuccessDeleted,
     isError: isErrorDeleted,
   } = mutationDelete;
+  const {
+    data: dataDeletedMany,
+    isPending: isPendingDeletedMany,
+    isSuccess: isSuccessDeletedMany,
+    isError: isErrorDeletedMany,
+  } = mutationDeleteMany;
 
   const queryProduct = useQuery({
     queryKey: ['product'],
@@ -130,14 +141,12 @@ const AdminProduct = () => {
     );
   };
 
-  const handleSearch = (selectedKeys, confirm, dataIndex) => {
+  const handleSearch = (confirm) => {
     confirm();
-    // setSearchText(selectedKeys[0]);
-    // setSearchedColumn(dataIndex);
   };
-  const handleReset = (clearFilters) => {
+  const handleReset = (clearFilters, confirm) => {
     clearFilters();
-    // setSearchText('');
+    confirm();
   };
   const getColumnSearchProps = (dataIndex) => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
@@ -147,20 +156,20 @@ const AdminProduct = () => {
           placeholder={`Search ${dataIndex}`}
           value={selectedKeys[0]}
           onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
-          onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
+          onPressEnter={() => handleSearch(confirm)}
           style={{ marginBottom: 8, display: 'block' }}
         />
         <Space>
           <Button
             type="primary"
-            onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+            onClick={() => handleSearch(confirm)}
             icon={<SearchOutlined />}
             size="small"
             style={{ width: 90 }}
           >
             Search
           </Button>
-          <Button onClick={() => clearFilters && handleReset(clearFilters)} size="small" style={{ width: 90 }}>
+          <Button onClick={() => clearFilters && handleReset(clearFilters, confirm)} size="small" style={{ width: 90 }}>
             Reset
           </Button>
         </Space>
@@ -279,9 +288,24 @@ const AdminProduct = () => {
     setIsModalOpenDelete(false);
   };
 
+  const handleCancelDeleteMany = () => {
+    setIsModalOpenDeleteMany(false);
+  };
+
   const handleDeleteProduct = () => {
     mutationDelete.mutate(
       { _id: rowSelected?._id, access_token: user?.access_token },
+      {
+        onSettled: () => {
+          queryProduct.refetch();
+        },
+      },
+    );
+  };
+
+  const handleDeleteManyProduct = () => {
+    mutationDeleteMany.mutate(
+      { ids: idsDelete, access_token: user?.access_token },
       {
         onSettled: () => {
           queryProduct.refetch();
@@ -359,6 +383,11 @@ const AdminProduct = () => {
     });
   };
 
+  const handleClickDeleteMany = (ids) => {
+    setIdsDelete(ids);
+    setIsModalOpenDeleteMany(true);
+  };
+
   useEffect(() => {
     form.setFieldsValue(stateProductDetails);
   }, [stateProductDetails]);
@@ -396,6 +425,15 @@ const AdminProduct = () => {
     }
   }, [isSuccessDeleted, isErrorDeleted]);
 
+  useEffect(() => {
+    if (isSuccessDeletedMany && dataDeletedMany.status === 'OK') {
+      message.success('Xoá nhiều sản phẩm thành công');
+      handleCancelDeleteMany();
+    } else if (isErrorDeletedMany) {
+      message.error('Xoá nhiều sản phẩm thất bại');
+    }
+  }, [isSuccessDeletedMany, isErrorDeletedMany]);
+
   return (
     <div>
       <WrapperHeader>Quản Lý Sản Phẩm</WrapperHeader>
@@ -408,7 +446,13 @@ const AdminProduct = () => {
         </Button>
       </div>
       <div style={{ marginTop: '20px' }}>
-        <TableComponent columns={columns} data={dataTable} isLoading={isLoading} />
+        <TableComponent
+          columns={columns}
+          data={dataTable}
+          isLoading={isLoading}
+          handleDeleteManyProduct={handleDeleteManyProduct}
+          handleClickDeleteMany={handleClickDeleteMany}
+        />
       </div>
       <ModalComponent forceRender title="Tạo sản phẩm" open={isModalOpen} onCancel={handleCancel} footer={null}>
         <Loading isPending={isPending}>
@@ -571,6 +615,17 @@ const AdminProduct = () => {
       >
         <Loading isPending={isPendingDeleted}>
           <div>Bạn chắc chắn XOÁ sản phẩm này?</div>
+        </Loading>
+      </ModalComponent>
+      <ModalComponent
+        forceRender
+        title="Xoá nhiều sản phẩm"
+        open={isModalOpenDeleteMany}
+        onCancel={handleCancelDeleteMany}
+        onOk={handleDeleteManyProduct}
+      >
+        <Loading isPending={isPendingDeletedMany}>
+          <div>Bạn chắc chắn XOÁ nhiều sản phẩm này?</div>
         </Loading>
       </ModalComponent>
     </div>

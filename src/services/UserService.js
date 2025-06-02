@@ -37,6 +37,16 @@ export const deleteUser = async (id, access_token) => {
     return res.data;
 }
 
+export const deleteManyUser = async (ids, access_token) => {
+    const res = await axiosJWT.delete(`${import.meta.env.VITE_BACKEND_API}/user/delete-many`, {
+        data: { ids },
+        headers: {
+            token: `Bearer ${access_token}`,
+        }
+    });
+    return res.data;
+}
+
 export const getDetailsUser = async (id, access_token) => {
     const res = await axiosJWT.get(`${import.meta.env.VITE_BACKEND_API}/user/get-details/${id}`, {
         headers: {
