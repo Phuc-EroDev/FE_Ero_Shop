@@ -18,6 +18,8 @@ const AdminUser = () => {
   const searchInput = useRef(null);
 
   const [isModalOpenDelete, setIsModalOpenDelete] = useState(false);
+  const [isModalOpenDeleteMany, setIsModalOpenDeleteMany] = useState(false);
+  const [idsDelete, setIdsDelete] = useState([]);
   const [rowSelected, setRowSelected] = useState('');
   const [isOpenDrawer, setIsOpenDrawer] = useState(false);
   const [stateUserDetails, setStateUserDetails] = useState({
@@ -40,6 +42,11 @@ const AdminUser = () => {
   const mutationDelete = useMutationHook((data) => {
     const { _id, access_token } = data;
     return UserService.deleteUser(_id, access_token);
+  });
+
+  const mutationDeleteMany = useMutationHook((data) => {
+    const { ids, access_token } = data;
+    return UserService.deleteManyUser(ids, access_token);
   });
 
   const fetchUserAll = async () => {
@@ -76,6 +83,12 @@ const AdminUser = () => {
     isSuccess: isSuccessDeleted,
     isError: isErrorDeleted,
   } = mutationDelete;
+  const {
+    data: dataDeletedMany,
+    isPending: isPendingDeletedMany,
+    isSuccess: isSuccessDeletedMany,
+    isError: isErrorDeletedMany,
+  } = mutationDeleteMany;
 
   const queryUser = useQuery({
     queryKey: ['user'],
@@ -106,14 +119,12 @@ const AdminUser = () => {
     );
   };
 
-  const handleSearch = (selectedKeys, confirm, dataIndex) => {
+  const handleSearch = (confirm) => {
     confirm();
-    // setSearchText(selectedKeys[0]);
-    // setSearchedColumn(dataIndex);
   };
-  const handleReset = (clearFilters) => {
+  const handleReset = (clearFilters, confirm) => {
     clearFilters();
-    // setSearchText('');
+    confirm();
   };
   const getColumnSearchProps = (dataIndex) => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
@@ -123,20 +134,20 @@ const AdminUser = () => {
           placeholder={`Search ${dataIndex}`}
           value={selectedKeys[0]}
           onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
-          onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
+          onPressEnter={() => handleSearch(confirm)}
           style={{ marginBottom: 8, display: 'block' }}
         />
         <Space>
           <Button
             type="primary"
-            onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+            onClick={() => handleSearch(confirm)}
             icon={<SearchOutlined />}
             size="small"
             style={{ width: 90 }}
           >
             Search
           </Button>
-          <Button onClick={() => clearFilters && handleReset(clearFilters)} size="small" style={{ width: 90 }}>
+          <Button onClick={() => clearFilters && handleReset(clearFilters, confirm)} size="small" style={{ width: 90 }}>
             Reset
           </Button>
         </Space>
@@ -239,9 +250,24 @@ const AdminUser = () => {
     setIsModalOpenDelete(false);
   };
 
+  const handleCancelDeleteMany = () => {
+    setIsModalOpenDeleteMany(false);
+  };
+
   const handleDeleteUser = () => {
     mutationDelete.mutate(
       { _id: rowSelected?._id, access_token: user?.access_token },
+      {
+        onSettled: () => {
+          queryUser.refetch();
+        },
+      },
+    );
+  };
+
+  const handleDeleteManyUser = () => {
+    mutationDeleteMany.mutate(
+      { ids: idsDelete, access_token: user?.access_token },
       {
         onSettled: () => {
           queryUser.refetch();
@@ -290,6 +316,11 @@ const AdminUser = () => {
     });
   };
 
+  const handleClickDeleteMany = (ids) => {
+    setIdsDelete(ids);
+    setIsModalOpenDeleteMany(true);
+  };
+
   useEffect(() => {
     form.setFieldsValue(stateUserDetails);
   }, [stateUserDetails]);
@@ -318,11 +349,25 @@ const AdminUser = () => {
     }
   }, [isSuccessDeleted, isErrorDeleted]);
 
+  useEffect(() => {
+    if (isSuccessDeletedMany && dataDeletedMany.status === 'OK') {
+      message.success('Xoá nhiều tài khoản thành công');
+      handleCancelDeleteMany();
+    } else if (isErrorDeletedMany) {
+      message.error('Xoá nhiều tài khoản thất bại');
+    }
+  }, [isSuccessDeletedMany, isErrorDeletedMany]);
+
   return (
     <div>
       <WrapperHeader>Quản Lý Người Dùng</WrapperHeader>
       <div style={{ marginTop: '20px' }}>
-        <TableComponent columns={columns} data={dataTable} isLoading={isLoadingUsers} />
+        <TableComponent
+          columns={columns}
+          data={dataTable}
+          isLoading={isLoadingUsers}
+          handleClickDeleteMany={handleClickDeleteMany}
+        />
       </div>
       <DrawerComponent
         title="Chi tiết người dùng"
@@ -387,6 +432,17 @@ const AdminUser = () => {
       >
         <Loading isPending={isPendingDeleted}>
           <div>Bạn chắc chắn XOÁ tài khoản này?</div>
+        </Loading>
+      </ModalComponent>
+      <ModalComponent
+        forceRender
+        title="Xoá nhiều tài khoản"
+        open={isModalOpenDeleteMany}
+        onCancel={handleCancelDeleteMany}
+        onOk={handleDeleteManyUser}
+      >
+        <Loading isPending={isPendingDeletedMany}>
+          <div>Bạn chắc chắn XOÁ nhiều tài khoản này?</div>
         </Loading>
       </ModalComponent>
     </div>
