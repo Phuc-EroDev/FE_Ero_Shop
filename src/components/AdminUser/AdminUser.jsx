@@ -27,6 +27,8 @@ const AdminUser = () => {
     email: '',
     phone: '',
     isAdmin: false,
+    address: '',
+    avatar: '',
   });
 
   const user = useSelector((state) => state?.user);
@@ -62,6 +64,8 @@ const AdminUser = () => {
         email: response?.data?.email,
         phone: response?.data?.phone,
         isAdmin: response?.data?.isAdmin,
+        address: response?.data?.address,
+        avatar: response?.data?.avatar,
       });
     }
     return response;
@@ -396,7 +400,15 @@ const AdminUser = () => {
               <InputComponent value={stateUserDetails.phone} onChange={handleOnChangeDetails} name="phone" />
             </Form.Item>
 
-            {/* <Form.Item label="Avatar" name="avatar" rules={[{ required: true, message: 'Please input your Avatar!' }]}>
+            <Form.Item
+              label="Address"
+              name="address"
+              rules={[{ required: true, message: 'Please input your Address!' }]}
+            >
+              <InputComponent value={stateUserDetails.address} onChange={handleOnChangeDetails} name="address" />
+            </Form.Item>
+
+            <Form.Item label="Avatar" name="avatar" rules={[{ required: true, message: 'Please input your Avatar!' }]}>
               <WrapperUploadFile onChange={handleOnChangeAvatarDetails} maxCount={1}>
                 <Button>Select File</Button>
                 {stateUserDetails?.avatar && (
@@ -413,7 +425,7 @@ const AdminUser = () => {
                   />
                 )}
               </WrapperUploadFile>
-            </Form.Item> */}
+            </Form.Item>
 
             <Form.Item label={null} wrapperCol={{ offset: 20, span: 16 }}>
               <Button type="primary" htmlType="submit">
