@@ -14,11 +14,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import * as UserService from '../../services/UserService';
 import { resetUser } from '../../redux/slides/userSlide.js';
 import Loading from '../LoadingComponent/Loading.jsx';
+import { searchProduct } from '../../redux/slides/productSlide.js';
 
 const HeaderComponent = ({ isHiddenSearch = false, isHiddenCard = false }) => {
   const [loading, setLoading] = useState(false);
   const [userName, setUserName] = useState('');
   const [userAvatar, setUserAvatar] = useState('');
+  const [search, setSearch] = useState('');
 
   const navigate = useNavigate();
   const user = useSelector((state) => state?.user);
@@ -44,6 +46,11 @@ const HeaderComponent = ({ isHiddenSearch = false, isHiddenCard = false }) => {
     </div>
   );
 
+  const onSearch = (e) => {
+    setSearch(e.target.value);
+    dispatch(searchProduct(e.target.value));
+  };
+
   useEffect(() => {
     setLoading(true);
     setUserName(user?.name);
@@ -59,7 +66,13 @@ const HeaderComponent = ({ isHiddenSearch = false, isHiddenCard = false }) => {
         </Col>
         {!isHiddenSearch && (
           <Col span={13}>
-            <ButtonInputSearch size="large" placeholder="input search text" textButton="Search" allowClear />
+            <ButtonInputSearch
+              size="large"
+              placeholder="input search text"
+              textbutton="Search"
+              allowClear
+              onChange={onSearch}
+            />
           </Col>
         )}
         <Col span={6} style={{ display: 'flex', gap: '54px', alignItems: 'center' }}>

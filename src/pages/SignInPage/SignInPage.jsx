@@ -125,7 +125,7 @@ const SignInPage = () => {
                 width: '100%',
                 margin: '26px 0 10px',
               }}
-              textButton={'Đăng nhập'}
+              textbutton={'Đăng nhập'}
             />
           </Loading>
           <WrapperTextLight>Quên mật khẩu?</WrapperTextLight>

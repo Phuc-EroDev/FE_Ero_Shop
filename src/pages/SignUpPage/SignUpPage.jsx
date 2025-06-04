@@ -140,7 +140,7 @@ const SignUpPage = () => {
                 width: '100%',
                 margin: '26px 0 10px',
               }}
-              textButton={'Đăng ký'}
+              textbutton={'Đăng ký'}
             />
           </Loading>
           <p>

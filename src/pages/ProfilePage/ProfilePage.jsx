@@ -93,7 +93,7 @@ const ProfilePage = () => {
                 height: '30px',
                 padding: '4px 6px',
               }}
-              textButton={'Cập nhật'}
+              textbutton={'Cập nhật'}
             />
           </WrapperInput>
           <WrapperInput>
@@ -116,7 +116,7 @@ const ProfilePage = () => {
                 height: '30px',
                 padding: '4px 6px',
               }}
-              textButton={'Cập nhật'}
+              textbutton={'Cập nhật'}
             />
           </WrapperInput>
           <WrapperInput>
@@ -139,7 +139,7 @@ const ProfilePage = () => {
                 height: '30px',
                 padding: '4px 6px',
               }}
-              textButton={'Cập nhật'}
+              textbutton={'Cập nhật'}
             />
           </WrapperInput>
           <WrapperInput>
@@ -162,7 +162,7 @@ const ProfilePage = () => {
                 height: '30px',
                 padding: '4px 6px',
               }}
-              textButton={'Cập nhật'}
+              textbutton={'Cập nhật'}
             />
           </WrapperInput>
           <WrapperInput>
@@ -195,7 +195,7 @@ const ProfilePage = () => {
                 height: '30px',
                 padding: '4px 6px',
               }}
-              textButton={'Cập nhật'}
+              textbutton={'Cập nhật'}
             />
           </WrapperInput>
         </WrapperContentProfile>

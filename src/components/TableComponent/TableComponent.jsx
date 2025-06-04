@@ -64,7 +64,7 @@ const TableComponent = (props) => {
               fontWeight: '600',
               marginBottom: '10px',
             }}
-            textButton={'Xuất file Excel'}
+            textbutton={'Xuất file Excel'}
           />
         </div>
         {selectedRowKeys.length > 0 && (
@@ -79,7 +79,7 @@ const TableComponent = (props) => {
                 fontWeight: '600',
                 marginBottom: '10px',
               }}
-              textButton={'Xóa tất cả'}
+              textbutton={'Xóa tất cả'}
             />
           </div>
         )}

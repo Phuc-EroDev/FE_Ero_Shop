@@ -103,7 +103,7 @@ const ProductDetailsComponent = () => {
               fontWeight: '600',
               width: '220px',
             }}
-            textButton={'Mua ngay'}
+            textbutton={'Mua ngay'}
           />
           <ButtonComponent
             size={'large'}
@@ -114,7 +114,7 @@ const ProductDetailsComponent = () => {
               width: '220px',
               border: '1px solid #C68642',
             }}
-            textButton={'Mua Trả sau'}
+            textbutton={'Mua Trả sau'}
           />
         </div>
       </Col>
