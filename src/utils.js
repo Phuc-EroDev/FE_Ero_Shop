@@ -1,3 +1,5 @@
+import { data } from "react-router-dom";
+
 export const isJsonString = (data) => {
     try {
         JSON.parse(data)
@@ -23,4 +25,21 @@ export const getItem = (label, key, icon, children, type) => {
     children,
     type
   };
+}
+
+export const renderOptions = (arr) => {
+  let results = []
+  if (Array.isArray(arr)) {
+    results = arr.map((options) => {
+      return {
+        value: options,
+        label: options,
+      }
+    })
+  }
+  results.push({
+    label: 'Thêm type',
+    value: 'add_type',
+  })
+  return results
 }

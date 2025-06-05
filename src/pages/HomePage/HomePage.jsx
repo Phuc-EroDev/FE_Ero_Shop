@@ -12,9 +12,7 @@ import Loading from '../../components/LoadingComponent/Loading';
 import { useDebounce } from '../../hooks/useDebounce';
 
 const HomePage = () => {
-  const arr = ['TV', 'Laptop', 'Phone'];
-
-  const [loading, setLoading] = useState(false);
+  const [typeProducts, setTypeProducts] = useState([]);
   const [limit, setLimit] = useState(6);
   // const [page, setPage] = useState(1);
 
@@ -26,6 +24,14 @@ const HomePage = () => {
     const searchDebounce = context?.queryKey && context?.queryKey[2];
     const res = await ProductService.getAllProduct(searchDebounce, limit);
     return res;
+  };
+
+  const fetchAllTypeProduct = async () => {
+    const res = await ProductService.getAllTypeProduct();
+    if (res?.status === 'OK') {
+      setTypeProducts(res?.data);
+    }
+    return res?.data;
   };
 
   const {
@@ -40,11 +46,15 @@ const HomePage = () => {
     placeholderData: keepPreviousData,
   });
 
+  useEffect(() => {
+    fetchAllTypeProduct();
+  }, []);
+
   return (
-    <Loading isPending={isLoading || loading}>
+    <Loading isPending={isLoading}>
       <div style={{ margin: '0 auto', padding: '0 120px' }}>
         <WrapperTypeProduct>
-          {arr.map((item) => {
+          {typeProducts.map((item) => {
             return <TypeProduct key={item} name={item} />;
           })}
         </WrapperTypeProduct>

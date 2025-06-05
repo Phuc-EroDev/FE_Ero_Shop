@@ -5,9 +5,16 @@ export const getAllProduct = async (search, limit) => {
     let res = {}
     if (search?.length > 0) {
         res = await axios.get(`${import.meta.env.VITE_BACKEND_API}/product/get-all?filter=name&filter=${search}&limit=${limit}`);
-    } else {
+    } else if (limit) {
         res = await axios.get(`${import.meta.env.VITE_BACKEND_API}/product/get-all?limit=${limit}`);
+    } else {
+        res = await axios.get(`${import.meta.env.VITE_BACKEND_API}/product/get-all`);
     }
+    return res.data;
+}
+
+export const getAllTypeProduct = async () => {
+    const res = await axios.get(`${import.meta.env.VITE_BACKEND_API}/product/get-all-type`);
     return res.data;
 }
 
