@@ -40,8 +40,6 @@ const HomePage = () => {
     placeholderData: keepPreviousData,
   });
 
-  console.log('products', products);
-
   return (
     <Loading isPending={isLoading || loading}>
       <div style={{ margin: '0 auto', padding: '0 120px' }}>
@@ -59,6 +57,7 @@ const HomePage = () => {
               return (
                 <CardComponent
                   key={product._id}
+                  id={product._id}
                   countInStock={product.countInStock}
                   description={product.description}
                   image={product.image}

@@ -9,12 +9,18 @@ import {
   WrapperStyleTextSell,
 } from './style';
 import labelCard from '../../assets/images/labelCard.png';
-import Product from '../../assets/images/product1.png';
+import { useNavigate } from 'react-router-dom';
 
 const CardComponent = (props) => {
-  const { countInStock, description, image, name, price, rating, type, selled, discount } = props;
+  const navigate = useNavigate();
+  const { id, countInStock, description, image, name, price, rating, type, selled, discount } = props;
+
+  const handleDetailsProduct = (id) => {
+    navigate(`/product-details/${id}`);
+  };
+
   return (
-    <WrapperCardStyle hoverable cover={<img alt="example" src={image} />}>
+    <WrapperCardStyle hoverable cover={<img alt="example" src={image} onClick={() => handleDetailsProduct(id)} />}>
       <img src={labelCard} style={{ width: '25px', height: '18px', position: 'absolute', top: '5px', left: '-4px' }} />
       <StyleNameProduct>{name}</StyleNameProduct>
       <WrapperReportText>
