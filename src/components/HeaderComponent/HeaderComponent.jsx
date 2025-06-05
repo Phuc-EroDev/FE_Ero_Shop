@@ -20,7 +20,7 @@ const HeaderComponent = ({ isHiddenSearch = false, isHiddenCard = false }) => {
   const [loading, setLoading] = useState(false);
   const [userName, setUserName] = useState('');
   const [userAvatar, setUserAvatar] = useState('');
-  const [search, setSearch] = useState('');
+  // const [search, setSearch] = useState('');
 
   const navigate = useNavigate();
   const user = useSelector((state) => state?.user);
@@ -47,7 +47,7 @@ const HeaderComponent = ({ isHiddenSearch = false, isHiddenCard = false }) => {
   );
 
   const onSearch = (e) => {
-    setSearch(e.target.value);
+    // setSearch(e.target.value);
     dispatch(searchProduct(e.target.value));
   };
 

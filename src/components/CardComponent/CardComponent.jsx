@@ -14,7 +14,7 @@ import Product from '../../assets/images/product1.png';
 const CardComponent = (props) => {
   const { countInStock, description, image, name, price, rating, type, selled, discount } = props;
   return (
-    <WrapperCardStyle hoverable cover={<img alt="example" src={Product} />}>
+    <WrapperCardStyle hoverable cover={<img alt="example" src={image} />}>
       <img src={labelCard} style={{ width: '25px', height: '18px', position: 'absolute', top: '5px', left: '-4px' }} />
       <StyleNameProduct>{name}</StyleNameProduct>
       <WrapperReportText>
@@ -24,7 +24,7 @@ const CardComponent = (props) => {
         <WrapperStyleTextSell> | Da ban {selled || 1000}+</WrapperStyleTextSell>
       </WrapperReportText>
       <WrapperPriceText>
-        <span style={{ marginRight: '8px' }}>{price} VND </span>
+        <span style={{ marginRight: '8px' }}>{price.toLocaleString()} VND </span>
         <WrapperDiscountText>-{discount || 5}%</WrapperDiscountText>
       </WrapperPriceText>
     </WrapperCardStyle>

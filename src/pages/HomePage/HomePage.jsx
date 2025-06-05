@@ -5,7 +5,7 @@ import { WrapperButtonMore, WrapperProducts, WrapperTypeProduct } from './style'
 import slider1 from '../../assets/images/slider1.png';
 import slider2 from '../../assets/images/slider2.png';
 import CardComponent from '../../components/CardComponent/CardComponent';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, keepPreviousData } from '@tanstack/react-query';
 import * as ProductService from '../../services/ProductService';
 import { useSelector } from 'react-redux';
 import Loading from '../../components/LoadingComponent/Loading';
@@ -14,43 +14,33 @@ import { useDebounce } from '../../hooks/useDebounce';
 const HomePage = () => {
   const arr = ['TV', 'Laptop', 'Phone'];
 
-  const [stateProducts, setStateProducts] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [limit, setLimit] = useState(6);
+  // const [page, setPage] = useState(1);
 
   const searchProduct = useSelector((state) => state?.product?.search);
-  const refSearch = useRef();
   const searchDebounce = useDebounce(searchProduct, 1000);
 
-  const fetchProductAll = async (search) => {
-    const res = await ProductService.getAllProduct(search);
-    if (search?.length > 0 || refSearch.current) {
-      setStateProducts(res?.data);
-    } else {
-      return res;
-    }
+  const fetchProductAll = async (context) => {
+    const limit = context?.queryKey && context?.queryKey[1];
+    const searchDebounce = context?.queryKey && context?.queryKey[2];
+    const res = await ProductService.getAllProduct(searchDebounce, limit);
+    return res;
   };
 
-  useEffect(() => {
-    if (refSearch.current) {
-      setLoading(true);
-      fetchProductAll(searchDebounce);
-    }
-    refSearch.current = true;
-    setLoading(false);
-  }, [searchDebounce]);
-
-  const { isLoading, data: products } = useQuery({
-    queryKey: ['product'],
+  const {
+    isLoading,
+    data: products,
+    isPreviousData,
+  } = useQuery({
+    queryKey: ['product', limit, searchDebounce],
     queryFn: fetchProductAll,
     retry: 1,
     retryDelay: 1000,
+    placeholderData: keepPreviousData,
   });
 
-  useEffect(() => {
-    if (products?.data?.length > 0) {
-      setStateProducts(products.data);
-    }
-  }, [products]);
+  console.log('products', products);
 
   return (
     <Loading isPending={isLoading || loading}>
@@ -65,7 +55,7 @@ const HomePage = () => {
         <div id="container" style={{ margin: '0 auto', padding: '0 120px', height: '1000px', width: '100%' }}>
           <SliderComponent arrImages={[slider1, slider2]} />
           <WrapperProducts>
-            {stateProducts?.map((product) => {
+            {products?.data?.map((product) => {
               return (
                 <CardComponent
                   key={product._id}
@@ -84,15 +74,10 @@ const HomePage = () => {
           </WrapperProducts>
           <div style={{ width: '100%', display: 'flex', justifyContent: 'center', marginTop: '10px' }}>
             <WrapperButtonMore
-              textbutton="Xem them"
+              textbutton={isPreviousData ? 'Loading...' : 'Xem thêm'}
               type="outline"
-              style={{
-                color: ' #D29B63',
-                border: '1px solid #D29B63',
-                width: '240px',
-                height: '38px',
-                fontWeight: '500',
-              }}
+              disabled={products?.total === products?.data?.length || products?.totalPage === 1}
+              onClick={() => setLimit((prev) => prev + 6)}
             />
           </div>
         </div>

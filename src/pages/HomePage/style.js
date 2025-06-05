@@ -10,14 +10,26 @@ export const WrapperTypeProduct = styled.div`
 `
 
 export const WrapperButtonMore = styled(ButtonComponent)`
-    &:hover {
+    color: #D29B63;
+    border: 1px solid #D29B63;
+    width: 240px;
+    height: 38px;
+    margin-bottom: 20px;
+    font-weight: 500;
+    text-align: center;
+    cursor: ${props => props.disabled ? 'not-allowed' : 'pointer'}; 
+       
+    &:hover:not(:disabled) {
         background-color: #D29B63;
         span {
             color: #fff;
         }
     }
-    width: 100%;
-    text-align: center;
+    
+    &:disabled {
+        color: #7a7676;
+        border: 1px solid #7a7676;
+    }
 `
 
 export const WrapperProducts = styled.div`

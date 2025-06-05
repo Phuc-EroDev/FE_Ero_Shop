@@ -1,12 +1,12 @@
 import axios from "axios";
 import { axiosJWT } from "./UserService";
 
-export const getAllProduct = async (search) => {
+export const getAllProduct = async (search, limit) => {
     let res = {}
-    if (search.length > 0) {
-        res = await axios.get(`${import.meta.env.VITE_BACKEND_API}/product/get-all?filter=name&filter=${search}`);
+    if (search?.length > 0) {
+        res = await axios.get(`${import.meta.env.VITE_BACKEND_API}/product/get-all?filter=name&filter=${search}&limit=${limit}`);
     } else {
-        res = await axios.get(`${import.meta.env.VITE_BACKEND_API}/product/get-all`);
+        res = await axios.get(`${import.meta.env.VITE_BACKEND_API}/product/get-all?limit=${limit}`);
     }
     return res.data;
 }
