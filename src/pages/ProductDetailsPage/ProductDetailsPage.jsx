@@ -7,7 +7,7 @@ const ProductDetailsPage = () => {
   const { id } = useParams();
 
   return (
-    <div style={{ padding: '0 120px', backgroundColor: '#333131', height: '1000px' }}>
+    <div style={{ padding: '0 120px', margin: '0 auto', backgroundColor: '#333131', width: '100%', height: '100vh' }}>
       <h5 style={{ padding: '8px 0', fontSize: '16px' }}>
         <span style={{ color: ' #C68642', cursor: 'pointer', fontWeight: 'bold' }} onClick={() => navigate('/')}>
           Trang chủ
