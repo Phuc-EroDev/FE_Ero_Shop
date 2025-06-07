@@ -4,7 +4,7 @@ import styled from "styled-components";
 export const WrapperContainer = styled.div`
     background-color: #333131;
     width: 100%;
-    min-height: 100vh;
+    min-height: 100%;
     overflow-x: hidden;
 `;
 
@@ -14,7 +14,8 @@ export const WrapperProducts = styled.div`
     gap: 16px;
     margin-top: 0;
     width: 100%;
-    
+    min-height: calc(100vh - 184px);
+
     /* Responsive breakpoints */
     @media (min-width: 1400px) {
         grid-template-columns: repeat(5, 1fr); /* 5 card trên màn hình lớn */
@@ -41,7 +42,7 @@ export const WrapperNavbar = styled(Col)`
     background-color: #242424;
     padding: 20px;
     border-radius: 8px;
-    height: 100vh;
+    height: 100%;
     margin-top: 0;
     
     /* Responsive cho NavBar */
