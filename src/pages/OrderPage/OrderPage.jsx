@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Checkbox } from 'antd';
 import { DeleteOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons';
-import imag from '../../assets/images/slider2.png';
+import image from '../../assets/images/slider2.png';
 import ButtonComponent from '../../components/ButtonComponent/ButtonComponent';
 import {
   WrapperCountOrder,
@@ -27,8 +27,8 @@ const OrderPage = ({ count = 1 }) => {
 
   return (
     <div style={{ backgroundColor: '#1a1a1a', width: '100%', minHeight: '100vh', padding: '40px 120px' }}>
-      <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-        <h3 style={{ color: '#ffffff', fontSize: '28px', marginBottom: '30px', textAlign: 'center' }}>Giỏ hàng</h3>
+      <div>
+        <h3 style={{ color: '#ffffff', fontSize: '28px', marginBottom: '10px', textAlign: 'left' }}>Giỏ hàng</h3>
         <div style={{ display: 'flex', justifyContent: 'space-between', gap: '20px' }}>
           <WrapperLeft>
             <WrapperStyleHeader>
@@ -57,7 +57,7 @@ const OrderPage = ({ count = 1 }) => {
                 <div style={{ width: '40%', display: 'flex', alignItems: 'center', gap: '12px' }}>
                   <Checkbox onChange={onChange} />
                   <img
-                    src={imag}
+                    src={image}
                     alt="product"
                     style={{
                       width: '60px',

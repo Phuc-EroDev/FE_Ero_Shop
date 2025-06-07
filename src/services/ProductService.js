@@ -13,14 +13,21 @@ export const getAllProduct = async (search, limit) => {
     return res.data;
 }
 
+export const getDetailsProduct = async (id) => {
+    const res = await axios.get(`${import.meta.env.VITE_BACKEND_API}/product/get-details/${id}`);
+    return res.data;
+}
+
 export const getAllTypeProduct = async () => {
     const res = await axios.get(`${import.meta.env.VITE_BACKEND_API}/product/get-all-type`);
     return res.data;
 }
 
-export const getDetailsProduct = async (id) => {
-    const res = await axios.get(`${import.meta.env.VITE_BACKEND_API}/product/get-details/${id}`);
-    return res.data;
+export const getProductType = async (type) => {
+    if (type) {
+        const res = await axios.get(`${import.meta.env.VITE_BACKEND_API}/product/get-all?filter=type&filter=${type}`);
+        return res.data;
+    }
 }
 
 export const createProduct = async (data) => {
