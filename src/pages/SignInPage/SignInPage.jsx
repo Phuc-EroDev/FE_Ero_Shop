@@ -3,7 +3,7 @@ import { TextWelcomeShop, WrapperContainerLeft, WrapperContainerRight, WrapperTe
 import InputFormComponent from '../../components/InputFormComponent/InputFormComponent';
 import ButtonComponent from '../../components/ButtonComponent/ButtonComponent';
 import { EyeFilled, EyeInvisibleFilled } from '@ant-design/icons';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import * as UserService from '../../services/UserService';
 import { useMutationHook } from '../../hooks/useMutationHook';
 import Loading from '../../components/LoadingComponent/Loading';
@@ -17,6 +17,7 @@ const SignInPage = () => {
   const [password, setPassword] = useState('');
 
   const dispatch = useDispatch();
+  const location = useLocation();
 
   const disabled = !email || !password;
 
@@ -37,8 +38,13 @@ const SignInPage = () => {
   const { data, isPending, isSuccess } = mutation;
 
   useEffect(() => {
+    console.log(location);
     if (isSuccess) {
-      navigate('/');
+      if (location?.state) {
+        navigate(location.state);
+      } else {
+        navigate('/');
+      }
       localStorage.setItem('access_token', JSON.stringify(data?.access_token));
       if (data?.access_token) {
         const decoded = jwtDecode(data?.access_token);

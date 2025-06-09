@@ -1,4 +1,4 @@
-import React, { use, useState } from 'react';
+import React, { useState } from 'react';
 import { Col, Image, Rate, Row } from 'antd';
 import * as ProductService from '../../services/ProductService';
 
@@ -22,12 +22,17 @@ import ButtonComponent from '../ButtonComponent/ButtonComponent';
 import { PlusOutlined, MinusOutlined } from '@ant-design/icons';
 import { useQuery } from '@tanstack/react-query';
 import Loading from '../LoadingComponent/Loading';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { addOrderProduct } from '../../redux/slides/orderSlide';
 
 const ProductDetailsComponent = ({ idProduct }) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const dispatch = useDispatch();
   const user = useSelector((state) => state?.user);
 
-  const [numProduct, setNumProduct] = useState(0);
+  const [numProduct, setNumProduct] = useState(1);
 
   const fetchDetailsProduct = async (context) => {
     const id = context.queryKey && context.queryKey[1];
@@ -53,6 +58,24 @@ const ProductDetailsComponent = ({ idProduct }) => {
       setNumProduct((prev) => (prev > 0 ? prev - 1 : 0));
     } else if (action === 'increase') {
       setNumProduct((prev) => prev + 1);
+    }
+  };
+
+  const handleAddOrderProduct = () => {
+    if (!user?.id) {
+      navigate('/sign-in', { state: location?.pathname });
+    } else {
+      dispatch(
+        addOrderProduct({
+          orderItem: {
+            name: productDetails?.data?.name,
+            amount: numProduct,
+            image: productDetails?.data?.image,
+            price: productDetails?.data?.price,
+            product: productDetails?.data?._id,
+          },
+        }),
+      );
     }
   };
 
@@ -140,7 +163,7 @@ const ProductDetailsComponent = ({ idProduct }) => {
                 size={'small'}
                 onClick={() => handleChangeQuantity('decrease')}
               />
-              <WrapperInputNumber value={numProduct} defaultValue={0} size={'small'} onChange={onChange} />
+              <WrapperInputNumber value={numProduct} defaultValue={1} size={'small'} onChange={onChange} />
               <ButtonComponent
                 icon={<PlusOutlined />}
                 style={{ color: '#000' }}
@@ -151,6 +174,7 @@ const ProductDetailsComponent = ({ idProduct }) => {
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
             <ButtonComponent
+              onClick={handleAddOrderProduct}
               size={'large'}
               style={{
                 backgroundColor: '#C68642',

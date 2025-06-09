@@ -25,6 +25,7 @@ const HeaderComponent = ({ isHiddenSearch = false, isHiddenCard = false }) => {
   const navigate = useNavigate();
   const user = useSelector((state) => state?.user);
   const dispatch = useDispatch();
+  const order = useSelector((state) => state?.order);
   const handleNavigateLogin = () => {
     navigate('/sign-in');
   };
@@ -109,7 +110,7 @@ const HeaderComponent = ({ isHiddenSearch = false, isHiddenCard = false }) => {
               onClick={() => navigate('/order')}
               style={{ display: 'flex', gap: '10px', alignItems: 'center', cursor: 'pointer' }}
             >
-              <Badge count={5} size="small">
+              <Badge count={order?.orderItems?.length} size="small">
                 <ShoppingCartOutlined style={{ fontSize: '30px', color: '#FDF6EC' }} />
               </Badge>
               <WrapperTextHeaderSmall>Giỏ hàng</WrapperTextHeaderSmall>

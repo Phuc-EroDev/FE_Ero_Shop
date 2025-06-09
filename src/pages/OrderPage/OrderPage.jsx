@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { use, useState } from 'react';
 import { Checkbox } from 'antd';
 import { DeleteOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons';
 import image from '../../assets/images/slider2.png';
@@ -15,13 +15,31 @@ import {
   WrapperTotal,
 } from './style';
 import { WrapperInputNumber } from '../../components/ProductDetailsComponent/style';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  decreaseAmountOrderProduct,
+  increaseAmountOrderProduct,
+  removeOrderProduct,
+} from '../../redux/slides/orderSlide';
 
-const OrderPage = ({ count = 1 }) => {
+const OrderPage = () => {
+  const order = useSelector((state) => state?.order);
+  const dispatch = useDispatch();
   const onChange = (e) => {
     console.log(`checked = ${e.target.checked}`);
   };
 
-  const handleChangeCount = () => {};
+  const handleChangeCount = (idProduct, type) => {
+    if (type === 'decrease') {
+      dispatch(decreaseAmountOrderProduct(idProduct));
+    } else if (type === 'increase') {
+      dispatch(increaseAmountOrderProduct(idProduct));
+    }
+  };
+
+  const handleRemoveOrderProduct = (idProduct) => {
+    dispatch(removeOrderProduct(idProduct));
+  };
 
   const handleOnChangeCheckAll = (e) => {};
 
@@ -34,7 +52,7 @@ const OrderPage = ({ count = 1 }) => {
             <WrapperStyleHeader>
               <span style={{ display: 'flex', alignItems: 'center', width: '40%' }}>
                 <Checkbox onChange={handleOnChangeCheckAll} style={{ marginRight: '12px' }} />
-                <span>Tất cả ({count} sản phẩm)</span>
+                <span>Tất cả ({order?.orderItems?.length} sản phẩm)</span>
               </span>
               <div
                 style={{
@@ -53,58 +71,83 @@ const OrderPage = ({ count = 1 }) => {
             </WrapperStyleHeader>
 
             <WrapperListOrder>
-              <WrapperItemOrder>
-                <div style={{ width: '40%', display: 'flex', alignItems: 'center', gap: '12px' }}>
-                  <Checkbox onChange={onChange} />
-                  <img
-                    src={image}
-                    alt="product"
-                    style={{
-                      width: '60px',
-                      height: '60px',
-                      objectFit: 'cover',
-                      borderRadius: '6px',
-                    }}
-                  />
-                  <div style={{ color: '#ffffff', fontSize: '14px', fontWeight: '500' }}>Name sản phẩm</div>
-                </div>
+              {order?.orderItems?.map((orderItem) => {
+                console.log(orderItem);
+                return (
+                  <WrapperItemOrder>
+                    <div style={{ width: '40%', display: 'flex', alignItems: 'center', gap: '12px' }}>
+                      <Checkbox onChange={onChange} />
+                      <img
+                        src={orderItem?.image}
+                        alt="product"
+                        style={{
+                          width: '60px',
+                          height: '60px',
+                          objectFit: 'cover',
+                          borderRadius: '6px',
+                        }}
+                      />
+                      <div style={{ color: '#ffffff', fontSize: '14px', fontWeight: '500' }}>{orderItem?.name}</div>
+                    </div>
 
-                <div
-                  style={{
-                    display: 'flex',
-                    flex: 1,
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    paddingLeft: '20px',
-                  }}
-                >
-                  <div style={{ display: 'flex', flexDirection: 'column' }}>
-                    <span style={{ color: '#D29B63', fontSize: '16px', fontWeight: 'bold' }}>100.000đ</span>
-                    <WrapperPriceDiscount>230.000đ</WrapperPriceDiscount>
-                  </div>
-
-                  <WrapperCountOrder>
-                    <ButtonComponent icon={<MinusOutlined />} size={'small'} />
-                    <WrapperInputNumber
-                      value={10}
-                      defaultValue={10}
-                      size={'small'}
-                      onChange={onChange}
+                    <div
                       style={{
-                        backgroundColor: 'transparent',
-                        border: 'none',
-                        color: '#ffffff',
-                        textAlign: 'center',
+                        display: 'flex',
+                        flex: 1,
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        paddingLeft: '20px',
                       }}
-                    />
-                    <ButtonComponent icon={<PlusOutlined />} size={'small'} />
-                  </WrapperCountOrder>
+                    >
+                      <div style={{ display: 'flex', flexDirection: 'column' }}>
+                        <span style={{ color: '#D29B63', fontSize: '16px', fontWeight: 'bold' }}>
+                          {(orderItem?.price).toLocaleString()}đ
+                        </span>
+                        <WrapperPriceDiscount>
+                          {orderItem?.discount
+                            ? ((orderItem?.price * orderItem?.discount) / 100).toLocaleString()
+                            : (orderItem?.price * 0.8).toLocaleString()}
+                          đ
+                        </WrapperPriceDiscount>
+                      </div>
 
-                  <span style={{ color: '#D29B63', fontSize: '16px', fontWeight: 'bold' }}>1.000.000đ</span>
+                      <WrapperCountOrder>
+                        <ButtonComponent
+                          icon={<MinusOutlined />}
+                          size={'small'}
+                          onClick={() => handleChangeCount(orderItem?.product, 'decrease')}
+                        />
+                        <WrapperInputNumber
+                          value={orderItem?.amount}
+                          defaultValue={1}
+                          size={'small'}
+                          onChange={onChange}
+                          style={{
+                            backgroundColor: 'transparent',
+                            border: 'none',
+                            color: '#ffffff',
+                            textAlign: 'center',
+                          }}
+                        />
+                        <ButtonComponent
+                          icon={<PlusOutlined />}
+                          size={'small'}
+                          onClick={() => handleChangeCount(orderItem?.product, 'increase')}
+                        />
+                      </WrapperCountOrder>
 
-                  <DeleteOutlined style={{ cursor: 'pointer', color: '#ff4d4f', fontSize: '16px' }} />
-                </div>
-              </WrapperItemOrder>
+                      <span style={{ color: '#D29B63', fontSize: '16px', fontWeight: 'bold' }}>
+                        {(orderItem?.amount * orderItem?.price).toLocaleString()}đ
+                      </span>
+
+                      <DeleteOutlined
+                        style={{ cursor: 'pointer', color: '#ff4d4f', fontSize: '16px' }}
+                        onClick={() => handleRemoveOrderProduct(orderItem?.product)}
+                      />
+                    </div>
+                  </WrapperItemOrder>
+                );
+              })}
             </WrapperListOrder>
           </WrapperLeft>
 
