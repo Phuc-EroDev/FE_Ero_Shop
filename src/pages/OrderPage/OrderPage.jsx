@@ -1,7 +1,6 @@
-import React, { use, useState } from 'react';
+import React, { useState } from 'react';
 import { Checkbox } from 'antd';
 import { DeleteOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons';
-import image from '../../assets/images/slider2.png';
 import ButtonComponent from '../../components/ButtonComponent/ButtonComponent';
 import {
   WrapperCountOrder,
@@ -19,14 +18,21 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
   decreaseAmountOrderProduct,
   increaseAmountOrderProduct,
+  removeMultiOrderProduct,
   removeOrderProduct,
 } from '../../redux/slides/orderSlide';
 
 const OrderPage = () => {
+  const [listChecked, setListChecked] = useState([]);
   const order = useSelector((state) => state?.order);
   const dispatch = useDispatch();
   const onChange = (e) => {
-    console.log(`checked = ${e.target.checked}`);
+    if (listChecked?.includes(e.target.value)) {
+      const newListChecked = listChecked?.filter((item) => item !== e.target.value);
+      setListChecked(newListChecked);
+    } else {
+      setListChecked((prev) => [...prev, e.target.value]);
+    }
   };
 
   const handleChangeCount = (idProduct, type) => {
@@ -41,7 +47,23 @@ const OrderPage = () => {
     dispatch(removeOrderProduct(idProduct));
   };
 
-  const handleOnChangeCheckAll = (e) => {};
+  const handleOnChangeCheckAll = (e) => {
+    if (e.target.checked) {
+      const newListChecked = [];
+      order?.orderItems?.forEach((orderItem) => {
+        newListChecked.push(orderItem?.product);
+      });
+      setListChecked(newListChecked);
+    } else {
+      setListChecked([]);
+    }
+  };
+
+  const handleRemoveMultiOrderProduct = () => {
+    if (listChecked?.length > 0) {
+      dispatch(removeMultiOrderProduct(listChecked));
+    }
+  };
 
   return (
     <div style={{ backgroundColor: '#1a1a1a', width: '100%', minHeight: '100vh', padding: '40px 120px' }}>
@@ -51,7 +73,11 @@ const OrderPage = () => {
           <WrapperLeft>
             <WrapperStyleHeader>
               <span style={{ display: 'flex', alignItems: 'center', width: '40%' }}>
-                <Checkbox onChange={handleOnChangeCheckAll} style={{ marginRight: '12px' }} />
+                <Checkbox
+                  onChange={handleOnChangeCheckAll}
+                  checked={listChecked?.length === order?.orderItems?.length}
+                  style={{ marginRight: '12px' }}
+                />
                 <span>Tất cả ({order?.orderItems?.length} sản phẩm)</span>
               </span>
               <div
@@ -66,17 +92,23 @@ const OrderPage = () => {
                 <span>Đơn giá</span>
                 <span>Số lượng</span>
                 <span>Thành tiền</span>
-                <DeleteOutlined style={{ cursor: 'pointer', color: '#D29B63', fontSize: '16px' }} />
+                <DeleteOutlined
+                  style={{ cursor: 'pointer', color: '#D29B63', fontSize: '16px' }}
+                  onClick={handleRemoveMultiOrderProduct}
+                />
               </div>
             </WrapperStyleHeader>
 
             <WrapperListOrder>
               {order?.orderItems?.map((orderItem) => {
-                console.log(orderItem);
                 return (
                   <WrapperItemOrder>
                     <div style={{ width: '40%', display: 'flex', alignItems: 'center', gap: '12px' }}>
-                      <Checkbox onChange={onChange} />
+                      <Checkbox
+                        onChange={onChange}
+                        checked={listChecked?.includes(orderItem?.product)}
+                        value={orderItem?.product}
+                      />
                       <img
                         src={orderItem?.image}
                         alt="product"
@@ -120,8 +152,8 @@ const OrderPage = () => {
                         <WrapperInputNumber
                           value={orderItem?.amount}
                           defaultValue={1}
+                          readOnly
                           size={'small'}
-                          onChange={onChange}
                           style={{
                             backgroundColor: 'transparent',
                             border: 'none',
