@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Checkbox } from 'antd';
 import { DeleteOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons';
 import ButtonComponent from '../../components/ButtonComponent/ButtonComponent';
@@ -65,6 +65,38 @@ const OrderPage = () => {
     }
   };
 
+  const subtotalMemo = useMemo(() => {
+    const result = order?.orderItems?.reduce((subtotal, orderItem) => {
+      return subtotal + ((orderItem?.price * 100) / (100 - orderItem?.discount)) * orderItem?.amount;
+    }, 0);
+    return result;
+  }, [order?.orderItems]);
+
+  const subtotalAfterDiscountMemo = useMemo(() => {
+    const result = order?.orderItems?.reduce((subtotalAfterDiscount, orderItem) => {
+      return subtotalAfterDiscount + orderItem?.price * orderItem?.amount;
+    }, 0);
+    return result;
+  }, [order?.orderItems]);
+
+  const shippingFeeMemo = useMemo(() => {
+    const subtotal = subtotalMemo;
+    if (subtotal <= 10000) {
+      return 0;
+    } else if (subtotal > 10000 && subtotal <= 100000) {
+      return 10000;
+    } else if (subtotal > 100000) {
+      return 50000;
+    }
+    return 20000;
+  }, [subtotalMemo]);
+
+  const totalPriceMemo = useMemo(() => {
+    const tax = 0; // Giả sử không có thuế
+    const result = subtotalAfterDiscountMemo + shippingFeeMemo + tax;
+    return result;
+  }, [subtotalAfterDiscountMemo, shippingFeeMemo]);
+
   return (
     <div style={{ backgroundColor: '#1a1a1a', width: '100%', minHeight: '100vh', padding: '40px 120px' }}>
       <div>
@@ -101,8 +133,10 @@ const OrderPage = () => {
 
             <WrapperListOrder>
               {order?.orderItems?.map((orderItem) => {
+                console.log('orderItem', orderItem);
+                // subtotalAfterDiscount += Math.round(orderItem?.price * orderItem?.amount);
                 return (
-                  <WrapperItemOrder>
+                  <WrapperItemOrder key={orderItem?.product}>
                     <div style={{ width: '40%', display: 'flex', alignItems: 'center', gap: '12px' }}>
                       <Checkbox
                         onChange={onChange}
@@ -136,10 +170,7 @@ const OrderPage = () => {
                           {(orderItem?.price).toLocaleString()}đ
                         </span>
                         <WrapperPriceDiscount>
-                          {orderItem?.discount
-                            ? ((orderItem?.price * orderItem?.discount) / 100).toLocaleString()
-                            : (orderItem?.price * 0.8).toLocaleString()}
-                          đ
+                          {Math.round((orderItem?.price * 100) / (100 - orderItem?.discount)).toLocaleString()}đ
                         </WrapperPriceDiscount>
                       </div>
 
@@ -169,7 +200,7 @@ const OrderPage = () => {
                       </WrapperCountOrder>
 
                       <span style={{ color: '#D29B63', fontSize: '16px', fontWeight: 'bold' }}>
-                        {(orderItem?.amount * orderItem?.price).toLocaleString()}đ
+                        {Math.round(orderItem?.amount * orderItem?.price).toLocaleString()}đ
                       </span>
 
                       <DeleteOutlined
@@ -187,11 +218,11 @@ const OrderPage = () => {
             <WrapperInfo>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <span>Tạm tính:</span>
-                <span>0đ</span>
+                <span>{Math.round(subtotalMemo).toLocaleString() || 0}đ</span>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <span>Giảm giá:</span>
-                <span>0đ</span>
+                <span>{Math.round(subtotalMemo - subtotalAfterDiscountMemo).toLocaleString() || 0}đ</span>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <span>Thuế:</span>
@@ -199,14 +230,14 @@ const OrderPage = () => {
               </div>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <span>Phí giao hàng:</span>
-                <span>0đ</span>
+                <span>{Math.round(shippingFeeMemo).toLocaleString() || 0}đ</span>
               </div>
             </WrapperInfo>
 
             <WrapperTotal>
               <span>Tổng tiền:</span>
               <span style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
-                <span>100.000đ</span>
+                <span>{Math.round(totalPriceMemo).toLocaleString() || 0}đ</span>
                 <span>(Đã bao gồm VAT nếu có)</span>
               </span>
             </WrapperTotal>

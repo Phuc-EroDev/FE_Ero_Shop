@@ -1,13 +1,13 @@
-import { data } from "react-router-dom";
+import { data } from 'react-router-dom';
 
 export const isJsonString = (data) => {
-    try {
-        JSON.parse(data)
-    } catch (error) {
-        return false
-    }
-    return true
-}
+  try {
+    JSON.parse(data);
+  } catch (error) {
+    return false;
+  }
+  return true;
+};
 
 export const getBase64 = (file) =>
   new Promise((resolve, reject) => {
@@ -23,23 +23,23 @@ export const getItem = (label, key, icon, children, type) => {
     key,
     icon,
     children,
-    type
+    type,
   };
-}
+};
 
 export const renderOptions = (arr) => {
-  let results = []
+  let results = [];
   if (Array.isArray(arr)) {
     results = arr.map((options) => {
       return {
         value: options,
         label: options,
-      }
-    })
+      };
+    });
   }
   results.push({
     label: 'Thêm type',
     value: 'add_type',
-  })
-  return results
-}
+  });
+  return results;
+};
