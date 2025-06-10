@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Checkbox } from 'antd';
 import { DeleteOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons';
 import ButtonComponent from '../../components/ButtonComponent/ButtonComponent';
@@ -20,6 +20,7 @@ import {
   increaseAmountOrderProduct,
   removeMultiOrderProduct,
   removeOrderProduct,
+  selectedOrder,
 } from '../../redux/slides/orderSlide';
 
 const OrderPage = () => {
@@ -66,18 +67,18 @@ const OrderPage = () => {
   };
 
   const subtotalMemo = useMemo(() => {
-    const result = order?.orderItems?.reduce((subtotal, orderItem) => {
-      return subtotal + ((orderItem?.price * 100) / (100 - orderItem?.discount)) * orderItem?.amount;
+    const result = order?.orderItemsSelected?.reduce((subtotal, ItemSelected) => {
+      return subtotal + ((ItemSelected?.price * 100) / (100 - ItemSelected?.discount)) * ItemSelected?.amount;
     }, 0);
     return result;
-  }, [order?.orderItems]);
+  }, [order?.orderItemsSelected]);
 
   const subtotalAfterDiscountMemo = useMemo(() => {
-    const result = order?.orderItems?.reduce((subtotalAfterDiscount, orderItem) => {
-      return subtotalAfterDiscount + orderItem?.price * orderItem?.amount;
+    const result = order?.orderItemsSelected?.reduce((subtotalAfterDiscount, ItemSelected) => {
+      return subtotalAfterDiscount + ItemSelected?.price * ItemSelected?.amount;
     }, 0);
     return result;
-  }, [order?.orderItems]);
+  }, [order?.orderItemsSelected]);
 
   const shippingFeeMemo = useMemo(() => {
     const subtotal = subtotalMemo;
@@ -96,6 +97,10 @@ const OrderPage = () => {
     const result = subtotalAfterDiscountMemo + shippingFeeMemo + tax;
     return result;
   }, [subtotalAfterDiscountMemo, shippingFeeMemo]);
+
+  useEffect(() => {
+    dispatch(selectedOrder(listChecked));
+  }, [listChecked]);
 
   return (
     <div style={{ backgroundColor: '#1a1a1a', width: '100%', minHeight: '100vh', padding: '40px 120px' }}>
@@ -133,8 +138,6 @@ const OrderPage = () => {
 
             <WrapperListOrder>
               {order?.orderItems?.map((orderItem) => {
-                console.log('orderItem', orderItem);
-                // subtotalAfterDiscount += Math.round(orderItem?.price * orderItem?.amount);
                 return (
                   <WrapperItemOrder key={orderItem?.product}>
                     <div style={{ width: '40%', display: 'flex', alignItems: 'center', gap: '12px' }}>
