@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Checkbox } from 'antd';
+import { Button, Checkbox, Form } from 'antd';
 import { DeleteOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons';
 import ButtonComponent from '../../components/ButtonComponent/ButtonComponent';
 import {
@@ -22,10 +22,35 @@ import {
   removeOrderProduct,
   selectedOrder,
 } from '../../redux/slides/orderSlide';
+import { updateUser } from '../../redux/slides/userSlide';
+import ModalComponent from '../../components/ModalComponent/ModalComponent';
+import Loading from '../../components/LoadingComponent/Loading';
+import InputComponent from '../../components/InputComponent/InputComponent';
+import { useMutationHook } from '../../hooks/useMutationHook';
+import * as UserService from '../../services/UserService';
+import * as message from '../../components/MessageComponent/Message';
 
 const OrderPage = () => {
+  const [isOpenModalUpdateInfo, setIsOpenModalUpdateInfo] = useState(false);
   const [listChecked, setListChecked] = useState([]);
+  const [stateUserDetails, setStateUserDetails] = useState({
+    name: '',
+    phone: '',
+    address: '',
+    city: '',
+  });
+
+  const [form] = Form.useForm();
+
   const order = useSelector((state) => state?.order);
+  const user = useSelector((state) => state?.user);
+
+  const mutationUpdate = useMutationHook((data) => {
+    const { _id, access_token, ...rests } = data;
+    const newData = rests.stateUserDetails;
+    return UserService.updateUser(_id, newData, access_token);
+  });
+
   const dispatch = useDispatch();
   const onChange = (e) => {
     if (listChecked?.includes(e.target.value)) {
@@ -98,9 +123,67 @@ const OrderPage = () => {
     return result;
   }, [subtotalAfterDiscountMemo, shippingFeeMemo]);
 
+  const handleAddCard = () => {
+    if (!order?.orderItemsSelected?.length) {
+      message.error('Vui lòng chọn sản phẩm để thanh toán');
+    } else if (!user?.name || !user?.email || !user?.phone || !user?.address || !user?.city) {
+      setIsOpenModalUpdateInfo(true);
+    }
+  };
+
+  const handleCancelModalUpdateInfo = () => {
+    setStateUserDetails({
+      name: '',
+      phone: '',
+      address: '',
+      city: '',
+    });
+    setIsOpenModalUpdateInfo(false);
+  };
+
+  const handleUpdateInfoUser = () => {
+    const { name, phone, address, city } = stateUserDetails;
+    if (name && phone && address && city) {
+      mutationUpdate.mutate(
+        { _id: user?.id, stateUserDetails, access_token: user?.access_token },
+        {
+          onSuccess: () => {
+            dispatch(updateUser({ name, phone, address, city }));
+            setIsOpenModalUpdateInfo(false);
+          },
+        },
+      );
+    }
+  };
+
+  const { data, isPending } = mutationUpdate;
+
+  const handleOnChangeDetails = (e) => {
+    setStateUserDetails({
+      ...stateUserDetails,
+      [e.target.name]: e.target.value,
+    });
+  };
+
   useEffect(() => {
     dispatch(selectedOrder(listChecked));
   }, [listChecked]);
+
+  useEffect(() => {
+    if (isOpenModalUpdateInfo) {
+      setStateUserDetails({
+        ...stateUserDetails,
+        name: user?.name,
+        phone: user?.phone,
+        address: user?.address,
+        city: user?.city,
+      });
+    }
+  }, [isOpenModalUpdateInfo]);
+
+  useEffect(() => {
+    form.setFieldsValue(stateUserDetails);
+  }, [stateUserDetails, form]);
 
   return (
     <div style={{ backgroundColor: '#1a1a1a', width: '100%', minHeight: '100vh', padding: '40px 120px' }}>
@@ -246,6 +329,7 @@ const OrderPage = () => {
             </WrapperTotal>
 
             <ButtonComponent
+              onClick={() => handleAddCard()}
               size={40}
               style={{
                 backgroundColor: '#D29B63',
@@ -263,6 +347,50 @@ const OrderPage = () => {
           </WrapperRight>
         </div>
       </div>
+      <ModalComponent
+        forceRender
+        title="Cập nhật thông tin giao hàng"
+        open={isOpenModalUpdateInfo}
+        onCancel={handleCancelModalUpdateInfo}
+        onOk={handleUpdateInfoUser}
+      >
+        <Loading isPending={isPending}>
+          <Form
+            name="basic"
+            labelCol={{ span: 4 }}
+            wrapperCol={{ span: 20 }}
+            // onFinish={onUpdateUser}
+            autoComplete="on"
+            form={form}
+          >
+            <Form.Item label="Name" name="name" rules={[{ required: true, message: 'Please input your Name!' }]}>
+              <InputComponent value={stateUserDetails.name} onChange={handleOnChangeDetails} name="name" />
+            </Form.Item>
+
+            <Form.Item label="Phone" name="phone" rules={[{ required: true, message: 'Please input your Phone!' }]}>
+              <InputComponent value={stateUserDetails.phone} onChange={handleOnChangeDetails} name="phone" />
+            </Form.Item>
+
+            <Form.Item
+              label="Address"
+              name="address"
+              rules={[{ required: true, message: 'Please input your Address!' }]}
+            >
+              <InputComponent value={stateUserDetails.address} onChange={handleOnChangeDetails} name="address" />
+            </Form.Item>
+
+            <Form.Item label="City" name="city" rules={[{ required: true, message: 'Please input your City!' }]}>
+              <InputComponent value={stateUserDetails.city} onChange={handleOnChangeDetails} name="city" />
+            </Form.Item>
+
+            {/* <Form.Item label={null} wrapperCol={{ offset: 20, span: 16 }}>
+              <Button type="primary" htmlType="submit">
+                Apply
+              </Button>
+            </Form.Item> */}
+          </Form>
+        </Loading>
+      </ModalComponent>
     </div>
   );
 };
