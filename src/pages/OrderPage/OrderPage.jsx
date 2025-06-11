@@ -3,6 +3,7 @@ import { Button, Checkbox, Form } from 'antd';
 import { DeleteOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons';
 import ButtonComponent from '../../components/ButtonComponent/ButtonComponent';
 import {
+  WrapperAddressInfo,
   WrapperCountOrder,
   WrapperInfo,
   WrapperItemOrder,
@@ -29,6 +30,7 @@ import InputComponent from '../../components/InputComponent/InputComponent';
 import { useMutationHook } from '../../hooks/useMutationHook';
 import * as UserService from '../../services/UserService';
 import * as message from '../../components/MessageComponent/Message';
+import { useNavigate } from 'react-router-dom';
 
 const OrderPage = () => {
   const [isOpenModalUpdateInfo, setIsOpenModalUpdateInfo] = useState(false);
@@ -41,6 +43,7 @@ const OrderPage = () => {
   });
 
   const [form] = Form.useForm();
+  const navigate = useNavigate();
 
   const order = useSelector((state) => state?.order);
   const user = useSelector((state) => state?.user);
@@ -91,6 +94,10 @@ const OrderPage = () => {
     }
   };
 
+  const handleChangeAddress = () => {
+    setIsOpenModalUpdateInfo(true);
+  };
+
   const subtotalMemo = useMemo(() => {
     const result = order?.orderItemsSelected?.reduce((subtotal, ItemSelected) => {
       return subtotal + ((ItemSelected?.price * 100) / (100 - ItemSelected?.discount)) * ItemSelected?.amount;
@@ -128,6 +135,8 @@ const OrderPage = () => {
       message.error('Vui lòng chọn sản phẩm để thanh toán');
     } else if (!user?.name || !user?.email || !user?.phone || !user?.address || !user?.city) {
       setIsOpenModalUpdateInfo(true);
+    } else {
+      navigate('/payment');
     }
   };
 
@@ -302,6 +311,21 @@ const OrderPage = () => {
 
           <WrapperRight>
             <WrapperInfo>
+              <WrapperAddressInfo>
+                <div className="address-container">
+                  <span className="address-label">Địa chỉ giao hàng:</span>
+                  <span className="change-button" onClick={handleChangeAddress}>
+                    Thay đổi
+                  </span>
+                </div>
+                <div className="address-preview">
+                  {user?.address && user?.city
+                    ? `${user.address} - ${user.city}`
+                    : 'Nhấn "Thay đổi" để thêm địa chỉ giao hàng'}
+                </div>
+              </WrapperAddressInfo>
+            </WrapperInfo>
+            <WrapperInfo>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <span>Tạm tính:</span>
                 <span>{Math.round(subtotalMemo).toLocaleString() || 0}đ</span>
@@ -382,12 +406,6 @@ const OrderPage = () => {
             <Form.Item label="City" name="city" rules={[{ required: true, message: 'Please input your City!' }]}>
               <InputComponent value={stateUserDetails.city} onChange={handleOnChangeDetails} name="city" />
             </Form.Item>
-
-            {/* <Form.Item label={null} wrapperCol={{ offset: 20, span: 16 }}>
-              <Button type="primary" htmlType="submit">
-                Apply
-              </Button>
-            </Form.Item> */}
           </Form>
         </Loading>
       </ModalComponent>
