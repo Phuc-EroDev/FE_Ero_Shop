@@ -63,7 +63,7 @@ const HeaderComponent = ({ isHiddenSearch = false, isHiddenCard = false }) => {
     <div>
       <WrapperHeader style={{ justifyContent: isHiddenSearch && isHiddenCard ? 'space-between' : 'unset' }}>
         <Col span={5}>
-          <WrapperTextHeader>ERO-SHOP</WrapperTextHeader>
+          <WrapperTextHeader onClick={() => navigate('/')}>ERO-SHOP</WrapperTextHeader>
         </Col>
         {!isHiddenSearch && (
           <Col span={13}>
