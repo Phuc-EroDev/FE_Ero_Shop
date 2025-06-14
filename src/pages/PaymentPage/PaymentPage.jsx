@@ -1,10 +1,8 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Button, Checkbox, Form, Radio } from 'antd';
-import { DeleteOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons';
+import { Form, Radio } from 'antd';
 import ButtonComponent from '../../components/ButtonComponent/ButtonComponent';
 import {
   WrapperAddressInfo,
-  WrapperCountOrder,
   WrapperInfo,
   WrapperLeft,
   WrapperMethodSection,
@@ -20,6 +18,7 @@ import { useMutationHook } from '../../hooks/useMutationHook';
 import * as UserService from '../../services/UserService';
 import * as OrderService from '../../services/OrderService';
 import * as message from '../../components/MessageComponent/Message';
+import { useNavigate } from 'react-router-dom';
 
 const PaymentPage = () => {
   const [isOpenModalUpdateInfo, setIsOpenModalUpdateInfo] = useState(false);
@@ -33,6 +32,7 @@ const PaymentPage = () => {
     city: '',
   });
 
+  const navigate = useNavigate();
   const [form] = Form.useForm();
 
   const order = useSelector((state) => state?.order);
@@ -176,7 +176,10 @@ const PaymentPage = () => {
   useEffect(() => {
     if (isSuccessAddOrder && dataAddOrder.status === 'OK') {
       message.success('Đặt hàng thành công');
-      handleCloseDrawer();
+      alert('Đặt hàng thành công');
+      navigate('/order-success', {
+        state: { shipping, payment, orders: order?.orderItemsSelected, totalPrice: totalPriceMemo },
+      });
     } else if (isErrorAddOrder) {
       message.error('Đặt hàng thất bại');
     }

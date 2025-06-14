@@ -1,10 +1,72 @@
 import styled from 'styled-components';
 
-export const WrapperLeft = styled.div`
-  width: 75%;
+export const WrapperStyleHeader = styled.div`
+  background-color: #2a2a2a;
+  padding: 16px 20px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+  span {
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 500;
+  }
+`;
+
+export const WrapperContainer = styled.div`
+  width: 100%;
   background-color: #2a2a2a;
   border-radius: 8px;
+  margin: 0 auto;
   padding: 20px;
+`;
+
+export const WrapperListOrder = styled.div`
+  margin-top: 16px;
+`;
+
+export const WrapperItemOrder = styled.div`
+  width: 750px;
+  display: flex;
+  align-items: center;
+  padding: 20px;
+  background-color: #333333;
+  margin-bottom: 12px;
+  border-radius: 8px;
+  border: 1px solid #444444;
+
+  &:hover {
+    background-color: #3a3a3a;
+  }
+`;
+
+export const WrapperPriceDiscount = styled.span`
+  color: #888888;
+  font-size: 12px;
+  text-decoration: line-through;
+  margin-left: 8px;
+`;
+
+export const WrapperCountOrder = styled.div`
+  display: flex;
+  align-items: center;
+  width: 100px;
+  border-radius: 6px;
+  border: 1px solid #555555;
+  background-color: #444444;
+  margin: 0 16px;
+
+  button {
+    background-color: transparent !important;
+    border: none !important;
+    color: #d29b63 !important;
+
+    &:hover {
+      color: #ffffff !important;
+      background-color: #d29b63 !important;
+    }
+  }
 `;
 
 export const WrapperRight = styled.div`
@@ -194,4 +256,11 @@ export const WrapperMethodSection = styled.div`
       }
     }
   }
+`;
+
+export const WrapperItemInfo = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 `;
