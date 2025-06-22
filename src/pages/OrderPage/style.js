@@ -14,6 +14,92 @@ export const WrapperStyleHeader = styled.div`
   }
 `;
 
+export const WrapperStyleHeaderShipping = styled.div`
+  background-color: #2a2a2a;
+  border-radius: 8px;
+  border: 1px solid #404040;
+  padding: 20px;
+  margin-bottom: 20px;
+
+  /* Custom Antd Steps */
+  .ant-steps {
+    .ant-steps-item {
+      .ant-steps-item-container {
+        .ant-steps-item-icon {
+          background-color: #666666;
+          border-color: #666666;
+          width: 32px;
+          height: 32px;
+
+          .ant-steps-icon {
+            color: #ffffff;
+            font-size: 14px;
+            font-weight: 600;
+          }
+        }
+
+        .ant-steps-item-content {
+          .ant-steps-item-title {
+            color: #cccccc !important;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 4px;
+
+            &::after {
+              background-color: #404040;
+            }
+          }
+
+          .ant-steps-item-description {
+            color: #888888;
+            font-size: 12px;
+          }
+        }
+      }
+
+      /* Active state */
+      &.ant-steps-item-process {
+        .ant-steps-item-icon {
+          background-color: #1890ff !important;
+          border-color: #1890ff !important;
+        }
+
+        .ant-steps-item-title {
+          color: #1890ff !important;
+        }
+      }
+
+      /* Finished state */
+      &.ant-steps-item-finish {
+        .ant-steps-item-icon {
+          background-color: #52c41a !important;
+          border-color: #52c41a !important;
+        }
+
+        .ant-steps-item-title {
+          color: #52c41a !important;
+        }
+      }
+
+      /* Connector line */
+      &:not(:last-child) {
+        .ant-steps-item-container::after {
+          background-color: #404040 !important;
+          height: 1px;
+          top: 16px;
+        }
+      }
+
+      /* Active connector */
+      &.ant-steps-item-finish:not(:last-child) {
+        .ant-steps-item-container::after {
+          background-color: #52c41a !important;
+        }
+      }
+    }
+  }
+`;
+
 export const WrapperLeft = styled.div`
   width: 75%;
   background-color: #2a2a2a;

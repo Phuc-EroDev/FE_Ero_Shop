@@ -19,6 +19,7 @@ import * as UserService from '../../services/UserService';
 import * as OrderService from '../../services/OrderService';
 import * as message from '../../components/MessageComponent/Message';
 import { useNavigate } from 'react-router-dom';
+import { removeMultiOrderProduct } from '../../redux/slides/orderSlide';
 
 const PaymentPage = () => {
   const [isOpenModalUpdateInfo, setIsOpenModalUpdateInfo] = useState(false);
@@ -175,8 +176,12 @@ const PaymentPage = () => {
 
   useEffect(() => {
     if (isSuccessAddOrder && dataAddOrder.status === 'OK') {
+      const arrOrdered = [];
+      order?.orderItemsSelected?.forEach((element) => {
+        arrOrdered.push(element.product);
+      });
+      dispatch(removeMultiOrderProduct(arrOrdered));
       message.success('Đặt hàng thành công');
-      alert('Đặt hàng thành công');
       navigate('/order-success', {
         state: { shipping, payment, orders: order?.orderItemsSelected, totalPrice: totalPriceMemo },
       });

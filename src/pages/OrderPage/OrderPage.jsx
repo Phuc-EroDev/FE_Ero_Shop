@@ -12,6 +12,7 @@ import {
   WrapperPriceDiscount,
   WrapperRight,
   WrapperStyleHeader,
+  WrapperStyleHeaderShipping,
   WrapperTotal,
 } from './style';
 import { WrapperInputNumber } from '../../components/ProductDetailsComponent/style';
@@ -31,6 +32,7 @@ import { useMutationHook } from '../../hooks/useMutationHook';
 import * as UserService from '../../services/UserService';
 import * as message from '../../components/MessageComponent/Message';
 import { useNavigate } from 'react-router-dom';
+import StepsComponent from '../../components/StepsComponent/StepsComponent';
 
 const OrderPage = () => {
   const [isOpenModalUpdateInfo, setIsOpenModalUpdateInfo] = useState(false);
@@ -47,6 +49,21 @@ const OrderPage = () => {
 
   const order = useSelector((state) => state?.order);
   const user = useSelector((state) => state?.user);
+
+  const itemShipping = [
+    {
+      title: 'free shipping',
+      description: 'dưới 10.000đ',
+    },
+    {
+      title: '10.000đ shipping fee',
+      description: 'Từ 10.000đ --> 100.000đ',
+    },
+    {
+      title: '100.000đ shipping fee',
+      description: 'Từ 100.000đ trở lên',
+    },
+  ];
 
   const mutationUpdate = useMutationHook((data) => {
     const { _id, access_token, ...rests } = data;
@@ -200,6 +217,12 @@ const OrderPage = () => {
         <h3 style={{ color: '#ffffff', fontSize: '28px', marginBottom: '10px', textAlign: 'left' }}>Giỏ hàng</h3>
         <div style={{ display: 'flex', justifyContent: 'space-between', gap: '20px' }}>
           <WrapperLeft>
+            <WrapperStyleHeaderShipping>
+              <StepsComponent
+                items={itemShipping}
+                current={shippingFeeMemo === 0 ? 0 : shippingFeeMemo === 10000 ? 1 : 2}
+              />
+            </WrapperStyleHeaderShipping>
             <WrapperStyleHeader>
               <span style={{ display: 'flex', alignItems: 'center', width: '40%' }}>
                 <Checkbox
