@@ -1,5 +1,5 @@
-import { Card } from "antd";
-import styled from "styled-components";
+import { Card } from 'antd';
+import styled from 'styled-components';
 
 export const WrapperCardStyle = styled(Card)`
     width: 200px;
@@ -9,42 +9,44 @@ export const WrapperCardStyle = styled(Card)`
       height: 200px;
     },
     position: relative;
+    cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
+    opacity: ${(props) => (props.disabled ? '0.4' : '1')};
 
     .ant-card-body {
         padding: 10px;
         background-color: #dfdedd;
     }
-`
+`;
 
 export const StyleNameProduct = styled.div`
-    font-weight: 600;
-    font-size: 12px;
-    line-height: 16px;
-    color: #171414;
-`
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 16px;
+  color: #171414;
+`;
 
 export const WrapperReportText = styled.div`
-    font-size: 10px;
-    color: #171414;
-    display: flex;
-    align-items: center;
-    margin-top: 6px;
-`
+  font-size: 10px;
+  color: #171414;
+  display: flex;
+  align-items: center;
+  margin-top: 6px;
+`;
 
 export const WrapperPriceText = styled.div`
-    color: #e53030;
-    font-size: 16px;
-    font-weight: 500;
-`
+  color: #e53030;
+  font-size: 16px;
+  font-weight: 500;
+`;
 
 export const WrapperDiscountText = styled.span`
-    color: #f54141;
-    font-size: 12px;
-    font-weight: 500;
-`
+  color: #f54141;
+  font-size: 12px;
+  font-weight: 500;
+`;
 
 export const WrapperStyleTextSell = styled.span`
-    font-size: 15px;
-    line-height: 24px;
-    color: #959392;
-`
+  font-size: 15px;
+  line-height: 24px;
+  color: #959392;
+`;

@@ -97,7 +97,6 @@ const PaymentPage = () => {
       user?.city &&
       user?.phone &&
       subtotalMemo &&
-      shippingFeeMemo &&
       totalPriceMemo &&
       payment &&
       user?.id

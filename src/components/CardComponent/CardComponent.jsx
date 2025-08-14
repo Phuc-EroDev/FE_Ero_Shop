@@ -20,7 +20,12 @@ const CardComponent = (props) => {
   };
 
   return (
-    <WrapperCardStyle hoverable cover={<img alt="example" src={image} onClick={() => handleDetailsProduct(id)} />}>
+    <WrapperCardStyle
+      hoverable
+      cover={<img alt="example" src={image} />}
+      onClick={() => countInStock !== 0 && handleDetailsProduct(id)}
+      disabled={countInStock === 0}
+    >
       <img src={labelCard} style={{ width: '25px', height: '18px', position: 'absolute', top: '5px', left: '-4px' }} />
       <StyleNameProduct>{name}</StyleNameProduct>
       <WrapperReportText>

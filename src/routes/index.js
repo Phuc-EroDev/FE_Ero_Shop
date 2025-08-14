@@ -27,6 +27,11 @@ export const routes = [
     page: OrderPage,
     isShowHeader: true,
   },
+  // {
+  //   path: '/my-order',
+  //   page: MyOrderPage,
+  //   isShowHeader: true,
+  // },
   {
     path: '/payment',
     page: PaymentPage,
