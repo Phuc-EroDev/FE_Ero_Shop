@@ -10,6 +10,7 @@ import ProfilePage from '../pages/ProfilePage/ProfilePage';
 import AdminPage from '../pages/AdminPage/AdminPage';
 import PaymentPage from '../pages/PaymentPage/PaymentPage';
 import OrderSuccessPage from '../pages/OrderSuccessPage/OrderSuccessPage';
+import MyOrderPage from '../pages/MyOrderPage/MyOrderPage';
 
 export const routes = [
   {
@@ -27,11 +28,11 @@ export const routes = [
     page: OrderPage,
     isShowHeader: true,
   },
-  // {
-  //   path: '/my-order',
-  //   page: MyOrderPage,
-  //   isShowHeader: true,
-  // },
+  {
+    path: '/my-order',
+    page: MyOrderPage,
+    isShowHeader: true,
+  },
   {
     path: '/payment',
     page: PaymentPage,
