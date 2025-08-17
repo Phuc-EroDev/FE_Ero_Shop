@@ -5,11 +5,13 @@ import Loading from '../../components/LoadingComponent/Loading';
 import { useSelector } from 'react-redux';
 import { orderConstants } from '../../constant';
 import { WrapperContainer, WrapperItemInfo, WrapperItemOrder, WrapperMethodSection } from './style';
+import { useLocation } from 'react-router-dom';
 
 const MyOrderPage = () => {
-  const user = useSelector((state) => state.user);
+  const location = useLocation();
+  const { state } = location;
   const fetchMyOrder = async () => {
-    const res = await OrderService.getOrderByUserId(user?.id, user?.access_token);
+    const res = await OrderService.getOrderByUserId(state?.id, state?.access_token);
     return res.data;
   };
   const queryOrder = useQuery({
@@ -17,7 +19,6 @@ const MyOrderPage = () => {
     queryFn: fetchMyOrder,
   });
   const { isLoading: isLoadingOrders, data: orders } = queryOrder;
-  console.log('orders', orders);
 
   return (
     <Loading isPending={isLoadingOrders}>

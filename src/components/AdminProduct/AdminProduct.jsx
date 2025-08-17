@@ -15,16 +15,7 @@ import { useSelector } from 'react-redux';
 import ModalComponent from '../ModalComponent/ModalComponent';
 
 const AdminProduct = () => {
-  const searchInput = useRef(null);
-
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [typeSelected, setTypeSelected] = useState('');
-  const [isModalOpenDelete, setIsModalOpenDelete] = useState(false);
-  const [isModalOpenDeleteMany, setIsModalOpenDeleteMany] = useState(false);
-  const [idsDelete, setIdsDelete] = useState([]);
-  const [rowSelected, setRowSelected] = useState('');
-  const [isOpenDrawer, setIsOpenDrawer] = useState(false);
-  const [stateProduct, setStateProduct] = useState({
+  const initial = () => ({
     name: '',
     type: '',
     newType: '',
@@ -35,16 +26,18 @@ const AdminProduct = () => {
     description: '',
     image: '',
   });
-  const [stateProductDetails, setStateProductDetails] = useState({
-    name: '',
-    type: '',
-    countInStock: '',
-    price: '',
-    rating: '',
-    discount: '',
-    description: '',
-    image: '',
-  });
+
+  const searchInput = useRef(null);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [typeSelected, setTypeSelected] = useState('');
+  const [isModalOpenDelete, setIsModalOpenDelete] = useState(false);
+  const [isModalOpenDeleteMany, setIsModalOpenDeleteMany] = useState(false);
+  const [idsDelete, setIdsDelete] = useState([]);
+  const [rowSelected, setRowSelected] = useState('');
+  const [isOpenDrawer, setIsOpenDrawer] = useState(false);
+  const [stateProduct, setStateProduct] = useState(initial());
+  const [stateProductDetails, setStateProductDetails] = useState(initial());
 
   const user = useSelector((state) => state?.user);
 
@@ -423,8 +416,12 @@ const AdminProduct = () => {
   };
 
   useEffect(() => {
-    form.setFieldsValue(stateProductDetails);
-  }, [stateProductDetails]);
+    if (!isModalOpen) {
+      form.setFieldsValue(stateProductDetails);
+    } else {
+      form.setFieldsValue(initial());
+    }
+  }, [stateProductDetails, isModalOpen]);
 
   useEffect(() => {
     if (rowSelected?._id) {

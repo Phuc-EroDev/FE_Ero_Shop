@@ -60,7 +60,12 @@ const HeaderComponent = ({ isHiddenSearch = false, isHiddenCard = false }) => {
         break;
 
       case 'my-order':
-        navigate('/my-order');
+        navigate('/my-order', {
+          state: {
+            id: user?.id,
+            access_token: user?.access_token,
+          },
+        });
         break;
 
       case 'logout':
