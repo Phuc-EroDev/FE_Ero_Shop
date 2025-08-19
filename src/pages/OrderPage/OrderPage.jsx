@@ -81,10 +81,10 @@ const OrderPage = () => {
     }
   };
 
-  const handleChangeCount = (idProduct, type) => {
-    if (type === 'decrease') {
+  const handleChangeCount = (idProduct, type, change) => {
+    if (type === 'decrease' && change) {
       dispatch(decreaseAmountOrderProduct(idProduct));
-    } else if (type === 'increase') {
+    } else if (type === 'increase' && change) {
       dispatch(increaseAmountOrderProduct(idProduct));
     }
   };
@@ -296,11 +296,13 @@ const OrderPage = () => {
                         <ButtonComponent
                           icon={<MinusOutlined />}
                           size={'small'}
-                          onClick={() => handleChangeCount(orderItem?.product, 'decrease')}
+                          onClick={() => handleChangeCount(orderItem?.product, 'decrease', orderItem?.amount > 1)}
                         />
                         <WrapperInputNumber
                           value={orderItem?.amount}
                           defaultValue={1}
+                          min={1}
+                          max={orderItem?.countInStock}
                           readOnly
                           size={'small'}
                           style={{
@@ -313,7 +315,13 @@ const OrderPage = () => {
                         <ButtonComponent
                           icon={<PlusOutlined />}
                           size={'small'}
-                          onClick={() => handleChangeCount(orderItem?.product, 'increase')}
+                          onClick={() =>
+                            handleChangeCount(
+                              orderItem?.product,
+                              'increase',
+                              orderItem?.amount < orderItem?.countInStock,
+                            )
+                          }
                         />
                       </WrapperCountOrder>
 
