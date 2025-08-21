@@ -195,3 +195,32 @@ export const WrapperMethodSection = styled.div`
     }
   }
 `;
+
+export const PayPalContainer = styled.div`
+  background-color: #2a2a2a;
+  padding: 15px;
+  border-radius: 8px;
+  border: 1px solid #444;
+  overflow: hidden;
+`;
+
+export const PayPalFallback = styled.div`
+  margin-top: 10px;
+  text-align: center;
+
+  span {
+    color: #999;
+    font-size: 12px;
+
+    &.link {
+      color: #d29b63;
+      cursor: pointer;
+      margin-left: 5px;
+      text-decoration: underline;
+
+      &:hover {
+        color: #e6b574;
+      }
+    }
+  }
+`;
