@@ -1,7 +1,10 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Form, Radio } from 'antd';
 import ButtonComponent from '../../components/ButtonComponent/ButtonComponent';
+import { PayPalScriptProvider, PayPalButtons } from '@paypal/react-paypal-js';
 import {
+  PayPalContainer,
+  PayPalFallback,
   WrapperAddressInfo,
   WrapperInfo,
   WrapperLeft,
@@ -17,15 +20,17 @@ import InputComponent from '../../components/InputComponent/InputComponent';
 import { useMutationHook } from '../../hooks/useMutationHook';
 import * as UserService from '../../services/UserService';
 import * as OrderService from '../../services/OrderService';
+import * as PaymentService from '../../services/PaymentService';
 import * as message from '../../components/MessageComponent/Message';
 import { useNavigate } from 'react-router-dom';
 import { removeMultiOrderProduct } from '../../redux/slides/orderSlide';
 
 const PaymentPage = () => {
+  const [paypalClientId, setPaypalClientId] = useState('');
   const [isOpenModalUpdateInfo, setIsOpenModalUpdateInfo] = useState(false);
   const [listChecked, setListChecked] = useState([]);
-  const [payment, setPayment] = useState('cod'); // Default payment method
-  const [shipping, setShipping] = useState('fast'); // Default shipping method
+  const [payment, setPayment] = useState('cod');
+  const [shipping, setShipping] = useState('fast');
   const [stateUserDetails, setStateUserDetails] = useState({
     name: '',
     phone: '',
@@ -38,6 +43,14 @@ const PaymentPage = () => {
 
   const order = useSelector((state) => state?.order);
   const user = useSelector((state) => state?.user);
+
+  // PayPal config
+  const initialOptions = {
+    clientId: paypalClientId || 'AWebD9EGY2bLQRWxKUSPyyyWX8huQVzszGupRr3sMzsB3TllON1GYKpU_ok1Uu7dXQMrJTNKiIG9V9UP',
+    currency: 'USD',
+    intent: 'capture',
+    debug: false,
+  };
 
   const mutationUpdate = useMutationHook((data) => {
     const { _id, access_token, ...rests } = data;
@@ -83,12 +96,12 @@ const PaymentPage = () => {
   }, [subtotalMemo]);
 
   const totalPriceMemo = useMemo(() => {
-    const tax = 0; // Giả sử không có thuế
+    const tax = 0;
     const result = subtotalAfterDiscountMemo + shippingFeeMemo + tax;
     return result;
   }, [subtotalAfterDiscountMemo, shippingFeeMemo]);
 
-  const handleAddOrder = () => {
+  const handleAddOrder = (isPaid = false, paidAt = null) => {
     if (
       user?.access_token &&
       order?.orderItemsSelected &&
@@ -113,8 +126,20 @@ const PaymentPage = () => {
         shippingPrice: shippingFeeMemo,
         totalPrice: totalPriceMemo,
         user: user?.id,
+        isPaid: isPaid,
+        paidAt: paidAt,
       });
     }
+  };
+
+  const handlePayPalSuccess = (details, data) => {
+    handleAddOrder(true, details?.update_time);
+    return fetch('/paypal-transaction-complete', {
+      method: 'post',
+      body: JSON.stringify({
+        orderID: data.orderID,
+      }),
+    });
   };
 
   const handleCancelModalUpdateInfo = () => {
@@ -156,6 +181,24 @@ const PaymentPage = () => {
       [e.target.name]: e.target.value,
     });
   };
+
+  useEffect(() => {
+    const getPayPalConfig = async () => {
+      try {
+        const response = await PaymentService.getConfig();
+        const clientId = response?.data;
+        if (clientId && clientId.trim()) {
+          setPaypalClientId(clientId);
+        } else {
+          setPaypalClientId('AWebD9EGY2bLQRWxKUSPyyyWX8huQVzszGupRr3sMzsB3TllON1GYKpU_ok1Uu7dXQMrJTNKiIG9V9UP');
+        }
+      } catch (error) {
+        console.error('Error loading PayPal config:', error);
+      }
+    };
+
+    getPayPalConfig();
+  }, []);
 
   useEffect(() => {
     if (isOpenModalUpdateInfo) {
@@ -221,6 +264,7 @@ const PaymentPage = () => {
                 <div className="method-container">
                   <Radio.Group defaultValue="cod" value={payment} onChange={(e) => setPayment(e.target.value)}>
                     <Radio value="cod">Thanh toán tiền mặt khi nhận hàng</Radio>
+                    <Radio value="paypal">Thanh toán qua PayPal</Radio>
                   </Radio.Group>
                 </div>
               </WrapperMethodSection>
@@ -269,22 +313,70 @@ const PaymentPage = () => {
                 </span>
               </WrapperTotal>
 
-              <ButtonComponent
-                onClick={() => handleAddOrder()}
-                size={40}
-                style={{
-                  backgroundColor: '#D29B63',
-                  height: '48px',
-                  width: '100%',
-                  border: 'none',
-                  borderRadius: '8px',
-                  color: '#ffffff',
-                  fontSize: '16px',
-                  fontWeight: '600',
-                  transition: 'all 0.3s ease',
-                }}
-                textbutton={'Đặt hàng'}
-              />
+              {payment === 'paypal' ? (
+                <PayPalContainer style={{ colorScheme: 'none' }}>
+                  <PayPalScriptProvider options={initialOptions} deferLoading={false}>
+                    <PayPalButtons
+                      style={{
+                        layout: 'vertical',
+                        color: 'gold',
+                        shape: 'pill',
+                        label: 'paypal',
+                        height: 48,
+                      }}
+                      createOrder={(data, actions) => {
+                        return actions.order.create({
+                          purchase_units: [
+                            {
+                              amount: {
+                                currency_code: 'USD',
+                                value: (totalPriceMemo / 25000).toFixed(2),
+                              },
+                            },
+                          ],
+                        });
+                      }}
+                      onApprove={(data, actions) => {
+                        return actions.order.capture().then((details) => {
+                          handlePayPalSuccess(details, data);
+                        });
+                      }}
+                      onError={(err) => {
+                        console.error('PayPal error:', err);
+                        setPayment('cod');
+                      }}
+                      onCancel={(data) => {
+                        console.log('PayPal cancelled:', data);
+                      }}
+                    />
+                  </PayPalScriptProvider>
+                  {/* Dùng trong component */}
+                  {/* Backup button nếu PayPal không load */}
+                  <PayPalFallback>
+                    <span>Không thể tải PayPal?</span>
+                    <span className="link" onClick={() => setPayment('cod')}>
+                      Chuyển về COD
+                    </span>
+                  </PayPalFallback>
+                </PayPalContainer>
+              ) : (
+                <ButtonComponent
+                  onClick={() => handleAddOrder()}
+                  size={40}
+                  style={{
+                    backgroundColor: '#D29B63',
+                    height: '48px',
+                    width: '100%',
+                    border: 'none',
+                    borderRadius: '8px',
+                    color: '#ffffff',
+                    fontSize: '16px',
+                    fontWeight: '600',
+                    transition: 'all 0.3s ease',
+                  }}
+                  textbutton={'Đặt hàng'}
+                />
+              )}
             </WrapperRight>
           </div>
         </div>

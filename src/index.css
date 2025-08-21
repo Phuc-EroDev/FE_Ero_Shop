@@ -26,3 +26,7 @@ body {
 html {
   font-size: 62.5%; 
 }
+
+.component-frame {
+  background: #2a2a2a;
+}
