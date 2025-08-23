@@ -126,6 +126,7 @@ const PaymentPage = () => {
         shippingPrice: shippingFeeMemo,
         totalPrice: totalPriceMemo,
         user: user?.id,
+        email: user?.email,
         isPaid: isPaid,
         paidAt: paidAt,
       });

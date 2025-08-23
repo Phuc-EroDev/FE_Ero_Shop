@@ -24,7 +24,7 @@ export const orderReducer = createSlice({
       const { orderItem } = action?.payload;
       const itemOrder = state?.orderItems?.find((item) => item?.product === orderItem?.product);
       if (itemOrder) {
-        itemOrder.amount += orderItem?.amount;
+        itemOrder.amount = orderItem?.amount;
       } else {
         state.orderItems.push(orderItem);
       }

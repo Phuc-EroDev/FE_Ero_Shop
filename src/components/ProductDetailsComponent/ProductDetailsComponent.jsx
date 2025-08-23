@@ -33,6 +33,7 @@ const ProductDetailsComponent = ({ idProduct }) => {
   const user = useSelector((state) => state?.user);
 
   const [numProduct, setNumProduct] = useState(1);
+  const [amountMessage, setAmountMessage] = useState('');
 
   const fetchDetailsProduct = async (context) => {
     const id = context.queryKey && context.queryKey[1];
@@ -48,22 +49,30 @@ const ProductDetailsComponent = ({ idProduct }) => {
     queryFn: fetchDetailsProduct,
     enabled: !!idProduct,
   });
+  console.log('productDetails', productDetails);
 
   const onChange = (value) => {
     setNumProduct(Number(value));
   };
 
-  const handleChangeQuantity = (action) => {
-    if (action === 'decrease') {
+  const handleChangeQuantity = (action, isChange) => {
+    if (action === 'decrease' && isChange) {
       setNumProduct((prev) => (prev > 0 ? prev - 1 : 0));
-    } else if (action === 'increase') {
+      setAmountMessage('');
+    } else if (action === 'increase' && isChange) {
       setNumProduct((prev) => prev + 1);
+    } else if (action === 'increase' && !isChange) {
+      setAmountMessage(
+        `Số lượng sản phẩm này không đủ, chỉ có thể chọn tối đa ${productDetails?.data?.countInStock} sản phẩm`,
+      );
     }
   };
 
   const handleAddOrderProduct = () => {
     if (!user?.id) {
       navigate('/sign-in', { state: location?.pathname });
+    } else if (!productDetails?.data?.countInStock) {
+      setAmountMessage('Sản phẩm này đã hết hàng');
     } else {
       dispatch(
         addOrderProduct({
@@ -78,6 +87,7 @@ const ProductDetailsComponent = ({ idProduct }) => {
           },
         }),
       );
+      navigate('/order');
     }
   };
 
@@ -163,14 +173,14 @@ const ProductDetailsComponent = ({ idProduct }) => {
                 icon={<MinusOutlined />}
                 style={{ color: '#000' }}
                 size={'small'}
-                onClick={() => handleChangeQuantity('decrease')}
+                onClick={() => handleChangeQuantity('decrease', numProduct > 1)}
               />
-              <WrapperInputNumber value={numProduct} defaultValue={1} size={'small'} onChange={onChange} />
+              <WrapperInputNumber value={numProduct} defaultValue={1} min={1} size={'small'} onChange={onChange} />
               <ButtonComponent
                 icon={<PlusOutlined />}
                 style={{ color: '#000' }}
                 size={'small'}
-                onClick={() => handleChangeQuantity('increase')}
+                onClick={() => handleChangeQuantity('increase', numProduct < productDetails?.data?.countInStock)}
               />
             </WrapperQualityProduct>
           </div>
@@ -199,6 +209,7 @@ const ProductDetailsComponent = ({ idProduct }) => {
               textbutton={'Mua Trả sau'}
             />
           </div>
+          {!!amountMessage && <div style={{ color: 'red' }}>{amountMessage}</div>}
         </Col>
       </Row>
     </Loading>
