@@ -1,3 +1,4 @@
+import { version } from 'react';
 import { data } from 'react-router-dom';
 
 export const isJsonString = (data) => {
@@ -42,4 +43,31 @@ export const renderOptions = (arr) => {
     value: 'add_type',
   });
   return results;
+};
+
+export const initFacebookSDK = () => {
+  if (window.FB) {
+    window.FB.XFBML.parse();
+  }
+  let locale = 'vi_VN';
+  window.fbAsyncInit = function () {
+    window.FB.init({
+      appId: import.meta.env.VITE_FB_ID,
+      cookie: true,
+      xfbml: true,
+      version: 'v8.6',
+    });
+  };
+
+  (function (d, s, id) {
+    console.log(s);
+    var js,
+      fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s);
+    js.id = id;
+    js.src = `https://connect.facebook.net/${locale}/sdk.js`;
+    // js.src = `https://connect.facebook.net/${locale}/sdk.js#xfbml=1&version=v3.0`;
+    fjs.parentNode.insertBefore(js, fjs);
+  })(document, 'script', 'facebook-jssdk');
 };

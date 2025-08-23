@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Col, Image, Rate, Row } from 'antd';
 import * as ProductService from '../../services/ProductService';
 
@@ -25,6 +25,9 @@ import Loading from '../LoadingComponent/Loading';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { addOrderProduct } from '../../redux/slides/orderSlide';
+import LikeButtonComponent from '../LikeButtonComponent/LikeButtonComponent';
+import FbCommentComponent from '../FbCommentComponent/FbCommentComponent';
+import { initFacebookSDK } from '../../utils';
 
 const ProductDetailsComponent = ({ idProduct }) => {
   const navigate = useNavigate();
@@ -90,6 +93,10 @@ const ProductDetailsComponent = ({ idProduct }) => {
       navigate('/order');
     }
   };
+
+  useEffect(() => {
+    initFacebookSDK();
+  }, []);
 
   return (
     <Loading isPending={isLoading}>
@@ -159,6 +166,7 @@ const ProductDetailsComponent = ({ idProduct }) => {
             <span className="address">{user?.address || ' 144/86, Nguyen Luong Bang, Lien Chieu, Da Nang '}</span> -
             <span className="change-address"> Đổi địa chỉ </span>
           </WrapperAddressProduct>
+          {/* <LikeButtonComponent dataHref={'https://developers.facebook.com/docs/plugins/'} /> */}
           <div
             style={{
               margin: '10px 0 20px',
@@ -211,6 +219,10 @@ const ProductDetailsComponent = ({ idProduct }) => {
           </div>
           {!!amountMessage && <div style={{ color: 'red' }}>{amountMessage}</div>}
         </Col>
+        <FbCommentComponent
+          dataHref={'https://developers.facebook.com/docs/plugins/comments#configurator'}
+          width={'1270'}
+        />
       </Row>
     </Loading>
   );
