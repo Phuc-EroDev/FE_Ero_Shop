@@ -193,9 +193,7 @@ const PaymentPage = () => {
         } else {
           setPaypalClientId('AWebD9EGY2bLQRWxKUSPyyyWX8huQVzszGupRr3sMzsB3TllON1GYKpU_ok1Uu7dXQMrJTNKiIG9V9UP');
         }
-      } catch (error) {
-        console.error('Error loading PayPal config:', error);
-      }
+      } catch (error) {}
     };
 
     getPayPalConfig();
@@ -343,16 +341,12 @@ const PaymentPage = () => {
                         });
                       }}
                       onError={(err) => {
-                        console.error('PayPal error:', err);
                         setPayment('cod');
                       }}
-                      onCancel={(data) => {
-                        console.log('PayPal cancelled:', data);
-                      }}
+                      onCancel={(data) => {}}
                     />
                   </PayPalScriptProvider>
-                  {/* Dùng trong component */}
-                  {/* Backup button nếu PayPal không load */}
+
                   <PayPalFallback>
                     <span>Không thể tải PayPal?</span>
                     <span className="link" onClick={() => setPayment('cod')}>

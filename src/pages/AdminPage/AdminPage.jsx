@@ -1,13 +1,18 @@
 import React, { useState } from 'react';
 import { getItem } from '../../utils';
-import { AppstoreOutlined, UserOutlined } from '@ant-design/icons';
+import { AppstoreOutlined, ShoppingCartOutlined, UserOutlined } from '@ant-design/icons';
 import HeaderComponent from '../../components/HeaderComponent/HeaderComponent';
 import { WrapperMenu } from './style';
 import AdminUser from '../../components/AdminUser/AdminUser';
 import AdminProduct from '../../components/AdminProduct/AdminProduct';
+import AdminOrder from '../../components/AdminOrder/AdminOrder';
 
 const AdminPage = () => {
-  const items = [getItem('Người dùng', 'user', <UserOutlined />), getItem('Sản phẩm', 'product', <AppstoreOutlined />)];
+  const items = [
+    getItem('Người dùng', 'user', <UserOutlined />),
+    getItem('Sản phẩm', 'product', <AppstoreOutlined />),
+    getItem('Đơn hàng', 'order', <ShoppingCartOutlined />),
+  ];
 
   // const rootSubmenuKeys = ['user', 'product'];
   const [keySelected, setKeySelected] = useState('');
@@ -18,6 +23,8 @@ const AdminPage = () => {
         return <AdminUser />;
       case 'product':
         return <AdminProduct />;
+      case 'order':
+        return <AdminOrder />;
       default:
         return <></>;
     }

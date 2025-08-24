@@ -1,6 +1,3 @@
-import { version } from 'react';
-import { data } from 'react-router-dom';
-
 export const isJsonString = (data) => {
   try {
     JSON.parse(data);
@@ -60,7 +57,6 @@ export const initFacebookSDK = () => {
   };
 
   (function (d, s, id) {
-    console.log(s);
     var js,
       fjs = d.getElementsByTagName(s)[0];
     if (d.getElementById(id)) return;

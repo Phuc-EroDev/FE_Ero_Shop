@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Col, Image, Rate, Row } from 'antd';
 import * as ProductService from '../../services/ProductService';
 
@@ -52,7 +52,6 @@ const ProductDetailsComponent = ({ idProduct }) => {
     queryFn: fetchDetailsProduct,
     enabled: !!idProduct,
   });
-  console.log('productDetails', productDetails);
 
   const onChange = (value) => {
     setNumProduct(Number(value));
@@ -94,9 +93,10 @@ const ProductDetailsComponent = ({ idProduct }) => {
     }
   };
 
-  useEffect(() => {
-    initFacebookSDK();
-  }, []);
+  // Facebook integration
+  // useEffect(() => {
+  //   initFacebookSDK();
+  // }, []);
 
   return (
     <Loading isPending={isLoading}>
@@ -166,7 +166,11 @@ const ProductDetailsComponent = ({ idProduct }) => {
             <span className="address">{user?.address || ' 144/86, Nguyen Luong Bang, Lien Chieu, Da Nang '}</span> -
             <span className="change-address"> Đổi địa chỉ </span>
           </WrapperAddressProduct>
-          {/* <LikeButtonComponent dataHref={'https://developers.facebook.com/docs/plugins/'} /> */}
+          {/* <LikeButtonComponent
+            dataHref={
+              import.meta.env.VITE_IS_LOCAL ? 'https://developers.facebook.com/docs/plugins/' : window.location.href
+            }
+          /> */}
           <div
             style={{
               margin: '10px 0 20px',
@@ -220,7 +224,11 @@ const ProductDetailsComponent = ({ idProduct }) => {
           {!!amountMessage && <div style={{ color: 'red' }}>{amountMessage}</div>}
         </Col>
         <FbCommentComponent
-          dataHref={'https://developers.facebook.com/docs/plugins/comments#configurator'}
+          dataHref={
+            import.meta.env.VITE_IS_LOCAL
+              ? 'https://developers.facebook.com/docs/plugins/comments#configurator'
+              : window.location.href
+          }
           width={'1270'}
         />
       </Row>
