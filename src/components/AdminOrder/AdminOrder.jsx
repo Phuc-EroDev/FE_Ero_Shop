@@ -135,8 +135,6 @@ const AdminOrder = () => {
   const dataTable =
     orders?.data?.length > 0 &&
     orders?.data?.map((order) => {
-      console.log('order: ', order);
-      // return { ...order, key: order._id };
       return {
         ...order,
         key: order?._id,
@@ -149,7 +147,9 @@ const AdminOrder = () => {
   return (
     <div>
       <WrapperHeader>Quản Lý Đơn Hàng</WrapperHeader>
-      <PieChartComponent />
+      <div style={{ width: '100%', height: '200px' }}>
+        <PieChartComponent data={orders?.data} />
+      </div>
       <div style={{ marginTop: '20px' }}>
         <TableComponent columns={columns} data={dataTable} isLoading={isLoadingOrders} />
       </div>

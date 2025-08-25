@@ -67,3 +67,30 @@ export const initFacebookSDK = () => {
     fjs.parentNode.insertBefore(js, fjs);
   })(document, 'script', 'facebook-jssdk');
 };
+
+export const convertDataChart = (data, type) => {
+  try {
+    const chartData = [];
+    const object = {};
+    Array.isArray(data) &&
+      data?.forEach((opt) => {
+        if (!object[opt[type]]) {
+          object[opt[type]] = 1;
+          chartData.push({
+            name: opt[type],
+            value: 1,
+          });
+        } else {
+          object[opt[type]] += 1;
+          chartData.forEach((item) => {
+            if (item.name === opt[type]) {
+              item.value += 1;
+            }
+          });
+        }
+      });
+    return chartData;
+  } catch (error) {
+    return [];
+  }
+};
