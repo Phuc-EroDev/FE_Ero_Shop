@@ -5,6 +5,7 @@ import ButtonComponent from '../../components/ButtonComponent/ButtonComponent';
 import { EyeFilled, EyeInvisibleFilled } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import * as UserService from '../../services/UserService';
+import * as OtpService from '../../services/OtpService';
 import { useMutationHook } from '../../hooks/useMutationHook';
 import Loading from '../../components/LoadingComponent/Loading';
 import * as message from '../../components/MessageComponent/Message';
@@ -12,11 +13,13 @@ import * as message from '../../components/MessageComponent/Message';
 const SignUpPage = () => {
   const [isShowPassword, setIsShowPassword] = useState(false);
   const [isShowConfirmPassword, setIsShowConfirmPassword] = useState(false);
+  const [isSentOtp, setIsSentOtp] = useState(false);
+  const [otp, setOtp] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
-  const disabled = !email || !password || !confirmPassword;
+  const disabled = !email || !password || !confirmPassword || !otp;
 
   const handleOnChangeEmail = (value) => {
     setEmail(value);
@@ -28,6 +31,15 @@ const SignUpPage = () => {
 
   const handleOnChangeConfirmPassword = (value) => {
     setConfirmPassword(value);
+  };
+
+  const handleOnChangeOTP = (value) => {
+    setOtp(value);
+  };
+
+  const sendOtp = () => {
+    OtpService.sendOtp(email);
+    setIsSentOtp(true);
   };
 
   const navigate = useNavigate();
@@ -52,6 +64,7 @@ const SignUpPage = () => {
       email,
       password,
       confirmPassword,
+      otp,
     });
   };
 
@@ -78,12 +91,31 @@ const SignUpPage = () => {
         <WrapperContainerLeft>
           <h1>Xin chào</h1>
           <p>Đăng nhập hoặc tạo tài khoản</p>
-          <InputFormComponent
-            value={email}
-            handleOnChange={handleOnChangeEmail}
-            placeholder="abc@email.com"
-            style={{ marginBottom: '10px' }}
-          />
+          <div style={{ position: 'relative' }}>
+            <span
+              style={{
+                zIndex: 10,
+                position: 'absolute',
+                color: '#C68642',
+                top: '1px',
+                right: '10px',
+                fontSize: '12px',
+                cursor: 'pointer',
+                padding: '6px 8px',
+                backgroundColor: '#fff',
+                borderLeft: '1px solid #C68642',
+              }}
+              onClick={sendOtp}
+            >
+              Nhận OTP
+            </span>
+            <InputFormComponent
+              value={email}
+              handleOnChange={handleOnChangeEmail}
+              placeholder="abc@email.com"
+              style={{ marginBottom: '10px' }}
+            />
+          </div>
           <div style={{ position: 'relative', marginBottom: '10px' }}>
             <span
               style={{
@@ -91,7 +123,7 @@ const SignUpPage = () => {
                 position: 'absolute',
                 color: '#655e5e',
                 top: '6px',
-                left: '386px',
+                right: '10px',
                 fontSize: '14px',
               }}
               onClick={() => setIsShowPassword(!isShowPassword)}
@@ -105,14 +137,14 @@ const SignUpPage = () => {
               type={isShowPassword ? 'text' : 'password'}
             />
           </div>
-          <div style={{ position: 'relative' }}>
+          <div style={{ position: 'relative', marginBottom: '10px' }}>
             <span
               style={{
                 zIndex: 10,
                 position: 'absolute',
                 color: '#655e5e',
                 top: '6px',
-                left: '386px',
+                right: '10px',
                 fontSize: '14px',
               }}
               onClick={() => setIsShowConfirmPassword(!isShowConfirmPassword)}
@@ -126,8 +158,30 @@ const SignUpPage = () => {
               type={isShowConfirmPassword ? 'text' : 'password'}
             />
           </div>
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <InputFormComponent
+              style={{ width: '80%' }}
+              value={otp}
+              handleOnChange={handleOnChangeOTP}
+              placeholder="Nhập OTP"
+              type="text"
+            />
+            {isSentOtp && (
+              <span
+                style={{
+                  width: '100%',
+                  marginLeft: '15px',
+                  fontSize: '12px',
+                  color: '#C68642',
+                }}
+              >
+                Đã gửi thành công OTP !
+              </span>
+            )}
+          </div>
           {data?.status === 'ERR' && <span style={{ color: 'red' }}>{data?.message}</span>}
-          <Loading isPending={isPending}>
+          <Loading isPending={false}>
+            {/* <Loading isPending={isPending}> */}
             <ButtonComponent
               onClick={handleSignUp}
               disabled={!email.length || !password.length || !confirmPassword}

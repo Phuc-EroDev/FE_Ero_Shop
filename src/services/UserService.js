@@ -19,7 +19,9 @@ export const logoutUser = async () => {
 };
 
 export const registerUser = async (data) => {
-  const res = await axios.post(`${import.meta.env.VITE_BACKEND_API}/user/sign-up`, data);
+  const res = await axios.post(`${import.meta.env.VITE_BACKEND_API}/user/sign-up`, data, {
+    withCredentials: true,
+  });
   return res.data;
 };
 
