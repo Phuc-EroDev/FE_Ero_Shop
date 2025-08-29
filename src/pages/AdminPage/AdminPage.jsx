@@ -14,7 +14,6 @@ const AdminPage = () => {
     getItem('Đơn hàng', 'order', <ShoppingCartOutlined />),
   ];
 
-  // const rootSubmenuKeys = ['user', 'product'];
   const [keySelected, setKeySelected] = useState('');
 
   const renderPage = (key) => {

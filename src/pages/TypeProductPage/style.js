@@ -1,52 +1,69 @@
-import { Col } from "antd";
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const WrapperContainer = styled.div`
-    background-color: #333131;
-    width: 100%;
-    min-height: 100%;
-    overflow-x: hidden;
+  width: 100%;
+  background-color: #2a2a2a;
+  min-height: 100vh;
+  padding: 20px 0;
+`;
+
+export const WrapperNavbar = styled.div`
+  background-color: #333333;
+  margin-right: 20px;
+  padding: 0;
+  border-radius: 12px;
+  height: auto;
+  width: 220px;
+  min-height: calc(100vh - 150px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  border: 1px solid #444444;
+  overflow: hidden;
+
+  @media (max-width: 768px) {
+    margin-right: 0;
+    margin-bottom: 20px;
+    min-height: auto;
+  }
 `;
 
 export const WrapperProducts = styled.div`
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Responsive grid */
-    gap: 16px;
-    margin-top: 0;
-    width: 100%;
-    min-height: calc(100vh - 184px);
+  background-color: #333333;
+  border-radius: 12px;
+  padding: 14px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  min-height: calc(100vh - 150px);
+  border: 1px solid #444444;
 
-    /* Responsive breakpoints */
-    @media (min-width: 1400px) {
-        grid-template-columns: repeat(5, 1fr); /* 5 card trên màn hình lớn */
-    }
-    
-    @media (max-width: 1399px) and (min-width: 1200px) {
-        grid-template-columns: repeat(4, 1fr); /* 4 card trên màn hình vừa */
-    }
-    
-    @media (max-width: 1199px) and (min-width: 992px) {
-        grid-template-columns: repeat(3, 1fr); /* 3 card trên màn hình nhỏ */
-    }
-    
-    @media (max-width: 991px) and (min-width: 768px) {
-        grid-template-columns: repeat(2, 1fr); /* 2 card trên tablet */
-    }
-    
-    @media (max-width: 767px) {
-        grid-template-columns: 1fr; /* 1 card trên mobile */
-    }
+  .ant-row {
+    margin: 0;
+  }
+
+  .ant-col {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 24px;
+  }
+
+  @media (max-width: 768px) {
+    padding: 20px;
+    min-height: auto;
+  }
+
+  @media (max-width: 576px) {
+    padding: 15px;
+  }
 `;
 
-export const WrapperNavbar = styled(Col)`
-    background-color: #242424;
-    padding: 20px;
-    border-radius: 8px;
-    height: 100%;
-    margin-top: 0;
-    
-    /* Responsive cho NavBar */
-    @media (max-width: 768px) {
-        margin-bottom: 20px;
-    }
+export const WrapperContent = styled.div`
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 20px;
+
+  @media (max-width: 768px) {
+    padding: 0 15px;
+  }
+
+  @media (max-width: 576px) {
+    padding: 0 10px;
+  }
 `;

@@ -7,7 +7,7 @@ export const WrapperSearchResult = styled.div`
 `;
 
 export const WrapperTitle = styled.h2`
-  color: #C68642;
+  color: #D4A574;
   font-size: 24px;
   font-weight: bold;
   margin-bottom: 30px;
@@ -44,7 +44,7 @@ export const WrapperProducts = styled.div`
   
   .ant-empty {
     .ant-empty-description {
-      color: #999;
+      color: #cccccc;
       font-size: 16px;
     }
   }
@@ -53,15 +53,16 @@ export const WrapperProducts = styled.div`
 export const WrapperNoResult = styled.div`
   text-align: center;
   padding: 60px 20px;
-  color: #999;
+  color: #cccccc;
   
   h3 {
-    color: #666;
+    color: #999999;
     margin-bottom: 10px;
   }
   
   p {
     font-size: 14px;
     margin-bottom: 20px;
+    color: #888888;
   }
 `;

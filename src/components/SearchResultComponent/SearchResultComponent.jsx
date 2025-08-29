@@ -1,29 +1,58 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Row, Col, Empty } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import CardComponent from '../CardComponent/CardComponent';
 import Loading from '../LoadingComponent/Loading';
+import * as ProductService from '../../services/ProductService';
 import { WrapperSearchResult, WrapperTitle, WrapperProducts } from './style';
 
 const SearchResultComponent = ({ 
-  data = [], 
   searchTerm = '', 
   isLoading = false, 
   title,
-  showTitle = true 
+  showTitle = true,
+  selectedType = ''
 }) => {
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleDetailsProduct = (id) => {
     navigate(`/product-details/${id}`);
   };
 
+  // Fetch data based on selectedType and searchTerm
+  const fetchSearchData = async () => {
+    setLoading(true);
+    try {
+      let res;
+      if (selectedType) {
+        res = await ProductService.getProductType(selectedType);
+      } else {
+        res = await ProductService.getAllProduct();
+      }
+      
+      if (res?.status === 'OK') {
+        setData(res?.data || []);
+      }
+    } catch (error) {
+      console.error('Error fetching search data:', error);
+      setData([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchSearchData();
+  }, [selectedType]);
+
   const filteredData = data?.filter(product => 
     product?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
     product?.type?.toLowerCase().includes(searchTerm.toLowerCase())
   ) || [];
 
-  if (isLoading) {
+  if (isLoading || loading) {
     return <Loading isPending={true} />;
   }
 

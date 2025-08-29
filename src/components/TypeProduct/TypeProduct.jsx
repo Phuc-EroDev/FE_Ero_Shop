@@ -15,13 +15,15 @@ const TypeProduct = ({ data }) => {
   const navigate = useNavigate();
 
   const handleNavigateType = (type) => {
-    navigate(
-      `/product/${type
-        .normalize('NFD')
-        ?.replace(/[\u0300-\u036f]/g, '')
-        ?.replace(/ /g, '-')}`,
-      { state: { type } },
-    );
+    navigate(`/type-product/`, { state: { type } });
+
+    // navigate(
+    //   `/product/${type
+    //     .normalize('NFD')
+    //     ?.replace(/[\u0300-\u036f]/g, '')
+    //     ?.replace(/ /g, '-')}`,
+    //   { state: { type } },
+    // );
   };
 
   const getTypeImage = (type) => {

@@ -44,10 +44,15 @@ export const routes = [
     isShowHeader: true,
   },
   {
-    path: '/product/:type',
+    path: '/type-product',
     page: TypeProductPage,
     isShowHeader: true,
   },
+  // {
+  //   path: '/type-product/:type',
+  //   page: TypeProductPage,
+  //   isShowHeader: true,
+  //  },
   {
     path: '/sign-in',
     page: SignInPage,

@@ -1,102 +1,83 @@
-import React, { Fragment, useEffect, useState } from 'react';
-import NavBarComponent from '../../components/NavBarComponent/NavBarComponent';
-import CardComponent from '../../components/CardComponent/CardComponent';
-import SearchResultComponent from '../../components/SearchResultComponent/SearchResultComponent';
-import { Col, Pagination, Row } from 'antd';
-import { WrapperNavbar, WrapperProducts, WrapperContainer } from './style';
-import { useLocation } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Col, Row } from 'antd';
+import { WrapperNavbar, WrapperProducts, WrapperContainer, WrapperContent } from './style';
 import * as ProductService from '../../services/ProductService';
 import Loading from '../../components/LoadingComponent/Loading';
 import { useSelector } from 'react-redux';
+import { useLocation } from 'react-router-dom';
 import { useDebounce } from '../../hooks/useDebounce';
+import SearchResultComponent from '../../components/SearchResultComponent/SearchResultComponent';
+import TypeListComponent from '../../components/TypeListComponent/TypeListComponent';
+import ProductListComponent from '../../components/ProductListComponent/ProductListComponent';
 
 const TypeProductPage = () => {
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [pagination, setPagination] = useState({ limit: 10, page: 0, total: 1 });
+  const location = useLocation();
+  const { state } = location;
 
-  const { state } = useLocation();
+  const [typeProducts, setTypeProducts] = useState([]);
+  const [selectedType, setSelectedType] = useState(state?.type || '');
+  const [loading, setLoading] = useState(false);
+
   const searchProduct = useSelector((state) => state?.product?.search);
   const searchDebounce = useDebounce(searchProduct, 500);
 
-  const onChange = (current, pageSize) => {
-    setPagination({ ...pagination, page: current - 1, limit: pageSize });
-  };
-
-  const fetchProductType = async (type, page, limit) => {
+  // Fetch all type products
+  const fetchAllTypeProduct = async () => {
     setLoading(true);
-    const res = await ProductService.getProductType(type, page, limit);
-    if (res?.status === 'OK') {
-      setProducts(res?.data);
-      setPagination({ ...pagination, total: res?.totalPage });
-      setLoading(false);
-    } else {
+    try {
+      const res = await ProductService.getAllTypeProduct();
+      if (res?.status === 'OK') {
+        setTypeProducts(res?.data);
+      }
+    } catch (error) {
+      console.error('Error fetching type products:', error);
+    } finally {
       setLoading(false);
     }
-    return res;
   };
 
   useEffect(() => {
-    if (state?.type) {
-      fetchProductType(state.type, pagination.page, pagination.limit);
-    }
-  }, [state?.type, pagination.page, pagination.limit]);
+    fetchAllTypeProduct();
+  }, []);
+
+  const handleTypeSelect = (type) => {
+    setSelectedType(type);
+  };
 
   return (
     <Loading isPending={loading}>
       <WrapperContainer>
-        <div style={{ padding: '20px 120px' }}>
-          <Row gutter={20} style={{ alignItems: 'flex-start' }}>
+        <WrapperContent>
+          <Row gutter={[24, 24]} style={{ minHeight: 'calc(100vh - 120px)' }}>
             <Col xs={24} sm={24} md={6} lg={5} xl={4}>
               <WrapperNavbar>
-                <NavBarComponent />
+                <TypeListComponent
+                  typeProducts={typeProducts}
+                  selectedType={selectedType}
+                  onTypeSelect={handleTypeSelect}
+                />
               </WrapperNavbar>
             </Col>
             <Col xs={24} sm={24} md={18} lg={19} xl={20}>
-              {searchDebounce ? (
-                <SearchResultComponent
-                  data={products}
-                  searchTerm={searchDebounce}
-                  isLoading={loading}
-                  title={`Kết quả tìm kiếm trong danh mục "${state?.type || 'Sản phẩm'}"`}
-                />
-              ) : (
-                <>
-                  <WrapperProducts>
-                    {products?.map((product) => {
-                      return (
-                        <CardComponent
-                          key={product._id}
-                          id={product._id}
-                          countInStock={product.countInStock}
-                          description={product.description}
-                          image={product.image}
-                          name={product.name}
-                          price={product.price}
-                          rating={product.rating}
-                          type={product.type}
-                          selled={product.selled}
-                          discount={product.discount}
-                        />
-                      );
-                    })}
-                  </WrapperProducts>
-                  <Pagination
-                    defaultCurrent={pagination?.page + 1}
-                    total={pagination?.total}
-                    style={{
-                      display: 'flex',
-                      justifyContent: 'center',
-                      marginTop: '30px',
-                      marginBottom: '20px',
-                    }}
-                    onChange={onChange}
+              <WrapperProducts>
+                {searchDebounce ? (
+                  <SearchResultComponent
+                    searchTerm={searchDebounce}
+                    isLoading={false}
+                    title={
+                      selectedType
+                        ? `Kết quả tìm kiếm trong danh mục "${selectedType}"`
+                        : 'Kết quả tìm kiếm trong tất cả sản phẩm'
+                    }
+                    selectedType={selectedType}
                   />
-                </>
-              )}
+                ) : (
+                  <ProductListComponent selectedType={selectedType} />
+                )}
+              </WrapperProducts>
             </Col>
           </Row>
-        </div>
+        </WrapperContent>
       </WrapperContainer>
     </Loading>
   );
