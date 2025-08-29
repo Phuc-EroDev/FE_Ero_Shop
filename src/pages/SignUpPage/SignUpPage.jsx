@@ -9,6 +9,7 @@ import * as OtpService from '../../services/OtpService';
 import { useMutationHook } from '../../hooks/useMutationHook';
 import Loading from '../../components/LoadingComponent/Loading';
 import * as message from '../../components/MessageComponent/Message';
+import { success, error, warning } from '../../components/MessageComponent/Message';
 
 const SignUpPage = () => {
   const [isShowPassword, setIsShowPassword] = useState(false);
@@ -52,10 +53,12 @@ const SignUpPage = () => {
 
   useEffect(() => {
     if (isSuccess) {
-      message.success();
+      success();
+      // message.success();
       handleNavigateLogin();
     } else if (isError) {
-      message.error();
+      error();
+      // message.error();
     }
   }, [isSuccess, isError]);
 

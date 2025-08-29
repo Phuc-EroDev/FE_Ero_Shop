@@ -2,14 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { routes } from './routes';
 import DefaultComponent from './components/DefaultComponent/DefaultComponent';
-import axios from 'axios';
-import { useQuery } from '@tanstack/react-query';
 import { isJsonString } from './utils';
 import { jwtDecode } from 'jwt-decode';
 import * as UserService from './services/UserService';
 import { updateUser } from './redux/slides/userSlide';
 import { useDispatch, useSelector } from 'react-redux';
 import Loading from './components/LoadingComponent/Loading';
+// import { contextHolder } from './components/MessageComponent/Message';
 
 function App() {
   const [isLoading, setIsLoading] = useState(false);
@@ -59,6 +58,7 @@ function App() {
 
   return (
     <div>
+      {/* {contextHolder} */}
       <Loading isPending={isLoading}>
         <Router>
           <Routes>

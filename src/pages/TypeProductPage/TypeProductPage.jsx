@@ -1,6 +1,7 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import NavBarComponent from '../../components/NavBarComponent/NavBarComponent';
 import CardComponent from '../../components/CardComponent/CardComponent';
+import SearchResultComponent from '../../components/SearchResultComponent/SearchResultComponent';
 import { Col, Pagination, Row } from 'antd';
 import { WrapperNavbar, WrapperProducts, WrapperContainer } from './style';
 import { useLocation } from 'react-router-dom';
@@ -52,44 +53,47 @@ const TypeProductPage = () => {
               </WrapperNavbar>
             </Col>
             <Col xs={24} sm={24} md={18} lg={19} xl={20}>
-              <WrapperProducts>
-                {products
-                  ?.filter((prod) => {
-                    if (searchDebounce === '') {
-                      return prod;
-                    } else if (prod?.name?.toLowerCase().includes(searchDebounce?.toLowerCase())) {
-                      return prod;
-                    }
-                  })
-                  ?.map((product) => {
-                    return (
-                      <CardComponent
-                        key={product._id}
-                        id={product._id}
-                        countInStock={product.countInStock}
-                        description={product.description}
-                        image={product.image}
-                        name={product.name}
-                        price={product.price}
-                        rating={product.rating}
-                        type={product.type}
-                        selled={product.selled}
-                        discount={product.discount}
-                      />
-                    );
-                  })}
-              </WrapperProducts>
-              <Pagination
-                defaultCurrent={pagination?.page + 1}
-                total={pagination?.total}
-                style={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  marginTop: '30px',
-                  marginBottom: '20px',
-                }}
-                onChange={onChange}
-              />
+              {searchDebounce ? (
+                <SearchResultComponent
+                  data={products}
+                  searchTerm={searchDebounce}
+                  isLoading={loading}
+                  title={`Kết quả tìm kiếm trong danh mục "${state?.type || 'Sản phẩm'}"`}
+                />
+              ) : (
+                <>
+                  <WrapperProducts>
+                    {products?.map((product) => {
+                      return (
+                        <CardComponent
+                          key={product._id}
+                          id={product._id}
+                          countInStock={product.countInStock}
+                          description={product.description}
+                          image={product.image}
+                          name={product.name}
+                          price={product.price}
+                          rating={product.rating}
+                          type={product.type}
+                          selled={product.selled}
+                          discount={product.discount}
+                        />
+                      );
+                    })}
+                  </WrapperProducts>
+                  <Pagination
+                    defaultCurrent={pagination?.page + 1}
+                    total={pagination?.total}
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'center',
+                      marginTop: '30px',
+                      marginBottom: '20px',
+                    }}
+                    onChange={onChange}
+                  />
+                </>
+              )}
             </Col>
           </Row>
         </div>

@@ -1,28 +1,90 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Button, Upload, message, List, Image } from 'antd';
+import { UploadOutlined, DeleteOutlined, EyeOutlined } from '@ant-design/icons';
+import { useSelector } from 'react-redux';
 import TypeProduct from '../../components/TypeProduct/TypeProduct';
 import SliderComponent from '../../components/SliderComponent/SliderComponent';
-import { WrapperButtonMore, WrapperProducts, WrapperTypeProduct } from './style';
-import slider1 from '../../assets/images/slider1.png';
-import slider2 from '../../assets/images/slider2.png';
-import CardComponent from '../../components/CardComponent/CardComponent';
+import ModalComponent from '../../components/ModalComponent/ModalComponent';
+import SearchResultComponent from '../../components/SearchResultComponent/SearchResultComponent';
+import { WrapperButtonMore, WrapperTypeProduct } from './style';
 import { useQuery, keepPreviousData } from '@tanstack/react-query';
 import * as ProductService from '../../services/ProductService';
-import { useSelector } from 'react-redux';
 import Loading from '../../components/LoadingComponent/Loading';
 import { useDebounce } from '../../hooks/useDebounce';
+import { useSlideManagement } from '../../hooks/useSlideManagement';
+import SectionComponent from '../../components/SectionComponent/SectionComponent';
 
 const HomePage = () => {
   const [typeProducts, setTypeProducts] = useState([]);
   const [limit, setLimit] = useState(6);
-  // const [page, setPage] = useState(1);
+  const [page, setPage] = useState(0);
+  const [isSlideModalOpen, setIsSlideModalOpen] = useState(false);
 
+  const user = useSelector((state) => state?.user);
   const searchProduct = useSelector((state) => state?.product?.search);
   const searchDebounce = useDebounce(searchProduct, 500);
+  
+  // Use slide management hook
+  const {
+    slides: slideImages,
+    handleAddSlide,
+    handleDeleteSlide,
+  } = useSlideManagement();
 
-  const fetchProductAll = async (context) => {
-    const limit = context?.queryKey && context?.queryKey[1];
-    const searchDebounce = context?.queryKey && context?.queryKey[2];
-    const res = await ProductService.getAllProduct(searchDebounce, limit);
+  const slideUrls = slideImages.map(slide => slide.url);
+
+  const navigate = useNavigate();
+
+  const handleNavigateType = (type) => {
+    navigate(
+      `/product/${type
+        .normalize('NFD')
+        ?.replace(/[\u0300-\u036f]/g, '')
+        ?.replace(/ /g, '-')}`,
+      { state: { type } },
+    );
+  };
+
+  const handleChangeSlide = () => {
+    setIsSlideModalOpen(true);
+  };
+
+  const handleCloseSlideModal = () => {
+    setIsSlideModalOpen(false);
+  };
+
+  const handleUpload = (file) => {
+    const isImage = file.type.startsWith('image/');
+    if (!isImage) {
+      message.error('Chỉ được upload file hình ảnh!');
+      return false;
+    }
+
+    const isLt5M = file.size / 1024 / 1024 < 5;
+    if (!isLt5M) {
+      message.error('Hình ảnh phải nhỏ hơn 5MB!');
+      return false;
+    }
+
+    // Add slide using hook
+    handleAddSlide(file);
+    return false; // Prevent automatic upload
+  };
+
+  const handleUploadSlide = {
+    name: 'file',
+    accept: 'image/*',
+    beforeUpload: handleUpload,
+  };
+
+  const fetchProductAll = async () => {
+    const res = await ProductService.getAllProduct();
+    return res;
+  };
+
+  const fetchProductType = async (type) => {
+    const res = await ProductService.getProductType(type);
     return res;
   };
 
@@ -34,11 +96,7 @@ const HomePage = () => {
     return res?.data;
   };
 
-  const {
-    isLoading,
-    data: products,
-    isPreviousData,
-  } = useQuery({
+  const { isLoading: isLoadingPopular, data: products } = useQuery({
     queryKey: ['product', limit, searchDebounce],
     queryFn: fetchProductAll,
     retry: 1,
@@ -46,52 +104,140 @@ const HomePage = () => {
     placeholderData: keepPreviousData,
   });
 
+  const { isLoading: isLoadingElectron, data: productsElectron } = useQuery({
+    queryKey: ['productElectron'],
+    queryFn: () => fetchProductType('laptop'),
+  });
+
   useEffect(() => {
     fetchAllTypeProduct();
   }, []);
 
   return (
-    <Loading isPending={isLoading}>
+    <>
       <div style={{ margin: '0 auto', padding: '0 120px' }}>
         <WrapperTypeProduct>
-          {typeProducts.map((item) => {
-            return <TypeProduct key={item} name={item} />;
-          })}
+          <h5 style={{ padding: '8px 0', fontSize: '16px' }}>
+            <span style={{ color: ' #C68642', cursor: 'pointer', fontWeight: 'bold' }} onClick={() => navigate('/')}>
+              {'Trang chủ >'}
+            </span>
+          </h5>
         </WrapperTypeProduct>
       </div>
       <div className="body" style={{ width: '100%', backgroundColor: ' #333131' }}>
-        <div id="container" style={{ margin: '0 auto', padding: '0 120px', height: '1000px', width: '100%' }}>
-          <SliderComponent arrImages={[slider1, slider2]} />
-          <WrapperProducts>
-            {products?.data?.map((product) => {
-              return (
-                <CardComponent
-                  key={product._id}
-                  id={product._id}
-                  countInStock={product.countInStock}
-                  description={product.description}
-                  image={product.image}
-                  name={product.name}
-                  price={product.price}
-                  rating={product.rating}
-                  type={product.type}
-                  selled={product.selled}
-                  discount={product.discount}
-                />
-              );
-            })}
-          </WrapperProducts>
-          <div style={{ width: '100%', display: 'flex', justifyContent: 'center', marginTop: '10px' }}>
-            <WrapperButtonMore
-              textbutton={isPreviousData ? 'Loading...' : 'Xem thêm'}
-              type="outline"
-              disabled={products?.total === products?.data?.length || products?.totalPage === 1}
-              onClick={() => setLimit((prev) => prev + 6)}
-            />
+        <div id="container" style={{ margin: '0 auto', padding: '0 120px', minHeight: 'auto', width: '100%' }}>
+          <div style={{ position: 'relative' }}>
+            <SliderComponent arrImages={slideUrls} />
+            {user?.isAdmin && <WrapperButtonMore textbutton={'Sửa slide'} type="outline" onClick={handleChangeSlide} />}
           </div>
+          
+          {/* Hiển thị kết quả search hoặc nội dung trang chủ */}
+          {searchDebounce ? (
+            <SearchResultComponent
+              data={products?.data}
+              searchTerm={searchDebounce}
+              isLoading={isLoadingPopular}
+            />
+          ) : (
+            <>
+              <Loading isPending={isLoadingPopular}>
+                <SectionComponent
+                  data={products?.data}
+                  title="SẢN PHẨM NỔI BẬT"
+                />
+              </Loading>
+
+              <TypeProduct data={typeProducts} />
+
+              <Loading isPending={isLoadingElectron}>
+                <SectionComponent
+                  data={productsElectron?.data}
+                  title="ĐIỆN TỬ"
+                  viewAllText="Xem thêm >"
+                  onViewAll={() => handleNavigateType('laptop')}
+                />
+              </Loading>
+
+              <Loading isPending={isLoadingPopular || isLoadingElectron}>
+                <SectionComponent
+                  data={products?.data?.filter((item) => !productsElectron?.data?.includes(item))}
+                  isMultiType={true}
+                  title="SẢN PHẨM KHÁC"
+                />
+              </Loading>
+            </>
+          )}
         </div>
       </div>
-    </Loading>
+
+      {/* Slide Management Modal */}
+      <ModalComponent
+        title="Quản lý Slide"
+        isOpen={isSlideModalOpen}
+        onCancel={handleCloseSlideModal}
+        onOk={handleCloseSlideModal}
+        width={800}
+        okText="Đóng"
+        cancelText="Hủy"
+      >
+        <div style={{ marginBottom: '20px' }}>
+          <Upload {...handleUploadSlide}>
+            <Button icon={<UploadOutlined />} type="dashed" size="large">
+              Thêm slide mới
+            </Button>
+          </Upload>
+          <p style={{ color: '#666', marginTop: '8px', fontSize: '12px' }}>
+            * Chỉ chấp nhận file hình ảnh (JPG, PNG, GIF) và kích thước &lt; 5MB
+          </p>
+        </div>
+
+        <List
+          dataSource={slideImages}
+          renderItem={(slide, index) => (
+            <List.Item
+              actions={[
+                <Button
+                  key="preview"
+                  icon={<EyeOutlined />}
+                  onClick={() => {
+                    Image.preview({
+                      src: slide.url,
+                      title: slide.name
+                    });
+                  }}
+                >
+                  Xem
+                </Button>,
+                <Button
+                  key="delete"
+                  icon={<DeleteOutlined />}
+                  danger
+                  onClick={() => handleDeleteSlide(slide.id)}
+                  disabled={slideImages.length <= 1}
+                >
+                  Xóa
+                </Button>
+              ]}
+            >
+              <List.Item.Meta
+                avatar={
+                  <Image
+                    width={80}
+                    height={50}
+                    src={slide.url}
+                    alt={slide.name}
+                    style={{ objectFit: 'cover', borderRadius: '4px' }}
+                    preview={false}
+                  />
+                }
+                title={slide.name}
+                description={`Slide ${index + 1} - ${slide.isDefault ? 'File gốc' : 'File mới'}`}
+              />
+            </List.Item>
+          )}
+        />
+      </ModalComponent>
+    </>
   );
 };
 
