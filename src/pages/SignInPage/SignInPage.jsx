@@ -34,6 +34,10 @@ const SignInPage = () => {
     navigate('/sign-up');
   };
 
+  const handleNavigateForgotPassword = () => {
+    navigate('/forgot-password');
+  };
+
   const mutation = useMutationHook((data) => UserService.loginUser(data));
   const { data, isPending, isSuccess } = mutation;
 
@@ -133,7 +137,7 @@ const SignInPage = () => {
               textbutton={'Đăng nhập'}
             />
           </Loading>
-          <WrapperTextLight>Quên mật khẩu?</WrapperTextLight>
+          <WrapperTextLight onClick={handleNavigateForgotPassword}>Quên mật khẩu?</WrapperTextLight>
           <p>
             Chưa có tài khoản? <WrapperTextLight onClick={handleNavigateSignUp}> Tạo tài khoản!</WrapperTextLight>
           </p>

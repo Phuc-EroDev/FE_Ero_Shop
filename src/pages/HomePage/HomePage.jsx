@@ -24,26 +24,16 @@ const HomePage = () => {
   const user = useSelector((state) => state?.user);
   const searchProduct = useSelector((state) => state?.product?.search);
   const searchDebounce = useDebounce(searchProduct, 500);
-  
-  // Use slide management hook
-  const {
-    slides: slideImages,
-    handleAddSlide,
-    handleDeleteSlide,
-  } = useSlideManagement();
 
-  const slideUrls = slideImages.map(slide => slide.url);
+  // Use slide management hook
+  const { slides: slideImages, handleAddSlide, handleDeleteSlide } = useSlideManagement();
+
+  const slideUrls = slideImages.map((slide) => slide.url);
 
   const navigate = useNavigate();
 
   const handleNavigateType = (type) => {
-    navigate(
-      `/product/${type
-        .normalize('NFD')
-        ?.replace(/[\u0300-\u036f]/g, '')
-        ?.replace(/ /g, '-')}`,
-      { state: { type } },
-    );
+    navigate(`/type-product/`, { state: { type } });
   };
 
   const handleChangeSlide = () => {
@@ -130,21 +120,14 @@ const HomePage = () => {
             <SliderComponent arrImages={slideUrls} />
             {user?.isAdmin && <WrapperButtonMore textbutton={'Sửa slide'} type="outline" onClick={handleChangeSlide} />}
           </div>
-          
+
           {/* Hiển thị kết quả search hoặc nội dung trang chủ */}
           {searchDebounce ? (
-            <SearchResultComponent
-              data={products?.data}
-              searchTerm={searchDebounce}
-              isLoading={isLoadingPopular}
-            />
+            <SearchResultComponent data={products?.data} searchTerm={searchDebounce} isLoading={isLoadingPopular} />
           ) : (
             <>
               <Loading isPending={isLoadingPopular}>
-                <SectionComponent
-                  data={products?.data}
-                  title="SẢN PHẨM NỔI BẬT"
-                />
+                <SectionComponent data={products?.data} title="SẢN PHẨM NỔI BẬT" />
               </Loading>
 
               <TypeProduct data={typeProducts} />
@@ -202,7 +185,7 @@ const HomePage = () => {
                   onClick={() => {
                     Image.preview({
                       src: slide.url,
-                      title: slide.name
+                      title: slide.name,
                     });
                   }}
                 >
@@ -216,7 +199,7 @@ const HomePage = () => {
                   disabled={slideImages.length <= 1}
                 >
                   Xóa
-                </Button>
+                </Button>,
               ]}
             >
               <List.Item.Meta

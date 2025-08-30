@@ -81,3 +81,10 @@ export const refreshToken = async () => {
   );
   return res.data;
 };
+
+export const resetPassword = async (data) => {
+  const res = await axios.post(`${import.meta.env.VITE_BACKEND_API}/user/reset-password`, data, {
+    withCredentials: true,
+  });
+  return res.data;
+};

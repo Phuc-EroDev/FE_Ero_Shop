@@ -5,6 +5,7 @@ import NotFoundPage from '../pages/NotFoundPage/NotFoundPage';
 import TypeProductPage from '../pages/TypeProductPage/TypeProductPage';
 import SignInPage from '../pages/SignInPage/SignInPage';
 import SignUpPage from '../pages/SignUpPage/SignUpPage';
+import ForgotPasswordPage from '../pages/ForgotPasswordPage/ForgotPasswordPage';
 import ProductDetailsPage from '../pages/ProductDetailsPage/ProductDetailsPage';
 import ProfilePage from '../pages/ProfilePage/ProfilePage';
 import AdminPage from '../pages/AdminPage/AdminPage';
@@ -61,6 +62,11 @@ export const routes = [
   {
     path: '/sign-up',
     page: SignUpPage,
+    isShowHeader: false,
+  },
+  {
+    path: '/forgot-password',
+    page: ForgotPasswordPage,
     isShowHeader: false,
   },
   {
