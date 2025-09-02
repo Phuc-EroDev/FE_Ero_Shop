@@ -4,6 +4,8 @@ import { Button, Form, Select, Space } from 'antd';
 import { DeleteOutlined, EditOutlined, PlusOutlined, SearchOutlined } from '@ant-design/icons';
 import TableComponent from '../TableComponent/TableComponent';
 import InputComponent from '../InputComponent/InputComponent';
+import InputTextAreaComponent from '../InputTextAreaComponent/InputTextAreaComponent';
+import ButtonComponent from '../ButtonComponent/ButtonComponent';
 import { getBase64, renderOptions } from '../../utils';
 import * as ProductService from '../../services/ProductService';
 import * as message from '../../components/MessageComponent/Message';
@@ -24,13 +26,12 @@ const AdminProduct = () => {
     rating: '',
     discount: '',
     description: '',
-    image: '',
+    image: [],
   });
 
   const searchInput = useRef(null);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [typeSelected, setTypeSelected] = useState('');
   const [isModalOpenDelete, setIsModalOpenDelete] = useState(false);
   const [isModalOpenDeleteMany, setIsModalOpenDeleteMany] = useState(false);
   const [idsDelete, setIdsDelete] = useState([]);
@@ -374,14 +375,18 @@ const AdminProduct = () => {
   };
 
   const handleOnChangeImage = async ({ fileList }) => {
-    const file = fileList[0];
-    if (!file.url && !file.preview) {
-      file.preview = await getBase64(file.originFileObj);
+    const images = [];
+    for (let file of fileList) {
+      if (!file.url && !file.preview) {
+        file.preview = await getBase64(file.originFileObj);
+      }
+      images.push(file.preview);
     }
     setStateProduct({
       ...stateProduct,
-      image: file.preview,
+      image: images,
     });
+    form.setFieldsValue({ image: images });
   };
 
   const handleCloseDrawer = () => {
@@ -394,20 +399,24 @@ const AdminProduct = () => {
       rating: '',
       discount: '',
       description: '',
-      image: '',
+      image: [],
     });
     form.resetFields();
   };
 
   const handleOnChangeImageDetails = async ({ fileList }) => {
-    const file = fileList[0];
-    if (!file.url && !file.preview) {
-      file.preview = await getBase64(file.originFileObj);
+    const images = [];
+    for (let file of fileList) {
+      if (!file.url && !file.preview) {
+        file.preview = await getBase64(file.originFileObj);
+      }
+      images.push(file.preview);
     }
     setStateProductDetails({
       ...stateProductDetails,
-      image: file.preview,
+      image: images,
     });
+    form.setFieldsValue({ image: images });
   };
 
   const handleClickDeleteMany = (ids) => {
@@ -550,26 +559,65 @@ const AdminProduct = () => {
               name="description"
               rules={[{ required: true, message: 'Please input your Description!' }]}
             >
-              <InputComponent value={stateProduct.description} onChange={handleOnChange} name="description" />
+              <InputTextAreaComponent
+                value={stateProduct.description}
+                onChange={handleOnChange}
+                name="description"
+                placeholder="Nhập mô tả sản phẩm..."
+                rows={4}
+                autoSize={{ minRows: 4, maxRows: 8 }}
+              />
             </Form.Item>
 
-            <Form.Item label="Image" name="image" rules={[{ required: true, message: 'Please input your Image!' }]}>
-              <WrapperUploadFile onChange={handleOnChangeImage} maxCount={1}>
-                <Button>Select File</Button>
-                {stateProduct?.image && (
-                  <img
-                    src={stateProduct?.image}
-                    style={{
-                      height: '60px',
-                      width: '60px',
-                      borderRadius: '50%',
-                      objectFit: 'cover',
-                      marginLeft: '10px',
-                    }}
-                    alt="Image Preview"
-                  />
-                )}
+            <Form.Item
+              label="Images"
+              name="image"
+              rules={[
+                { required: true, message: 'Vui lòng chọn ảnh sản phẩm!' },
+                {
+                  validator: (_, value) => {
+                    if (value && value.length === 5) {
+                      return Promise.resolve();
+                    }
+                    return Promise.reject(new Error('Vui lòng chọn đủ 5 ảnh cho sản phẩm!'));
+                  },
+                },
+              ]}
+            >
+              <WrapperUploadFile onChange={handleOnChangeImage} maxCount={5} multiple fileList={[]}>
+                <ButtonComponent
+                  textbutton={
+                    stateProduct?.image && stateProduct.image.length > 0 ? 'Chọn lại 5 ảnh mới' : 'Chọn 5 ảnh sản phẩm'
+                  }
+                  style={{
+                    backgroundColor: '#C68642',
+                    color: '#FDF6EC',
+                    border: 'none',
+                    borderRadius: '4px',
+                  }}
+                />
               </WrapperUploadFile>
+              {stateProduct?.image && stateProduct.image.length > 0 && (
+                <div style={{ marginTop: '10px', display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                  {stateProduct.image.map((img, index) => (
+                    <img
+                      key={index}
+                      src={img}
+                      style={{
+                        height: '60px',
+                        width: '60px',
+                        borderRadius: '8px',
+                        objectFit: 'cover',
+                        border: '1px solid #d9d9d9',
+                      }}
+                      alt={`Preview ${index + 1}`}
+                    />
+                  ))}
+                </div>
+              )}
+              <div style={{ marginTop: '8px', fontSize: '12px', color: '#666' }}>
+                Đã chọn: {stateProduct?.image?.length || 0}/5 ảnh
+              </div>
             </Form.Item>
 
             <Form.Item label={null} wrapperCol={{ offset: 20, span: 16 }}>
@@ -636,30 +684,67 @@ const AdminProduct = () => {
               name="description"
               rules={[{ required: true, message: 'Please input your Description!' }]}
             >
-              <InputComponent
+              <InputTextAreaComponent
                 value={stateProductDetails.description}
                 onChange={handleOnChangeDetails}
                 name="description"
+                placeholder="Nhập mô tả sản phẩm..."
+                rows={4}
+                autoSize={{ minRows: 4, maxRows: 8 }}
               />
             </Form.Item>
 
-            <Form.Item label="Image" name="image" rules={[{ required: true, message: 'Please input your Image!' }]}>
-              <WrapperUploadFile onChange={handleOnChangeImageDetails} maxCount={1}>
-                <Button>Select File</Button>
-                {stateProductDetails?.image && (
-                  <img
-                    src={stateProductDetails?.image}
-                    style={{
-                      height: '60px',
-                      width: '60px',
-                      borderRadius: '50%',
-                      objectFit: 'cover',
-                      marginLeft: '10px',
-                    }}
-                    alt="Image Preview"
-                  />
-                )}
+            <Form.Item
+              label="Images (5 ảnh)"
+              name="image"
+              rules={[
+                { required: true, message: 'Vui lòng chọn ảnh sản phẩm!' },
+                {
+                  validator: (_, value) => {
+                    if (value && value.length === 5) {
+                      return Promise.resolve();
+                    }
+                    return Promise.reject(new Error('Vui lòng chọn đủ 5 ảnh cho sản phẩm!'));
+                  },
+                },
+              ]}
+            >
+              <WrapperUploadFile onChange={handleOnChangeImageDetails} maxCount={5} multiple fileList={[]}>
+                <ButtonComponent
+                  textbutton={
+                    stateProductDetails?.image && stateProductDetails.image.length > 0
+                      ? 'Chọn lại 5 ảnh mới'
+                      : 'Chọn 5 ảnh sản phẩm'
+                  }
+                  style={{
+                    backgroundColor: '#C68642',
+                    color: '#FDF6EC',
+                    border: 'none',
+                    borderRadius: '4px',
+                  }}
+                />
               </WrapperUploadFile>
+              {stateProductDetails?.image && stateProductDetails.image.length > 0 && (
+                <div style={{ marginTop: '10px', display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                  {stateProductDetails.image.map((img, index) => (
+                    <img
+                      key={index}
+                      src={img}
+                      style={{
+                        height: '60px',
+                        width: '60px',
+                        borderRadius: '8px',
+                        objectFit: 'cover',
+                        border: '1px solid #d9d9d9',
+                      }}
+                      alt={`Preview ${index + 1}`}
+                    />
+                  ))}
+                </div>
+              )}
+              <div style={{ marginTop: '8px', fontSize: '12px', color: '#666' }}>
+                Đã chọn: {stateProductDetails?.image?.length || 0}/5 ảnh
+              </div>
             </Form.Item>
 
             <Form.Item label={null} wrapperCol={{ offset: 20, span: 16 }}>

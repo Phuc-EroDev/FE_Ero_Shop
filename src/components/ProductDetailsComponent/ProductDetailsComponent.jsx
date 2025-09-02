@@ -7,6 +7,7 @@ import imageSmall2 from '../../assets/images/imageSmall2.png';
 import imageSmall3 from '../../assets/images/imageSmall3.png';
 import imageSmall4 from '../../assets/images/imageSmall4.png';
 import imageSmall5 from '../../assets/images/imageSmall5.png';
+import FormattedTextComponent from '../FormattedTextComponent/FormattedTextComponent';
 import {
   WrapperAddressProduct,
   WrapperInputNumber,
@@ -36,6 +37,7 @@ import { addOrderProduct } from '../../redux/slides/orderSlide';
 import LikeButtonComponent from '../LikeButtonComponent/LikeButtonComponent';
 import FbCommentComponent from '../FbCommentComponent/FbCommentComponent';
 import { initFacebookSDK } from '../../utils';
+import SectionComponent from '../SectionComponent/SectionComponent';
 
 const ProductDetailsComponent = ({ idProduct }) => {
   const navigate = useNavigate();
@@ -47,10 +49,8 @@ const ProductDetailsComponent = ({ idProduct }) => {
   const [amountMessage, setAmountMessage] = useState('');
   const [currentImage, setCurrentImage] = useState(null);
 
-  // Array of small images
-  const smallImages = [imageSmall1, imageSmall2, imageSmall3, imageSmall4, imageSmall5];
+  let smallImages = [];
 
-  // Handle clicking on small image
   const handleImageClick = (imageSrc) => {
     setCurrentImage(imageSrc);
   };
@@ -68,6 +68,27 @@ const ProductDetailsComponent = ({ idProduct }) => {
     queryKey: ['product-details', idProduct],
     queryFn: fetchDetailsProduct,
     enabled: !!idProduct,
+  });
+
+  if (productDetails?.data?.image) {
+    smallImages = productDetails?.data?.image;
+  }
+
+  // Fetch products with same type
+  const fetchProductsByType = async (type) => {
+    if (!type) return [];
+    const response = await ProductService.getAllProduct('', 100); // Get more products
+    return (
+      response?.data?.filter(
+        (product) => product.type === type && product._id !== idProduct, // Exclude current product
+      ) || []
+    );
+  };
+
+  const { data: relatedProducts = [] } = useQuery({
+    queryKey: ['related-products', productDetails?.data?.type, idProduct],
+    queryFn: () => fetchProductsByType(productDetails?.data?.type),
+    enabled: !!productDetails?.data?.type,
   });
 
   const onChange = (value) => {
@@ -116,6 +137,10 @@ const ProductDetailsComponent = ({ idProduct }) => {
     }
   };
 
+  const handleNavigateType = (type) => {
+    navigate(`/type-product/`, { state: { type } });
+  };
+
   // Facebook integration
   // useEffect(() => {
   //   initFacebookSDK();
@@ -127,7 +152,7 @@ const ProductDetailsComponent = ({ idProduct }) => {
         <Row>
           <WrapperImageCol xs={24} md={10}>
             <WrapperMainImage>
-              <Image src={currentImage || productDetails?.data?.image} alt="Image Product" preview={false} />
+              <Image src={currentImage || productDetails?.data?.image[0]} alt="Image Product" preview={false} />
             </WrapperMainImage>
             <Row style={{ paddingTop: '10px', justifyContent: 'space-between' }}>
               {smallImages.map((image, index) => (
@@ -194,7 +219,8 @@ const ProductDetailsComponent = ({ idProduct }) => {
               <ButtonComponent
                 onClick={handleAddOrderProduct}
                 style={{
-                  backgroundColor: '#C68642',
+                  backgroundColor: !!productDetails?.data?.countInStock ? '#C68642' : '#404040',
+                  cursor: !!productDetails?.data?.countInStock ? 'pointer' : 'not-allowed',
                   borderRadius: '4px',
                   color: '#FDF6EC',
                   fontWeight: '600',
@@ -216,6 +242,59 @@ const ProductDetailsComponent = ({ idProduct }) => {
             {!!amountMessage && <WrapperErrorMessage>{amountMessage}</WrapperErrorMessage>}
           </WrapperInfoCol>
         </Row>
+
+        <WrapperCommentContainer>
+          <div
+            style={{
+              marginTop: '20px',
+            }}
+          >
+            <div
+              style={{
+                backgroundColor: '#1a1a1a',
+                padding: '16px 24px',
+                borderRadius: '12px',
+                border: '1px solid #333333',
+                marginBottom: '24px',
+              }}
+            >
+              <h3
+                style={{
+                  fontSize: '18px',
+                  fontWeight: 'bold',
+                  color: '#C68642',
+                  margin: '0',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.5px',
+                }}
+              >
+                MÔ TẢ SẢN PHẨM
+              </h3>
+            </div>
+            <FormattedTextComponent
+              text={productDetails?.data?.description}
+              style={{
+                fontSize: '14px',
+                color: '#D1D1D1',
+                backgroundColor: 'transparent',
+                padding: '0 8px',
+                border: 'none',
+                margin: '0',
+              }}
+            />
+          </div>
+        </WrapperCommentContainer>
+
+        <WrapperCommentContainer>
+          <SectionComponent
+            data={relatedProducts}
+            title={`SẢN PHẨM CÙNG LOẠI - ${productDetails?.data?.type?.toUpperCase() || ''}`}
+            viewAllText="Xem tất cả >"
+            onViewAll={() => handleNavigateType(productDetails?.data?.type)}
+            isMultiType={false}
+            showNavigation={true}
+          />
+        </WrapperCommentContainer>
 
         <WrapperCommentContainer>
           <FbCommentComponent

@@ -9,12 +9,16 @@ export const WrapperCardStyle = styled(Card)`
       height: 200px;
     },
     position: relative;
-    cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
+    cursor: pointer;
     opacity: ${(props) => (props.disabled ? '0.4' : '1')};
 
     .ant-card-body {
         padding: 10px;
         background-color: #dfdedd;
+    }
+    
+    .ant-card-cover {
+        position: relative;
     }
 `;
 
@@ -49,4 +53,23 @@ export const WrapperStyleTextSell = styled.span`
   font-size: 15px;
   line-height: 24px;
   color: #959392;
+`;
+
+export const WrapperOutOfStockLabel = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+  z-index: 10;
+  white-space: nowrap;
+  backdrop-filter: blur(4px);
+  border: 1px solid #ff4444;
+  box-shadow: 0 4px 12px rgba(255, 68, 68, 0.3);
 `;

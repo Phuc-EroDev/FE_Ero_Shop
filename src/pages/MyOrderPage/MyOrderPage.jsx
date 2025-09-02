@@ -1,100 +1,174 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import * as OrderService from '../../services/OrderService';
 import Loading from '../../components/LoadingComponent/Loading';
 import { useSelector } from 'react-redux';
 import { orderConstants } from '../../constant';
-import { WrapperContainer, WrapperItemInfo, WrapperItemOrder, WrapperMethodSection } from './style';
-import { useLocation } from 'react-router-dom';
+import {
+  MyOrderContainer,
+  MyOrderWrapper,
+  MyOrderTitle,
+  OrderCard,
+  OrderHeader,
+  OrderId,
+  OrderStatus,
+  StatusBadge,
+  OrderBody,
+  OrderInfo,
+  InfoCard,
+  InfoTitle,
+  InfoContent,
+  ShippingBadge,
+  ProductList,
+  ProductItem,
+  ProductImage,
+  ProductInfo,
+  ProductName,
+  ProductDetails,
+  OrderFooter,
+  TotalPrice,
+  ActionButtons,
+  ActionButton,
+  EmptyState,
+} from './style';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { message } from 'antd';
 
 const MyOrderPage = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const { state } = location;
+  const [cancellingOrder, setCancellingOrder] = useState(null);
+
   const fetchMyOrder = async () => {
     const res = await OrderService.getOrderByUserId(state?.id, state?.access_token);
     return res.data;
   };
+
   const queryOrder = useQuery({
     queryKey: ['order'],
     queryFn: fetchMyOrder,
   });
   const { isLoading: isLoadingOrders, data: orders } = queryOrder;
 
+  const handleCancelOrder = async (order) => {
+    try {
+      setCancellingOrder(order._id);
+      await OrderService.cancelOrder(order?._id, state?.access_token, order?.user, order?.orderItems);
+      message.success('Đơn hàng đã được hủy thành công!');
+      queryOrder.refetch();
+    } catch (error) {
+      message.error('Có lỗi xảy ra khi hủy đơn hàng!');
+    } finally {
+      setCancellingOrder(null);
+    }
+  };
+
+  const handleViewDetail = (order) => {
+    navigate('/order-detail', {
+      state: {
+        orderId: order._id,
+        orderData: order,
+        ...state,
+      },
+    });
+  };
+
+  const getPaymentStatus = (paymentMethod, isPaid) => {
+    if (paymentMethod === 'paypal') return 'paid';
+    return isPaid ? 'paid' : 'pending';
+  };
+
+  const getDeliveryStatus = (isDelivered) => {
+    return isDelivered ? 'delivered' : 'pending';
+  };
+
   return (
     <Loading isPending={isLoadingOrders}>
-      <div style={{ backgroundColor: '#1a1a1a', width: '100%', minHeight: '100vh', padding: '10px 120px' }}>
-        {orders?.map((order) => (
-          <div
-            key={order?._id}
-            style={{ display: 'flex', justifyContent: 'space-between', gap: '20px', padding: '10px 0' }}
-          >
-            <WrapperContainer>
-              <WrapperMethodSection>
-                <h4 className="method-title">Phương thức giao hàng</h4>
-                <div className="method-badge">
-                  <span className="badge fast">{orderConstants?.shipping['fast']}</span>
-                  <span>Giao hàng tiết kiệm</span>
-                </div>
-              </WrapperMethodSection>
+      <MyOrderContainer>
+        <MyOrderWrapper>
+          <MyOrderTitle>Đơn hàng của tôi</MyOrderTitle>
 
-              <WrapperMethodSection>
-                <h4 className="method-title">Phương thức thanh toán</h4>
-                <div className="method-container">
-                  <span>{orderConstants?.payment[order?.paymentMethod]}</span>
-                </div>
-              </WrapperMethodSection>
+          {!orders || orders.length === 0 ? (
+            <EmptyState>
+              <h3>Chưa có đơn hàng nào</h3>
+              <p>Bạn chưa có đơn hàng nào. Hãy mua sắm ngay!</p>
+            </EmptyState>
+          ) : (
+            orders?.map((order) => (
+              <OrderCard key={order?._id}>
+                <OrderHeader>
+                  <OrderId>Mã đơn hàng: #{order?._id?.slice(-8)}</OrderId>
+                  <OrderStatus>
+                    <StatusBadge status={getPaymentStatus(order?.paymentMethod, order?.isPaid)}>
+                      {getPaymentStatus(order?.paymentMethod, order?.isPaid) === 'paid'
+                        ? 'Đã thanh toán'
+                        : 'Chưa thanh toán'}
+                    </StatusBadge>
+                    <StatusBadge status={getDeliveryStatus(order?.isDelivered)}>
+                      {getDeliveryStatus(order?.isDelivered) === 'delivered' ? 'Đã giao hàng' : 'Đang giao hàng'}
+                    </StatusBadge>
+                  </OrderStatus>
+                </OrderHeader>
 
-              <WrapperItemInfo>
-                {order?.orderItems?.map((orderItem) => {
-                  return (
-                    <WrapperItemOrder key={orderItem?.product}>
-                      <div style={{ width: '40%', display: 'flex', alignItems: 'center', gap: '12px' }}>
-                        <img
-                          src={orderItem?.image}
+                <OrderBody>
+                  <OrderInfo>
+                    <InfoCard>
+                      <InfoTitle>Phương thức giao hàng</InfoTitle>
+                      <InfoContent>
+                        <ShippingBadge>{orderConstants?.shipping[order?.shippingMethod]}</ShippingBadge>
+                        <span>{orderConstants?.shippingName[order?.shippingMethod]}</span>
+                      </InfoContent>
+                    </InfoCard>
+
+                    <InfoCard>
+                      <InfoTitle>Phương thức thanh toán</InfoTitle>
+                      <InfoContent>{orderConstants?.payment[order?.paymentMethod]}</InfoContent>
+                    </InfoCard>
+                  </OrderInfo>
+
+                  <ProductList>
+                    {order?.orderItems?.map((orderItem) => (
+                      <ProductItem key={orderItem?.product}>
+                        <ProductImage
+                          src={Array.isArray(orderItem?.image) ? orderItem?.image[0] : orderItem?.image}
                           alt="product"
-                          style={{
-                            width: '60px',
-                            height: '60px',
-                            objectFit: 'cover',
-                            borderRadius: '6px',
-                          }}
                         />
-                        <div style={{ color: '#D29B63', fontSize: '16px', fontWeight: 'bold' }}>{orderItem?.name}</div>
-                      </div>
+                        <ProductInfo>
+                          <ProductName>{orderItem?.name}</ProductName>
+                          <ProductDetails>
+                            <span>Giá: {orderItem?.price.toLocaleString()}đ</span>
+                            <span>Số lượng: {orderItem?.amount}</span>
+                            <span>Thành tiền: {(orderItem?.price * orderItem?.amount).toLocaleString()}đ</span>
+                          </ProductDetails>
+                        </ProductInfo>
+                      </ProductItem>
+                    ))}
+                  </ProductList>
+                </OrderBody>
 
-                      <div
-                        style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'space-between',
-                          marginLeft: '20px',
-                        }}
+                <OrderFooter>
+                  <TotalPrice>Tổng tiền: {order?.totalPrice?.toLocaleString()}đ</TotalPrice>
+                  <ActionButtons>
+                    <ActionButton variant="detail" onClick={() => handleViewDetail(order)}>
+                      Xem chi tiết
+                    </ActionButton>
+                    {!order?.isDelivered && (
+                      <ActionButton
+                        variant="cancel"
+                        onClick={() => handleCancelOrder(order)}
+                        disabled={cancellingOrder === order._id}
                       >
-                        <div>
-                          <span style={{ color: '#ffffff', fontSize: '14px', fontWeight: '400' }}>
-                            Giá tiền: {orderItem?.price.toLocaleString()}đ
-                          </span>
-                        </div>
-                      </div>
-
-                      <div style={{ marginLeft: '20px', marginRight: '20px' }}>
-                        <span style={{ color: '#ffffff', fontSize: '14px', fontWeight: '400' }}>
-                          Số lượng: {orderItem?.amount}
-                        </span>
-                      </div>
-                    </WrapperItemOrder>
-                  );
-                })}
-              </WrapperItemInfo>
-              <div>
-                <span style={{ color: '#cb8540', fontSize: '18px', fontWeight: 'bold' }}>
-                  Tổng tiền: {order?.totalPrice?.toLocaleString()}đ
-                </span>
-              </div>
-            </WrapperContainer>
-          </div>
-        ))}
-      </div>
+                        {cancellingOrder === order._id ? 'Đang hủy...' : 'Hủy đơn hàng'}
+                      </ActionButton>
+                    )}
+                  </ActionButtons>
+                </OrderFooter>
+              </OrderCard>
+            ))
+          )}
+        </MyOrderWrapper>
+      </MyOrderContainer>
     </Loading>
   );
 };

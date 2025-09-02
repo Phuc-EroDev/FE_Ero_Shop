@@ -3,7 +3,13 @@ import image from './assets/images/product1.png';
 export const orderConstants = {
   shipping: {
     fast: 'FAST',
+    ghtk: 'GHTK',
     gojek: 'GO JEK',
+  },
+  shippingName: {
+    fast: 'Giao hàng nhanh',
+    ghtk: 'Giao hàng tiết kiệm',
+    gojek: 'Giao hàng qua GO JEK',
   },
   payment: {
     cod: 'Thanh toán tiền mặt khi nhận hàng',

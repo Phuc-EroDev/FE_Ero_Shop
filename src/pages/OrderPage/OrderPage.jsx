@@ -60,7 +60,7 @@ const OrderPage = () => {
       description: 'Từ 10.000đ --> 100.000đ',
     },
     {
-      title: '100.000đ shipping fee',
+      title: '50.000đ shipping fee',
       description: 'Từ 100.000đ trở lên',
     },
   ];
@@ -117,25 +117,28 @@ const OrderPage = () => {
 
   const subtotalMemo = useMemo(() => {
     const result = order?.orderItemsSelected?.reduce((subtotal, ItemSelected) => {
-      return subtotal + ((ItemSelected?.price * 100) / (100 - ItemSelected?.discount)) * ItemSelected?.amount;
+      return subtotal + ItemSelected?.price * ItemSelected?.amount;
     }, 0);
-    return result;
+    return Math.round(result);
   }, [order?.orderItemsSelected]);
 
   const subtotalAfterDiscountMemo = useMemo(() => {
     const result = order?.orderItemsSelected?.reduce((subtotalAfterDiscount, ItemSelected) => {
-      return subtotalAfterDiscount + ItemSelected?.price * ItemSelected?.amount;
+      return (
+        subtotalAfterDiscount +
+        (ItemSelected?.price - (ItemSelected?.price * ItemSelected?.discount) / 100) * ItemSelected?.amount
+      );
     }, 0);
-    return result;
+    return Math.round(result);
   }, [order?.orderItemsSelected]);
 
   const shippingFeeMemo = useMemo(() => {
     const subtotal = subtotalMemo;
-    if (subtotal <= 10000) {
+    if (subtotal < 10000) {
       return 0;
-    } else if (subtotal > 10000 && subtotal <= 100000) {
+    } else if (subtotal >= 10000 && subtotal < 100000) {
       return 10000;
-    } else if (subtotal > 100000) {
+    } else if (subtotal >= 100000) {
       return 50000;
     }
     return 20000;
@@ -144,7 +147,7 @@ const OrderPage = () => {
   const totalPriceMemo = useMemo(() => {
     const tax = 0; // Giả sử không có thuế
     const result = subtotalAfterDiscountMemo + shippingFeeMemo + tax;
-    return result;
+    return Math.round(result);
   }, [subtotalAfterDiscountMemo, shippingFeeMemo]);
 
   const handleAddCard = () => {
@@ -262,7 +265,7 @@ const OrderPage = () => {
                         value={orderItem?.product}
                       />
                       <img
-                        src={orderItem?.image}
+                        src={orderItem?.image[0]}
                         alt="product"
                         style={{
                           width: '60px',
@@ -285,11 +288,12 @@ const OrderPage = () => {
                     >
                       <div style={{ display: 'flex', flexDirection: 'column' }}>
                         <span style={{ color: '#D29B63', fontSize: '16px', fontWeight: 'bold' }}>
-                          {(orderItem?.price).toLocaleString()}đ
+                          {Math.round(
+                            orderItem?.price - (orderItem?.price * orderItem?.discount) / 100,
+                          ).toLocaleString()}
+                          đ
                         </span>
-                        <WrapperPriceDiscount>
-                          {Math.round((orderItem?.price * 100) / (100 - orderItem?.discount)).toLocaleString()}đ
-                        </WrapperPriceDiscount>
+                        <WrapperPriceDiscount>{Math.round(orderItem?.price).toLocaleString()}đ</WrapperPriceDiscount>
                       </div>
 
                       <WrapperCountOrder>
@@ -326,7 +330,10 @@ const OrderPage = () => {
                       </WrapperCountOrder>
 
                       <span style={{ color: '#D29B63', fontSize: '16px', fontWeight: 'bold' }}>
-                        {Math.round(orderItem?.amount * orderItem?.price).toLocaleString()}đ
+                        {Math.round(
+                          orderItem?.amount * (orderItem?.price - (orderItem?.price * orderItem?.discount) / 100),
+                        ).toLocaleString()}
+                        đ
                       </span>
 
                       <DeleteOutlined
@@ -359,11 +366,11 @@ const OrderPage = () => {
             <WrapperInfo>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <span>Tạm tính:</span>
-                <span>{Math.round(subtotalMemo).toLocaleString() || 0}đ</span>
+                <span>{subtotalMemo.toLocaleString() || 0}đ</span>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <span>Giảm giá:</span>
-                <span>{Math.round(subtotalMemo - subtotalAfterDiscountMemo).toLocaleString() || 0}đ</span>
+                <span>{(subtotalMemo - subtotalAfterDiscountMemo).toLocaleString() || 0}đ</span>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <span>Thuế:</span>
@@ -371,14 +378,14 @@ const OrderPage = () => {
               </div>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <span>Phí giao hàng:</span>
-                <span>{Math.round(shippingFeeMemo).toLocaleString() || 0}đ</span>
+                <span>{shippingFeeMemo.toLocaleString() || 0}đ</span>
               </div>
             </WrapperInfo>
 
             <WrapperTotal>
               <span>Tổng tiền:</span>
               <span style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
-                <span>{Math.round(totalPriceMemo).toLocaleString() || 0}đ</span>
+                <span>{totalPriceMemo.toLocaleString() || 0}đ</span>
                 <span>(Đã bao gồm VAT nếu có)</span>
               </span>
             </WrapperTotal>

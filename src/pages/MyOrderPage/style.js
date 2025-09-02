@@ -264,3 +264,239 @@ export const WrapperItemInfo = styled.div`
   flex-direction: column;
   align-items: center;
 `;
+
+// My Order Page Components
+export const MyOrderContainer = styled.div`
+  background-color: #1a1a1a;
+  width: 100%;
+  min-height: 100vh;
+  padding: 20px;
+`;
+
+export const MyOrderWrapper = styled.div`
+  max-width: 1200px;
+  margin: 0 auto;
+`;
+
+export const MyOrderTitle = styled.h2`
+  color: #C68642;
+  font-size: 24px;
+  margin-bottom: 24px;
+  text-align: center;
+  font-weight: bold;
+`;
+
+export const OrderCard = styled.div`
+  background-color: #2a2a2a;
+  border-radius: 12px;
+  border: 1px solid #333;
+  margin-bottom: 20px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+
+  &:hover {
+    border-color: #C68642;
+    box-shadow: 0 6px 12px rgba(198, 134, 66, 0.1);
+  }
+`;
+
+export const OrderHeader = styled.div`
+  background-color: #333;
+  padding: 16px 20px;
+  border-bottom: 1px solid #444;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+export const OrderId = styled.span`
+  color: #C68642;
+  font-size: 14px;
+  font-weight: 600;
+`;
+
+export const OrderStatus = styled.div`
+  display: flex;
+  gap: 8px;
+`;
+
+export const StatusBadge = styled.span`
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 600;
+  background-color: ${props => {
+    if (props.status === 'paid') return '#4CAF50';
+    if (props.status === 'delivered') return '#2196F3';
+    if (props.status === 'pending') return '#FF9800';
+    if (props.status === 'cancelled') return '#F44336';
+    return '#666';
+  }};
+  color: white;
+`;
+
+export const OrderBody = styled.div`
+  padding: 20px;
+`;
+
+export const OrderInfo = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 20px;
+`;
+
+export const InfoCard = styled.div`
+  background-color: #333;
+  padding: 12px 16px;
+  border-radius: 8px;
+  border: 1px solid #444;
+`;
+
+export const InfoTitle = styled.h5`
+  color: #C68642;
+  font-size: 14px;
+  margin-bottom: 8px;
+  font-weight: 600;
+`;
+
+export const InfoContent = styled.div`
+  color: #E5E5E5;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+`;
+
+export const ShippingBadge = styled.span`
+  background-color: #C68642;
+  color: #FDF6EC;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+`;
+
+export const ProductList = styled.div`
+  margin-bottom: 20px;
+`;
+
+export const ProductItem = styled.div`
+  display: flex;
+  align-items: center;
+  padding: 12px;
+  background-color: #333;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  border: 1px solid #444;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+`;
+
+export const ProductImage = styled.img`
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid #C68642;
+  margin-right: 16px;
+`;
+
+export const ProductInfo = styled.div`
+  flex: 1;
+  min-width: 0;
+`;
+
+export const ProductName = styled.div`
+  color: #E5E5E5;
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 4px;
+`;
+
+export const ProductDetails = styled.div`
+  display: flex;
+  gap: 20px;
+  color: #B8B8B8;
+  font-size: 14px;
+`;
+
+export const OrderFooter = styled.div`
+  border-top: 1px solid #444;
+  padding: 16px 20px;
+  background-color: #333;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+export const TotalPrice = styled.div`
+  color: #C68642;
+  font-size: 18px;
+  font-weight: bold;
+`;
+
+export const ActionButtons = styled.div`
+  display: flex;
+  gap: 12px;
+`;
+
+export const ActionButton = styled.button`
+  padding: 8px 16px;
+  border-radius: 6px;
+  border: none;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  ${props => {
+    if (props.variant === 'cancel') {
+      return `
+        background-color: #F44336;
+        color: white;
+        
+        &:hover {
+          background-color: #D32F2F;
+        }
+      `;
+    }
+    if (props.variant === 'detail') {
+      return `
+        background-color: transparent;
+        color: #C68642;
+        border: 1px solid #C68642;
+        
+        &:hover {
+          background-color: #C68642;
+          color: white;
+        }
+      `;
+    }
+    return '';
+  }}
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+`;
+
+export const EmptyState = styled.div`
+  text-align: center;
+  padding: 60px 20px;
+  color: #B8B8B8;
+  
+  h3 {
+    color: #C68642;
+    font-size: 20px;
+    margin-bottom: 8px;
+  }
+  
+  p {
+    font-size: 16px;
+  }
+`;

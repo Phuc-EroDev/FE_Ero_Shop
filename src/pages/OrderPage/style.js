@@ -40,7 +40,7 @@ export const WrapperStyleHeaderShipping = styled.div`
 
         .ant-steps-item-content {
           .ant-steps-item-title {
-            color: #cccccc !important;
+            color: #cccccc;
             font-size: 14px;
             font-weight: 600;
             margin-bottom: 4px;
@@ -60,8 +60,8 @@ export const WrapperStyleHeaderShipping = styled.div`
       /* Active state */
       &.ant-steps-item-process {
         .ant-steps-item-icon {
-          background-color: #1890ff !important;
-          border-color: #1890ff !important;
+          background-color: #1890ff;
+          border-color: #1890ff;
         }
 
         .ant-steps-item-title {
@@ -72,8 +72,8 @@ export const WrapperStyleHeaderShipping = styled.div`
       /* Finished state */
       &.ant-steps-item-finish {
         .ant-steps-item-icon {
-          background-color: #52c41a !important;
-          border-color: #52c41a !important;
+          background-color: #52c41a;
+          border-color: #52c41a;
         }
 
         .ant-steps-item-title {
@@ -84,7 +84,7 @@ export const WrapperStyleHeaderShipping = styled.div`
       /* Connector line */
       &:not(:last-child) {
         .ant-steps-item-container::after {
-          background-color: #404040 !important;
+          background-color: #404040;
           height: 1px;
           top: 16px;
         }
@@ -93,7 +93,7 @@ export const WrapperStyleHeaderShipping = styled.div`
       /* Active connector */
       &.ant-steps-item-finish:not(:last-child) {
         .ant-steps-item-container::after {
-          background-color: #52c41a !important;
+          background-color: #52c41a;
         }
       }
     }
@@ -135,20 +135,67 @@ export const WrapperPriceDiscount = styled.span`
 export const WrapperCountOrder = styled.div`
   display: flex;
   align-items: center;
-  width: 100px;
-  border-radius: 6px;
+  width: 120px;
+  border-radius: 8px;
   border: 1px solid #555555;
-  background-color: #444444;
+  background-color: #333333;
   margin: 0 16px;
+  overflow: hidden;
 
   button {
-    background-color: transparent !important;
+    background-color: transparent;
     border: none !important;
-    color: #d29b63 !important;
+    color: #d29b63;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
 
     &:hover {
       color: #ffffff !important;
       background-color: #d29b63 !important;
+    }
+
+    .anticon {
+      font-size: 12px;
+    }
+  }
+
+  .ant-input-number {
+    background-color: transparent;
+    border: none;
+    color: #ffffff;
+    text-align: center;
+    flex: 1;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .ant-input-number-input {
+      background-color: transparent;
+      border: none;
+      color: #ffffff;
+      text-align: center;
+      font-weight: 500;
+      padding: 0;
+      height: 100%;
+      line-height: 32px;
+      margin: 0;
+    }
+
+    .ant-input-number-input-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+    }
+
+    .ant-input-number-handler-wrap {
+      display: none;
     }
   }
 `;

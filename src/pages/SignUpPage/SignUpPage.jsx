@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { TextWelcomeShop, WrapperContainerLeft, WrapperContainerRight, WrapperTextLight } from './style';
 import InputFormComponent from '../../components/InputFormComponent/InputFormComponent';
 import ButtonComponent from '../../components/ButtonComponent/ButtonComponent';
-import { EyeFilled, EyeInvisibleFilled } from '@ant-design/icons';
+import { EyeFilled, EyeInvisibleFilled, LeftOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import * as UserService from '../../services/UserService';
 import * as OtpService from '../../services/OtpService';
@@ -48,6 +48,10 @@ const SignUpPage = () => {
     navigate('/sign-in');
   };
 
+  const handleNavigateHome = () => {
+    navigate('/');
+  };
+
   const mutation = useMutationHook((data) => UserService.registerUser(data));
   const { data, isPending, isSuccess, isError } = mutation;
 
@@ -79,8 +83,36 @@ const SignUpPage = () => {
         justifyContent: 'center',
         backgroundColor: 'rgba(0, 0, 0, 0.53)',
         height: '100vh',
+        position: 'relative',
       }}
     >
+      <div
+        onClick={handleNavigateHome}
+        style={{
+          position: 'absolute',
+          top: '20px',
+          left: '20px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px',
+          color: '#C68642',
+          cursor: 'pointer',
+          fontSize: '14px',
+          fontWeight: '500',
+          transition: 'all 0.3s ease',
+          zIndex: 10,
+        }}
+        onMouseEnter={(e) => {
+          e.target.style.color = '#D4A574';
+        }}
+        onMouseLeave={(e) => {
+          e.target.style.color = '#C68642';
+        }}
+      >
+        <LeftOutlined style={{ fontSize: '16px' }} />
+        <span>Return Home</span>
+      </div>
+
       <div
         style={{
           width: '800px',
@@ -93,7 +125,7 @@ const SignUpPage = () => {
       >
         <WrapperContainerLeft>
           <h1>Xin chào</h1>
-          <p>Đăng nhập hoặc tạo tài khoản</p>
+          <p>Đăng ký tài khoản của bạn</p>
           <div style={{ position: 'relative' }}>
             <span
               style={{
@@ -183,8 +215,7 @@ const SignUpPage = () => {
             )}
           </div>
           {data?.status === 'ERR' && <span style={{ color: 'red' }}>{data?.message}</span>}
-          <Loading isPending={false}>
-            {/* <Loading isPending={isPending}> */}
+          <Loading isPending={isPending}>
             <ButtonComponent
               onClick={handleSignUp}
               disabled={!email.length || !password.length || !confirmPassword}

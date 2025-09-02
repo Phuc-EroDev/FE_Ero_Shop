@@ -1,12 +1,12 @@
 import { message } from 'antd';
 
 const success = (mes = 'Success') => {
-  console.log('mes: ', mes);
+  // console.log('mes: ', mes);
   message.success(mes);
 };
 
 const error = (mes = 'Error') => {
-  console.log('mes: ', mes);
+  // console.log('mes: ', mes);
   message.error(mes);
 };
 

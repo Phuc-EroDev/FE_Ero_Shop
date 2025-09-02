@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { TextWelcomeShop, WrapperContainerLeft, WrapperContainerRight, WrapperTextLight } from './style';
 import InputFormComponent from '../../components/InputFormComponent/InputFormComponent';
 import ButtonComponent from '../../components/ButtonComponent/ButtonComponent';
-import { EyeFilled, EyeInvisibleFilled } from '@ant-design/icons';
+import { EyeFilled, EyeInvisibleFilled, LeftOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import * as UserService from '../../services/UserService';
 import * as OtpService from '../../services/OtpService';
@@ -53,6 +53,10 @@ const ForgotPasswordPage = () => {
     navigate('/sign-in');
   };
 
+  const handleNavigateHome = () => {
+    navigate('/');
+  };
+
   // Tạo mutation cho reset password (cần tạo service này)
   const mutation = useMutationHook((data) => {
     // Sẽ cần tạo service resetPassword trong UserService
@@ -92,8 +96,36 @@ const ForgotPasswordPage = () => {
         justifyContent: 'center',
         backgroundColor: 'rgba(0, 0, 0, 0.53)',
         height: '100vh',
+        position: 'relative',
       }}
     >
+      <div
+        onClick={handleNavigateHome}
+        style={{
+          position: 'absolute',
+          top: '20px',
+          left: '20px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px',
+          color: '#C68642',
+          cursor: 'pointer',
+          fontSize: '14px',
+          fontWeight: '500',
+          transition: 'all 0.3s ease',
+          zIndex: 10,
+        }}
+        onMouseEnter={(e) => {
+          e.target.style.color = '#D4A574';
+        }}
+        onMouseLeave={(e) => {
+          e.target.style.color = '#C68642';
+        }}
+      >
+        <LeftOutlined style={{ fontSize: '16px' }} />
+        <span>Return Home</span>
+      </div>
+
       <div
         style={{
           width: '800px',

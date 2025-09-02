@@ -6,7 +6,7 @@ const DefaultComponent = ({ children }) => {
   return (
     <div>
       <HeaderComponent />
-      {children}
+      <div style={{ paddingTop: '60px', minHeight: 'calc(100vh - 80px)' }}>{children}</div>
       <FooterComponent />
     </div>
   );

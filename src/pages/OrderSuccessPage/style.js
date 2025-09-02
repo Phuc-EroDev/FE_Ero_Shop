@@ -264,3 +264,287 @@ export const WrapperItemInfo = styled.div`
   flex-direction: column;
   align-items: center;
 `;
+
+// Order Success Page Components
+export const OrderSuccessContainer = styled.div`
+  background-color: #1a1a1a;
+  width: 100%;
+  min-height: 100vh;
+  padding: 40px;
+`;
+
+export const OrderSuccessWrapper = styled.div`
+  max-width: 1200px;
+  margin: 0 auto;
+`;
+
+export const OrderSuccessTitle = styled.h3`
+  color: #C68642;
+  font-size: 28px;
+  margin-bottom: 8px;
+  text-align: center;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+`;
+
+export const OrderSuccessSubtitle = styled.p`
+  color: #B8B8B8;
+  font-size: 16px;
+  text-align: center;
+  margin-bottom: 32px;
+`;
+
+export const OrderSuccessLayout = styled.div`
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+`;
+
+export const OrderSuccessLeftColumn = styled.div`
+  flex: 2;
+  min-width: 0;
+`;
+
+export const OrderSuccessRightColumn = styled.div`
+  flex: 1;
+  min-width: 300px;
+`;
+
+export const OrderSuccessCard = styled.div`
+  background-color: #2a2a2a;
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid #333;
+  margin-bottom: 20px;
+`;
+
+export const OrderSuccessCardTitle = styled.h4`
+  color: #C68642;
+  font-size: 16px;
+  margin-bottom: 16px;
+  font-weight: bold;
+`;
+
+export const OrderSuccessCardSmallTitle = styled.h4`
+  color: #C68642;
+  font-size: 14px;
+  margin-bottom: 12px;
+  font-weight: bold;
+`;
+
+export const StatusBadgeContainer = styled.div`
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+`;
+
+export const StatusBadge = styled.span`
+  color: #fff;
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: bold;
+  background-color: ${props => {
+    if (props.type === 'paid') return '#4CAF50';
+    if (props.type === 'pending') return '#FF9800';
+    if (props.type === 'preparing') return '#2196F3';
+    return '#666';
+  }};
+`;
+
+export const UserInfoGrid = styled.div`
+  display: grid;
+  gap: 12px;
+`;
+
+export const UserInfoRow = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
+
+export const UserInfoLabel = styled.span`
+  color: #B8B8B8;
+  font-size: 14px;
+`;
+
+export const UserInfoValue = styled.span`
+  color: #E5E5E5;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: right;
+  max-width: 60%;
+`;
+
+export const MethodGrid = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 20px;
+`;
+
+export const MethodCard = styled.div`
+  background-color: #2a2a2a;
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid #333;
+`;
+
+export const ShippingContainer = styled.div`
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+`;
+
+export const ShippingBadge = styled.div`
+  background-color: #C68642;
+  color: #FDF6EC;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  display: inline-block;
+`;
+
+export const ShippingName = styled.div`
+  color: #E5E5E5;
+  font-size: 13px;
+`;
+
+export const PaymentMethod = styled.div`
+  color: #E5E5E5;
+  font-size: 13px;
+  background-color: #333;
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: 1px solid #444;
+`;
+
+export const ProductItem = styled.div`
+  display: flex;
+  align-items: center;
+  padding: 12px;
+  background-color: #333;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  border: 1px solid #444;
+`;
+
+export const ProductImage = styled.img`
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid #C68642;
+  margin-right: 12px;
+`;
+
+export const ProductInfo = styled.div`
+  flex: 1;
+  min-width: 0;
+`;
+
+export const ProductName = styled.div`
+  color: #E5E5E5;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 4px;
+`;
+
+export const ProductPriceRow = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+export const ProductPrice = styled.span`
+  color: #B8B8B8;
+  font-size: 12px;
+`;
+
+export const ProductTotal = styled.span`
+  color: #C68642;
+  font-size: 14px;
+  font-weight: bold;
+`;
+
+export const SummaryCard = styled.div`
+  background-color: #2a2a2a;
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid #333;
+  position: sticky;
+  top: 20px;
+`;
+
+export const SummaryTitle = styled.h4`
+  color: #C68642;
+  font-size: 16px;
+  margin-bottom: 16px;
+  font-weight: bold;
+  text-align: center;
+`;
+
+export const SummarySection = styled.div`
+  border-bottom: 1px solid #444;
+  padding-bottom: 16px;
+  margin-bottom: 16px;
+`;
+
+export const SummaryRow = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+`;
+
+export const SummaryLabel = styled.span`
+  color: #B8B8B8;
+  font-size: 14px;
+`;
+
+export const SummaryValue = styled.span`
+  color: #E5E5E5;
+  font-size: 14px;
+`;
+
+export const SummaryDiscount = styled.span`
+  color: #4CAF50;
+  font-size: 14px;
+`;
+
+export const SummaryTotal = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  background-color: #333;
+  border-radius: 8px;
+  border: 1px solid #C68642;
+`;
+
+export const SummaryTotalLabel = styled.span`
+  color: #C68642;
+  font-size: 16px;
+  font-weight: bold;
+`;
+
+export const SummaryTotalValue = styled.span`
+  color: #C68642;
+  font-size: 20px;
+  font-weight: bold;
+`;
+
+export const SummaryContact = styled.div`
+  margin-top: 16px;
+  padding: 12px;
+  background-color: #333;
+  border-radius: 8px;
+  color: #B8B8B8;
+  font-size: 12px;
+  line-height: 1.5;
+
+  .highlight {
+    color: #C68642;
+  }
+`;

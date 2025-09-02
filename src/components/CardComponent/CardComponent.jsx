@@ -7,6 +7,7 @@ import {
   WrapperPriceText,
   WrapperReportText,
   WrapperStyleTextSell,
+  WrapperOutOfStockLabel,
 } from './style';
 import labelCard from '../../assets/images/labelCard.png';
 import { useNavigate } from 'react-router-dom';
@@ -22,7 +23,12 @@ const CardComponent = (props) => {
   return (
     <WrapperCardStyle
       hoverable
-      cover={<img alt="example" src={image} />}
+      cover={
+        <div style={{ position: 'relative' }}>
+          <img alt="example" src={image[0]} />
+          {countInStock === 0 && <WrapperOutOfStockLabel>HẾT HÀNG</WrapperOutOfStockLabel>}
+        </div>
+      }
       onClick={() => handleDetailsProduct(id)}
       disabled={countInStock === 0}
     >

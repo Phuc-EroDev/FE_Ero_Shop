@@ -291,7 +291,6 @@ export const WrapperErrorMessage = styled.div`
 /* Comment section styling */
 export const WrapperCommentContainer = styled.div`
   margin-top: 24px;
-  padding-top: 24px;
   border-top: 2px solid #3b3a38;
 
   .fb-comments {

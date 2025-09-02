@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { TextWelcomeShop, WrapperContainerLeft, WrapperContainerRight, WrapperTextLight } from './style';
 import InputFormComponent from '../../components/InputFormComponent/InputFormComponent';
 import ButtonComponent from '../../components/ButtonComponent/ButtonComponent';
-import { EyeFilled, EyeInvisibleFilled } from '@ant-design/icons';
+import { EyeFilled, EyeInvisibleFilled, LeftOutlined } from '@ant-design/icons';
 import { useLocation, useNavigate } from 'react-router-dom';
 import * as UserService from '../../services/UserService';
 import { useMutationHook } from '../../hooks/useMutationHook';
@@ -10,6 +10,7 @@ import Loading from '../../components/LoadingComponent/Loading';
 import { jwtDecode } from 'jwt-decode';
 import { useDispatch } from 'react-redux';
 import { updateUser } from '../../redux/slides/userSlide';
+import * as message from '../../components/MessageComponent/Message';
 
 const SignInPage = () => {
   const [isShowPassword, setIsShowPassword] = useState(false);
@@ -38,16 +39,15 @@ const SignInPage = () => {
     navigate('/forgot-password');
   };
 
+  const handleNavigateHome = () => {
+    navigate('/');
+  };
+
   const mutation = useMutationHook((data) => UserService.loginUser(data));
-  const { data, isPending, isSuccess } = mutation;
+  const { data, isPending, isSuccess, isError } = mutation;
 
   useEffect(() => {
-    if (isSuccess) {
-      if (location?.state) {
-        navigate(location.state);
-      } else {
-        navigate('/');
-      }
+    if (isSuccess && data?.status === 'OK') {
       localStorage.setItem('access_token', JSON.stringify(data?.access_token));
       if (data?.access_token) {
         const decoded = jwtDecode(data?.access_token);
@@ -55,8 +55,17 @@ const SignInPage = () => {
           handleGetDetailsUser(decoded?.id, data?.access_token);
         }
       }
+      if (location?.state) {
+        navigate(location.state);
+      } else {
+        navigate('/');
+      }
+    } else if (isSuccess && data?.status === 'ERR') {
+      message.error('Đăng nhập thất bại');
+    } else if (isError) {
+      message.error('Đăng nhập thất bại');
     }
-  }, [isSuccess]);
+  }, [isSuccess, isError, data]);
 
   const handleGetDetailsUser = async (id, token) => {
     const res = await UserService.getDetailsUser(id, token);
@@ -78,8 +87,36 @@ const SignInPage = () => {
         justifyContent: 'center',
         backgroundColor: 'rgba(0, 0, 0, 0.53)',
         height: '100vh',
+        position: 'relative',
       }}
     >
+      <div
+        onClick={handleNavigateHome}
+        style={{
+          position: 'absolute',
+          top: '20px',
+          left: '20px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px',
+          color: '#C68642',
+          cursor: 'pointer',
+          fontSize: '14px',
+          fontWeight: '500',
+          transition: 'all 0.3s ease',
+          zIndex: 10,
+        }}
+        onMouseEnter={(e) => {
+          e.target.style.color = '#D4A574';
+        }}
+        onMouseLeave={(e) => {
+          e.target.style.color = '#C68642';
+        }}
+      >
+        <LeftOutlined style={{ fontSize: '16px' }} />
+        <span>Return Home</span>
+      </div>
+
       <div
         style={{
           width: '800px',
@@ -92,7 +129,7 @@ const SignInPage = () => {
       >
         <WrapperContainerLeft>
           <h1>Xin chào</h1>
-          <p>Đăng nhập hoặc tạo tài khoản</p>
+          <p>Đăng nhập tài khoản của bạn</p>
           <InputFormComponent
             value={email}
             handleOnChange={handleOnChangeEmail}

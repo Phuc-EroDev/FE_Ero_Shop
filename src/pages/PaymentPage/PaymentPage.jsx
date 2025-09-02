@@ -71,34 +71,37 @@ const PaymentPage = () => {
 
   const subtotalMemo = useMemo(() => {
     const result = order?.orderItemsSelected?.reduce((subtotal, ItemSelected) => {
-      return subtotal + ((ItemSelected?.price * 100) / (100 - ItemSelected?.discount)) * ItemSelected?.amount;
+      return subtotal + ItemSelected?.price * ItemSelected?.amount;
     }, 0);
-    return result;
+    return Math.round(result);
   }, [order?.orderItemsSelected]);
 
   const subtotalAfterDiscountMemo = useMemo(() => {
     const result = order?.orderItemsSelected?.reduce((subtotalAfterDiscount, ItemSelected) => {
-      return subtotalAfterDiscount + ItemSelected?.price * ItemSelected?.amount;
+      return (
+        subtotalAfterDiscount +
+        (ItemSelected?.price - (ItemSelected?.price * ItemSelected?.discount) / 100) * ItemSelected?.amount
+      );
     }, 0);
-    return result;
+    return Math.round(result);
   }, [order?.orderItemsSelected]);
 
   const shippingFeeMemo = useMemo(() => {
     const subtotal = subtotalMemo;
-    if (subtotal <= 10000) {
+    if (subtotal < 10000) {
       return 0;
-    } else if (subtotal > 10000 && subtotal <= 100000) {
+    } else if (subtotal >= 10000 && subtotal < 100000) {
       return 10000;
-    } else if (subtotal > 100000) {
+    } else if (subtotal >= 100000) {
       return 50000;
     }
     return 20000;
   }, [subtotalMemo]);
 
   const totalPriceMemo = useMemo(() => {
-    const tax = 0;
+    const tax = 0; // Giả sử không có thuế
     const result = subtotalAfterDiscountMemo + shippingFeeMemo + tax;
-    return result;
+    return Math.round(result);
   }, [subtotalAfterDiscountMemo, shippingFeeMemo]);
 
   const handleAddOrder = (isPaid = false, paidAt = null) => {
@@ -112,6 +115,7 @@ const PaymentPage = () => {
       subtotalMemo &&
       totalPriceMemo &&
       payment &&
+      shipping &&
       user?.id
     ) {
       mutationAddOrder.mutate({
@@ -122,6 +126,7 @@ const PaymentPage = () => {
         phone: user?.phone,
         access_token: user?.access_token,
         paymentMethod: payment,
+        shippingMethod: shipping,
         itemsPrice: subtotalMemo,
         shippingPrice: shippingFeeMemo,
         totalPrice: totalPriceMemo,
@@ -224,7 +229,21 @@ const PaymentPage = () => {
       dispatch(removeMultiOrderProduct(arrOrdered));
       message.success('Đặt hàng thành công');
       navigate('/order-success', {
-        state: { shipping, payment, orders: order?.orderItemsSelected, totalPrice: totalPriceMemo },
+        state: {
+          user: {
+            fullName: user?.name,
+            address: user?.address,
+            city: user?.city,
+            phone: user?.phone,
+          },
+          shipping,
+          payment,
+          orders: order?.orderItemsSelected,
+          subtotal: subtotalMemo,
+          subtotalAfterDiscount: subtotalAfterDiscountMemo,
+          shippingPrice: shippingFeeMemo,
+          totalPrice: totalPriceMemo,
+        },
       });
     } else if (isErrorAddOrder) {
       message.error('Đặt hàng thất bại');
@@ -245,13 +264,19 @@ const PaymentPage = () => {
                     <Radio value="fast">
                       <div className="method-badge">
                         <span className="badge fast">FAST</span>
+                        <span>Giao hàng nhanh</span>
+                      </div>
+                    </Radio>
+                    <Radio value="ghtk">
+                      <div className="method-badge">
+                        <span className="badge fast">GHTK</span>
                         <span>Giao hàng tiết kiệm</span>
                       </div>
                     </Radio>
                     <Radio value="gojek">
                       <div className="method-badge">
                         <span className="badge standard">GO JEK</span>
-                        <span>Giao hàng tiết kiệm</span>
+                        <span>Giao hàng qua GO JEK</span>
                       </div>
                     </Radio>
                   </Radio.Group>
