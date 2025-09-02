@@ -49,6 +49,7 @@ const SignInPage = () => {
   useEffect(() => {
     if (isSuccess && data?.status === 'OK') {
       localStorage.setItem('access_token', JSON.stringify(data?.access_token));
+      localStorage.setItem('refresh_token', JSON.stringify(data?.refresh_token));
       if (data?.access_token) {
         const decoded = jwtDecode(data?.access_token);
         if (decoded?.id) {
@@ -68,8 +69,10 @@ const SignInPage = () => {
   }, [isSuccess, isError, data]);
 
   const handleGetDetailsUser = async (id, token) => {
+    const storage = localStorage.getItem('refresh_token');
+    const refresh_token = storage ? JSON.parse(storage) : null;
     const res = await UserService.getDetailsUser(id, token);
-    dispatch(updateUser({ ...res?.data, access_token: token }));
+    dispatch(updateUser({ ...res?.data, access_token: token, refresh_token }));
   };
 
   const handleSignIn = () => {

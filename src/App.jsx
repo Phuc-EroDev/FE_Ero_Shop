@@ -38,9 +38,16 @@ function App() {
     async function (config) {
       const currentTime = new Date();
       const { decoded } = handleDecoded();
+      let storageRefreshToken = localStorage.getItem('refresh_token');
+      const refreshToken = storageRefreshToken ? JSON.parse(storageRefreshToken) : null;
+      const decodedRefreshToken = jwtDecode(refreshToken);
       if (decoded?.exp < currentTime.getTime() / 1000) {
-        const data = await UserService.refreshToken();
-        config.headers['token'] = `Bearer ${data?.access_token}`;
+        if (decodedRefreshToken?.exp > currentTime.getTime() / 1000) {
+          const data = await UserService.refreshToken(refreshToken);
+          config.headers['token'] = `Bearer ${data?.access_token}`;
+        } else {
+          dispatch(resetUser());
+        }
       }
       // Do something before request is sent
       return config;
@@ -52,8 +59,10 @@ function App() {
   );
 
   const handleGetDetailsUser = async (id, token) => {
+    let storageRefreshToken = localStorage.getItem('refresh_token');
+    const refreshToken = storageRefreshToken ? JSON.parse(storageRefreshToken) : null;
     const res = await UserService.getDetailsUser(id, token);
-    dispatch(updateUser({ ...res?.data, access_token: token }));
+    dispatch(updateUser({ ...res?.data, access_token: token, refreshToken }));
   };
 
   return (
