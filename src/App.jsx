@@ -5,7 +5,7 @@ import DefaultComponent from './components/DefaultComponent/DefaultComponent';
 import { isJsonString } from './utils';
 import { jwtDecode } from 'jwt-decode';
 import * as UserService from './services/UserService';
-import { updateUser } from './redux/slides/userSlide';
+import { updateUser, resetUser } from './redux/slides/userSlide';
 import { useDispatch, useSelector } from 'react-redux';
 import Loading from './components/LoadingComponent/Loading';
 // import { contextHolder } from './components/MessageComponent/Message';
@@ -27,9 +27,18 @@ function App() {
   const handleDecoded = () => {
     let storageData = localStorage.getItem('access_token');
     let decoded = {};
+    console.log('Storage access_token:', storageData); // Debug log
     if (storageData && isJsonString(storageData)) {
       storageData = JSON.parse(storageData);
-      decoded = jwtDecode(storageData);
+      try {
+        decoded = jwtDecode(storageData);
+        console.log('Decoded token:', decoded); // Debug log
+      } catch (error) {
+        console.error('Error decoding token:', error);
+        // Clear invalid token
+        localStorage.removeItem('access_token');
+        localStorage.removeItem('refresh_token');
+      }
     }
     return { decoded, storageData };
   };

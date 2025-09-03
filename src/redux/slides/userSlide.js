@@ -27,6 +27,7 @@ export const userSlice = createSlice({
         city = '',
         avatar = '',
         access_token = '',
+        refreshToken = '',
         isAdmin,
       } = action.payload;
       state.id = _id;
@@ -37,7 +38,7 @@ export const userSlice = createSlice({
       state.city = city;
       state.avatar = avatar;
       state.access_token = access_token;
-      state.refresh_token = refresh_token;
+      state.refresh_token = refreshToken;
       state.isAdmin = isAdmin; // Ensure isAdmin is set correctly
     },
     resetUser: (state) => {
