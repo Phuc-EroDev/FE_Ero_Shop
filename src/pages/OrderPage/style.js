@@ -1,5 +1,62 @@
 import styled from 'styled-components';
 
+export const WrapperAddressInfo = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  background-color: #333333;
+  border-radius: 8px;
+  border: 1px solid #444444;
+  
+  .address-title {
+    font-weight: 600;
+    color: #ffffff;
+    font-size: 15px;
+    margin-bottom: 4px;
+  }
+  
+  .address-content {
+    color: #cccccc;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  
+  .address-change {
+    color: #c68642;
+    font-size: 14px;
+    cursor: pointer;
+    align-self: flex-start;
+    margin-top: 8px;
+    
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    padding: 14px;
+    gap: 10px;
+    
+    .address-title {
+      font-size: 14px;
+    }
+    
+    .address-content {
+      font-size: 13px;
+    }
+    
+    .address-change {
+      font-size: 13px;
+    }
+  }
+  
+  @media (max-width: 576px) {
+    padding: 12px;
+    gap: 8px;
+  }
+`;
+
 export const WrapperStyleHeader = styled.div`
   background-color: #2a2a2a;
   padding: 16px 20px;
