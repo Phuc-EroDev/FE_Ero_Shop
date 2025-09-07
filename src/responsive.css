@@ -1,0 +1,154 @@
+/* Responsive CSS for Ero-Shop */
+
+/* ===== GLOBAL RESPONSIVE RULES ===== */
+
+/* Hide elements on mobile */
+@media (max-width: 767px) {
+  .hide-on-mobile {
+    display: none !important;
+  }
+}
+
+/* Show elements only on mobile */
+.show-on-mobile {
+  display: none !important;
+}
+
+@media (max-width: 767px) {
+  .show-on-mobile {
+    display: block !important;
+  }
+  
+  .show-on-mobile.flex {
+    display: flex !important;
+  }
+}
+
+/* Adjust container paddings on different screen sizes */
+.responsive-container {
+  padding: 0 24px;
+}
+
+@media (max-width: 768px) {
+  .responsive-container {
+    padding: 0 16px;
+  }
+}
+
+@media (max-width: 576px) {
+  .responsive-container {
+    padding: 0 12px;
+  }
+}
+
+/* Responsive typography */
+@media (max-width: 576px) {
+  h1 {
+    font-size: 24px !important;
+  }
+  
+  h2 {
+    font-size: 20px !important;
+  }
+  
+  h3 {
+    font-size: 18px !important;
+  }
+  
+  p, div {
+    font-size: 14px !important;
+  }
+}
+
+/* Make images responsive */
+.responsive-image {
+  max-width: 100%;
+  height: auto;
+}
+
+/* ===== ANT DESIGN SPECIFIC OVERRIDES ===== */
+
+/* Adjust Ant Design components for mobile */
+@media (max-width: 576px) {
+  /* Make buttons more touch friendly */
+  .ant-btn {
+    height: 40px !important;
+    padding: 4px 15px !important;
+    font-size: 14px !important;
+  }
+  
+  /* Ensure form items stack well */
+  .ant-form-item {
+    margin-bottom: 16px !important;
+  }
+  
+  /* Adjust input sizes */
+  .ant-input, 
+  .ant-input-number,
+  .ant-select {
+    font-size: 14px !important;
+  }
+  
+  /* Make modals take more screen space */
+  .ant-modal {
+    max-width: 90% !important;
+    margin: 10px auto !important;
+  }
+  
+  /* Adjust card padding */
+  .ant-card-body {
+    padding: 12px !important;
+  }
+  
+  /* Ensure tables are scrollable */
+  .ant-table-wrapper {
+    overflow-x: auto !important;
+  }
+}
+
+/* ===== LAYOUT HELPERS ===== */
+
+/* Responsive flex direction */
+.flex-column-mobile {
+  display: flex;
+}
+
+@media (max-width: 767px) {
+  .flex-column-mobile {
+    flex-direction: column !important;
+  }
+}
+
+/* Responsive gap */
+.gap-reduced-mobile {
+  gap: 24px;
+}
+
+@media (max-width: 768px) {
+  .gap-reduced-mobile {
+    gap: 16px !important;
+  }
+}
+
+@media (max-width: 576px) {
+  .gap-reduced-mobile {
+    gap: 12px !important;
+  }
+}
+
+/* Responsive margins */
+.margin-reduced-mobile {
+  margin-bottom: 32px;
+}
+
+@media (max-width: 768px) {
+  .margin-reduced-mobile {
+    margin-bottom: 24px !important;
+  }
+}
+
+@media (max-width: 576px) {
+  .margin-reduced-mobile {
+    margin-bottom: 16px !important;
+  }
+}

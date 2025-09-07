@@ -60,16 +60,6 @@ export const SectionWrapper = styled.div`
     border-color: #c68642;
     box-shadow: 0 4px 20px rgba(198, 134, 66, 0.1);
   }
-  
-  @media (max-width: 768px) {
-    padding: 16px 0;
-    margin: 16px 0;
-  }
-  
-  @media (max-width: 576px) {
-    padding: 12px 0;
-    margin: 12px 0;
-  }
 `;
 
 export const SectionHeader = styled.div`
@@ -79,19 +69,6 @@ export const SectionHeader = styled.div`
   padding: 0 20px;
   margin-bottom: 20px;
   animation: ${slideInLeft} 0.6s ease-out 0.2s both;
-  
-  @media (max-width: 768px) {
-    padding: 0 16px;
-    margin-bottom: 16px;
-  }
-  
-  @media (max-width: 576px) {
-    padding: 0 12px;
-    margin-bottom: 12px;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
-  }
 `;
 
 export const SectionTitle = styled.h2`
@@ -107,14 +84,6 @@ export const SectionTitle = styled.h2`
     color: #d79334;
     text-shadow: 0 0 10px rgba(198, 134, 66, 0.3);
     transform: translateX(5px);
-  }
-  
-  @media (max-width: 768px) {
-    font-size: 18px;
-  }
-  
-  @media (max-width: 576px) {
-    font-size: 16px;
   }
 `;
 
@@ -145,24 +114,11 @@ export const ViewAllLink = styled.span`
       width: 100%;
     }
   }
-  
-  @media (max-width: 576px) {
-    font-size: 13px;
-    margin-top: 4px;
-  }
 `;
 export const ProductsContainer = styled.div`
   position: relative;
   padding: 0 20px;
   animation: ${slideInRight} 0.6s ease-out 0.4s both;
-  
-  @media (max-width: 768px) {
-    padding: 0 16px;
-  }
-  
-  @media (max-width: 576px) {
-    padding: 0 12px;
-  }
 `;
 
 // Animation for horizontal slide transition
@@ -358,17 +314,5 @@ export const CardWrapper = styled.div`
 
   &:active {
     transform: translateY(-4px) scale(1.01);
-  }
-  
-  @media (max-width: 768px) {
-    &:hover {
-      transform: translateY(-5px) scale(1.01);
-    }
-  }
-  
-  @media (max-width: 576px) {
-    &:hover {
-      transform: translateY(-3px) scale(1);
-    }
   }
 `;

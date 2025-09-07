@@ -1,9 +1,14 @@
-import React from 'react';
-import { WrapperContent, WrapperLabelText, WrapperTextPrice, WrapperTextValue } from './style';
+import React, { useState } from 'react';
+import { NavBarItem, WrapperContent, WrapperLabelText, WrapperNavBar, WrapperTextPrice, WrapperTextValue } from './style';
 import { Checkbox, Col, Rate, Row } from 'antd';
 
-const NavBarComponent = () => {
+const NavBarComponent = ({ categories = [] }) => {
+  const [activeCategory, setActiveCategory] = useState(null);
   const onChange = () => {};
+
+  const handleCategoryClick = (category) => {
+    setActiveCategory(category);
+  };
 
   const renderContent = (type, options) => {
     switch (type) {
@@ -50,6 +55,19 @@ const NavBarComponent = () => {
 
   return (
     <div>
+      {categories && categories.length > 0 && (
+        <WrapperNavBar>
+          {categories.map((category, index) => (
+            <NavBarItem 
+              key={index}
+              active={activeCategory === category}
+              onClick={() => handleCategoryClick(category)}
+            >
+              {category}
+            </NavBarItem>
+          ))}
+        </WrapperNavBar>
+      )}
       <WrapperLabelText>Label</WrapperLabelText>
       <WrapperContent>{renderContent('text', ['Laptop', 'Phone', 'TV'])}</WrapperContent>
     </div>

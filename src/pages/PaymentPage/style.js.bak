@@ -5,19 +5,6 @@ export const WrapperLeft = styled.div`
   background-color: #2a2a2a;
   border-radius: 8px;
   padding: 20px;
-  
-  @media (max-width: 992px) {
-    width: 70%;
-  }
-  
-  @media (max-width: 768px) {
-    width: 100%;
-    padding: 16px;
-  }
-  
-  @media (max-width: 576px) {
-    padding: 12px;
-  }
 `;
 
 export const WrapperRight = styled.div`
@@ -26,16 +13,6 @@ export const WrapperRight = styled.div`
   display: flex;
   flex-direction: column;
   gap: 16px;
-  
-  @media (max-width: 992px) {
-    width: 28%;
-  }
-  
-  @media (max-width: 768px) {
-    width: 100%;
-    margin-left: 0;
-    margin-top: 20px;
-  }
 `;
 
 export const WrapperInfo = styled.div`
@@ -60,18 +37,6 @@ export const WrapperInfo = styled.div`
       }
     }
   }
-  
-  @media (max-width: 768px) {
-    padding: 16px;
-  }
-  
-  @media (max-width: 576px) {
-    padding: 12px;
-    
-    div span {
-      font-size: 14px;
-    }
-  }
 `;
 
 export const WrapperTotal = styled.div`
@@ -82,15 +47,6 @@ export const WrapperTotal = styled.div`
   background-color: #2a2a2a;
   border-radius: 8px;
   border: 2px solid #d29b63;
-  
-  @media (max-width: 768px) {
-    padding: 16px;
-  }
-  
-  @media (max-width: 576px) {
-    padding: 12px;
-  }
-
 
   > span:first-child {
     color: #ffffff;

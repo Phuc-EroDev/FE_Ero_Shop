@@ -12,6 +12,12 @@ export const WrapperProducts = styled.div`
     justify-content: center;
     margin-bottom: 24px;
   }
+  
+  @media (max-width: 576px) {
+    .ant-col {
+      margin-bottom: 16px;
+    }
+  }
 
   /* Ensure all Ant Design components have dark theme */
   .ant-empty {
@@ -38,6 +44,18 @@ export const WrapperProducts = styled.div`
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
     border: 1px solid #444444;
     margin-top: 30px;
+    
+    @media (max-width: 768px) {
+      padding: 16px 20px;
+      margin-top: 24px;
+    }
+    
+    @media (max-width: 576px) {
+      padding: 12px 16px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
 
     .ant-pagination-total-text {
       color: #cccccc;
@@ -52,6 +70,13 @@ export const WrapperProducts = styled.div`
       min-width: 40px;
       height: 40px;
       line-height: 38px;
+      
+      @media (max-width: 576px) {
+        min-width: 32px;
+        height: 32px;
+        line-height: 30px;
+        margin: 0 4px;
+      }
 
       &:hover {
         border-color: #c68642;

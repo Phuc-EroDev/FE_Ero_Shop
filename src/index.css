@@ -30,3 +30,63 @@ html {
 .component-frame {
   background: #2a2a2a;
 }
+
+/* Responsive utility classes */
+@media (max-width: 767px) {
+  .hide-on-mobile {
+    display: none !important;
+  }
+  
+  .show-on-mobile {
+    display: block !important;
+  }
+  
+  /* Make Ant Design tables responsive */
+  .ant-table {
+    overflow-x: auto;
+  }
+  
+  /* Adjust Ant Design form items for mobile */
+  .ant-form-item {
+    margin-bottom: 12px;
+  }
+  
+  /* Adjust buttons on mobile */
+  .ant-btn {
+    padding: 4px 12px;
+    font-size: 14px;
+  }
+}
+
+/* Classes that are always visible regardless of screen size */
+.show-on-all-devices {
+  display: block !important;
+}
+
+/* Responsive grid adjustments */
+.responsive-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+
+@media (max-width: 1024px) {
+  .responsive-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .responsive-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+}
+
+@media (max-width: 576px) {
+  .responsive-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+}

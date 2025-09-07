@@ -26,6 +26,9 @@ import {
   WrapperButtonSection,
   WrapperErrorMessage,
   WrapperCommentContainer,
+  WrapperThumbnailGallery,
+  WrapperRelatedProducts,
+  WrapperSpecifications,
 } from './style';
 import ButtonComponent from '../ButtonComponent/ButtonComponent';
 import { PlusOutlined, MinusOutlined } from '@ant-design/icons';

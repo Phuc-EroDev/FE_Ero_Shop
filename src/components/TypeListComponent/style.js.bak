@@ -10,11 +10,6 @@ export const WrapperTypeList = styled.div`
   @media (max-width: 768px) {
     padding: 20px 12px;
   }
-  
-  @media (max-width: 576px) {
-    padding: 16px 10px;
-    border-radius: 8px;
-  }
 `;
 
 export const WrapperTitle = styled.h3`
@@ -42,18 +37,6 @@ export const WrapperTitle = styled.h3`
   @media (max-width: 768px) {
     font-size: 18px;
     margin-bottom: 20px;
-    padding-bottom: 14px;
-  }
-  
-  @media (max-width: 576px) {
-    font-size: 16px;
-    margin-bottom: 16px;
-    padding-bottom: 12px;
-    
-    &::after {
-      width: 40px;
-      height: 2px;
-    }
   }
 `;
 
@@ -115,23 +98,6 @@ export const WrapperTypeItem = styled.div`
 
     &:hover {
       transform: translateX(3px) scale(1.01);
-    }
-  }
-  
-  @media (max-width: 576px) {
-    padding: 10px 14px;
-    font-size: 12px;
-    margin-bottom: 8px;
-    border-radius: 8px;
-    border-width: 1px;
-    
-    &:hover {
-      transform: translateX(2px) scale(1);
-      box-shadow: 0 4px 15px rgba(198, 134, 66, 0.15);
-    }
-    
-    &:active {
-      transform: translateX(1px) scale(0.99);
     }
   }
 `;

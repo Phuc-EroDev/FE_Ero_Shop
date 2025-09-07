@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { getItem } from '../../utils';
 import { AppstoreOutlined, DashboardOutlined, ShoppingCartOutlined, UserOutlined } from '@ant-design/icons';
 import HeaderComponent from '../../components/HeaderComponent/HeaderComponent';
-import { WrapperMenu } from './style';
+import { WrapperMenu, WrapperAdminContainer, WrapperAdminContent } from './style';
 import AdminUser from '../../components/AdminUser/AdminUser';
 import AdminProduct from '../../components/AdminProduct/AdminProduct';
 import AdminOrder from '../../components/AdminOrder/AdminOrder';
@@ -38,12 +38,12 @@ const AdminPage = () => {
   return (
     <>
       <HeaderComponent isHiddenSearch isHiddenCard />
-      <div style={{ position: 'relative', display: 'flex', marginTop: '60px' }}>
+      <WrapperAdminContainer>
         <WrapperMenu theme={'dark'} mode="inline" items={items} onClick={handleOnClick} />
-        <div style={{ flex: 1, padding: '16px', marginLeft: '256px', minHeight: 'calc(100vh - 64px)' }}>
+        <WrapperAdminContent>
           {renderPage(keySelected)}
-        </div>
-      </div>
+        </WrapperAdminContent>
+      </WrapperAdminContainer>
     </>
   );
 };
