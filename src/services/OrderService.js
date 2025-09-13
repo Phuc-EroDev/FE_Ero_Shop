@@ -30,7 +30,6 @@ export const getAllOrder = async (access_token) => {
 };
 
 export const getOrderDetail = async (orderId, userId, access_token) => {
-  console.log(userId);
   const res = await axiosJWT.post(
     `${import.meta.env.VITE_BACKEND_API}/order/detail/${orderId}`,
     { user: userId },

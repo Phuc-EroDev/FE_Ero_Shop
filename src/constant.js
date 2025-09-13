@@ -1,4 +1,4 @@
-import image from './assets/images/product1.png';
+import image from './assets/images/signIn_signUp.png';
 
 export const orderConstants = {
   shipping: {

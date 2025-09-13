@@ -6,9 +6,9 @@ import Loading from '../LoadingComponent/Loading';
 import * as ProductService from '../../services/ProductService';
 import { WrapperSearchResult, WrapperTitle, WrapperProducts } from './style';
 
-const SearchResultComponent = ({ 
-  searchTerm = '', 
-  isLoading = false, 
+const SearchResultComponent = ({
+  searchTerm = '',
+  isLoading = false,
   title,
   showTitle = true,
   selectedType = ''
@@ -29,9 +29,9 @@ const SearchResultComponent = ({
       if (selectedType) {
         res = await ProductService.getProductType(selectedType);
       } else {
-        res = await ProductService.getAllProduct();
+        res = await ProductService.getAllProduct('', 0, 1000);
       }
-      
+
       if (res?.status === 'OK') {
         setData(res?.data || []);
       }
@@ -47,7 +47,7 @@ const SearchResultComponent = ({
     fetchSearchData();
   }, [selectedType]);
 
-  const filteredData = data?.filter(product => 
+  const filteredData = data?.filter(product =>
     product?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
     product?.type?.toLowerCase().includes(searchTerm.toLowerCase())
   ) || [];
@@ -60,24 +60,24 @@ const SearchResultComponent = ({
     <WrapperSearchResult>
       {showTitle && (
         <WrapperTitle>
-          {title || (searchTerm ? 
-            `Kết quả tìm kiếm cho "${searchTerm}" (${filteredData.length} sản phẩm)` : 
+          {title || (searchTerm ?
+            `Kết quả tìm kiếm cho "${searchTerm}" (${filteredData.length} sản phẩm)` :
             'Tất cả sản phẩm'
           )}
         </WrapperTitle>
       )}
-      
+
       <WrapperProducts>
         {filteredData.length > 0 ? (
-          <Row gutter={[20, 20]}>
+          <Row gutter={[{ xs: 8, sm: 16, md: 20 }, { xs: 16, sm: 16, md: 20 }]}>
             {filteredData.map((product) => (
-              <Col 
-                key={product._id} 
-                xs={24} 
-                sm={12} 
-                md={8} 
-                lg={6} 
-                xl={4}
+              <Col
+                key={product._id}
+                xs={12}
+                sm={12}
+                md={8}
+                lg={6}
+                xl={6}
               >
                 <CardComponent
                   countInStock={product.countInStock}
@@ -98,7 +98,7 @@ const SearchResultComponent = ({
         ) : (
           <Empty
             description={
-              searchTerm 
+              searchTerm
                 ? `Không tìm thấy sản phẩm nào với từ khóa "${searchTerm}"`
                 : "Không có sản phẩm nào"
             }

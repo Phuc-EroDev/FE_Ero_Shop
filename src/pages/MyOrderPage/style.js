@@ -271,11 +271,13 @@ export const MyOrderContainer = styled.div`
   width: 100%;
   min-height: 100vh;
   padding: 20px;
+  margin-top: -60px; // Fix for DefaultComponent padding
 `;
 
 export const MyOrderWrapper = styled.div`
   max-width: 1200px;
   margin: 0 auto;
+  padding: 0 10px;
 `;
 
 export const MyOrderTitle = styled.h2`
@@ -284,6 +286,11 @@ export const MyOrderTitle = styled.h2`
   margin-bottom: 24px;
   text-align: center;
   font-weight: bold;
+  
+  @media (max-width: 768px) {
+    font-size: 20px;
+    margin-bottom: 16px;
+  }
 `;
 
 export const OrderCard = styled.div`
@@ -299,6 +306,11 @@ export const OrderCard = styled.div`
     border-color: #C68642;
     box-shadow: 0 6px 12px rgba(198, 134, 66, 0.1);
   }
+  
+  @media (max-width: 768px) {
+    border-radius: 8px;
+    margin-bottom: 16px;
+  }
 `;
 
 export const OrderHeader = styled.div`
@@ -308,6 +320,13 @@ export const OrderHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 12px 16px;
+  }
 `;
 
 export const OrderId = styled.span`
@@ -334,10 +353,19 @@ export const StatusBadge = styled.span`
     return '#666';
   }};
   color: white;
+  
+  @media (max-width: 768px) {
+    padding: 3px 10px;
+    font-size: 11px;
+  }
 `;
 
 export const OrderBody = styled.div`
   padding: 20px;
+  
+  @media (max-width: 768px) {
+    padding: 12px;
+  }
 `;
 
 export const OrderInfo = styled.div`
@@ -345,6 +373,12 @@ export const OrderInfo = styled.div`
   grid-template-columns: 1fr 1fr;
   gap: 16px;
   margin-bottom: 20px;
+  
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
 `;
 
 export const InfoCard = styled.div`
@@ -394,6 +428,13 @@ export const ProductItem = styled.div`
   &:last-child {
     margin-bottom: 0;
   }
+  
+  @media (max-width: 768px) {
+    padding: 12px;
+    flex-direction: ${props => props.isMobile ? 'row' : 'row'};
+    align-items: ${props => props.isMobile ? 'center' : 'center'};
+    gap: 10px;
+  }
 `;
 
 export const ProductImage = styled.img`
@@ -403,11 +444,24 @@ export const ProductImage = styled.img`
   border-radius: 8px;
   border: 1px solid #C68642;
   margin-right: 16px;
+  
+  @media (max-width: 768px) {
+    margin-right: 0;
+    width: 60px;
+    height: 60px;
+    flex-shrink: 0;
+  }
 `;
 
 export const ProductInfo = styled.div`
   flex: 1;
   min-width: 0;
+  
+  @media (max-width: 768px) {
+    width: calc(100% - 70px);
+    flex: 1;
+    min-width: 0;
+  }
 `;
 
 export const ProductName = styled.div`
@@ -415,6 +469,14 @@ export const ProductName = styled.div`
   font-size: 16px;
   font-weight: 600;
   margin-bottom: 4px;
+  
+  @media (max-width: 768px) {
+    font-size: 14px;
+    margin-bottom: 6px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 `;
 
 export const ProductDetails = styled.div`
@@ -422,6 +484,12 @@ export const ProductDetails = styled.div`
   gap: 20px;
   color: #B8B8B8;
   font-size: 14px;
+  
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 4px;
+    font-size: 12px;
+  }
 `;
 
 export const OrderFooter = styled.div`
@@ -431,17 +499,41 @@ export const OrderFooter = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 16px;
+  }
 `;
 
 export const TotalPrice = styled.div`
   color: #C68642;
   font-size: 18px;
   font-weight: bold;
+  
+  @media (max-width: 768px) {
+    width: 100%;
+    font-size: 16px;
+    margin-bottom: 0;
+  }
 `;
 
 export const ActionButtons = styled.div`
   display: flex;
   gap: 12px;
+  
+  @media (max-width: 768px) {
+    width: 100%;
+    gap: 10px;
+    display: flex;
+    justify-content: space-between;
+    
+    button {
+      flex: 1;
+    }
+  }
 `;
 
 export const ActionButton = styled.button`
@@ -452,6 +544,7 @@ export const ActionButton = styled.button`
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
+  text-align: center;
 
   ${props => {
     if (props.variant === 'cancel') {
@@ -483,6 +576,13 @@ export const ActionButton = styled.button`
     opacity: 0.5;
     cursor: not-allowed;
   }
+  
+  @media (max-width: 768px) {
+    padding: 8px 10px;
+    font-size: 12px;
+    white-space: nowrap;
+    min-width: 100px;
+  }
 `;
 
 export const EmptyState = styled.div`
@@ -498,5 +598,17 @@ export const EmptyState = styled.div`
   
   p {
     font-size: 16px;
+  }
+  
+  @media (max-width: 768px) {
+    padding: 40px 15px;
+    
+    h3 {
+      font-size: 18px;
+    }
+    
+    p {
+      font-size: 14px;
+    }
   }
 `;

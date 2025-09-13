@@ -7,10 +7,19 @@ export const WrapperStyleHeader = styled.div`
   display: flex;
   align-items: center;
   margin-bottom: 16px;
+  
+  @media (max-width: 768px) {
+    padding: 10px 12px;
+  }
+  
   span {
     color: #ffffff;
     font-size: 14px;
     font-weight: 500;
+    
+    @media (max-width: 768px) {
+      font-size: 12px;
+    }
   }
 `;
 
@@ -20,6 +29,10 @@ export const WrapperStyleHeaderShipping = styled.div`
   border: 1px solid #404040;
   padding: 20px;
   margin-bottom: 20px;
+  
+  @media (max-width: 768px) {
+    display: none;
+  }
 
   /* Custom Antd Steps */
   .ant-steps {
@@ -105,6 +118,11 @@ export const WrapperLeft = styled.div`
   background-color: #2a2a2a;
   border-radius: 8px;
   padding: 20px;
+  
+  @media (max-width: 768px) {
+    width: 100%;
+    padding: 15px;
+  }
 `;
 
 export const WrapperListOrder = styled.div`
@@ -119,6 +137,12 @@ export const WrapperItemOrder = styled.div`
   margin-bottom: 12px;
   border-radius: 8px;
   border: 1px solid #444444;
+
+  @media (max-width: 768px) {
+    padding: 15px;
+    flex-direction: column;
+    align-items: flex-start;
+  }
 
   &:hover {
     background-color: #3a3a3a;
@@ -141,13 +165,20 @@ export const WrapperCountOrder = styled.div`
   background-color: #333333;
   margin: 0 16px;
   overflow: hidden;
+  
+  @media (max-width: 768px) {
+    width: 90px;
+    margin: 0;
+    border: 1px solid #666666;
+    background-color: #3a3a3a;
+  }
 
   button {
     background-color: transparent;
     border: none !important;
     color: #d29b63;
-    width: 32px;
-    height: 32px;
+    width: 28px;
+    height: 28px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -159,7 +190,11 @@ export const WrapperCountOrder = styled.div`
     }
 
     .anticon {
-      font-size: 12px;
+      font-size: 10px;
+      
+      @media (max-width: 768px) {
+        font-size: 9px;
+      }
     }
   }
 
@@ -173,6 +208,10 @@ export const WrapperCountOrder = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
+    
+    @media (max-width: 768px) {
+      height: 28px;
+    }
 
     .ant-input-number-input {
       background-color: transparent;
@@ -184,6 +223,12 @@ export const WrapperCountOrder = styled.div`
       height: 100%;
       line-height: 32px;
       margin: 0;
+      font-size: 14px;
+      
+      @media (max-width: 768px) {
+        line-height: 28px;
+        font-size: 13px;
+      }
     }
 
     .ant-input-number-input-wrap {
@@ -206,6 +251,12 @@ export const WrapperRight = styled.div`
   display: flex;
   flex-direction: column;
   gap: 16px;
+  
+  @media (max-width: 768px) {
+    width: 100%;
+    margin-left: 0;
+    margin-top: 20px;
+  }
 `;
 
 export const WrapperInfo = styled.div`
@@ -213,6 +264,10 @@ export const WrapperInfo = styled.div`
   background-color: #2a2a2a;
   border-radius: 8px;
   width: 100%;
+  
+  @media (max-width: 768px) {
+    padding: 15px;
+  }
 
   div {
     margin-bottom: 12px;
@@ -267,18 +322,29 @@ export const WrapperAddressInfo = styled.div`
   border-radius: 8px;
   border: 1px solid #404040;
   margin-bottom: 16px;
+  
+  @media (max-width: 768px) {
+    padding: 15px;
+    background-color: #333333;
+    border: 1px solid #555555;
+  }
 
   .address-container {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
   }
 
   .address-label {
     color: #cccccc;
     font-size: 14px;
     font-weight: 500;
+    
+    @media (max-width: 768px) {
+      font-size: 14px;
+      color: #d9d9d9;
+    }
   }
 
   .change-button {
@@ -288,6 +354,12 @@ export const WrapperAddressInfo = styled.div`
     font-weight: 500;
     text-decoration: underline;
     transition: color 0.3s ease;
+    padding: 2px 5px;
+    
+    @media (max-width: 768px) {
+      color: #1677ff;
+      border-radius: 4px;
+    }
 
     &:hover {
       color: #69b7ff;
@@ -304,6 +376,15 @@ export const WrapperAddressInfo = styled.div`
     font-weight: 600;
     line-height: 1.4;
     margin-left: 4px;
+    padding: 4px 0;
+    
+    @media (max-width: 768px) {
+      background-color: #3a3a3a;
+      border-radius: 4px;
+      padding: 8px 10px;
+      margin-left: 0;
+      width: 100%;
+    }
 
     &.placeholder {
       color: #888888;

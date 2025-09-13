@@ -24,7 +24,7 @@ const SectionComponent = ({
   const scrollRef = useRef(null);
   const [currentPage, setCurrentPage] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
-  const productsPerPage = isMultiType ? 18 : 6; // 3 hàng x 6 sản phẩm hoặc 1 hàng x 6 sản phẩm
+  const productsPerPage = isMultiType ? 18 : data.length; // MultiType: 18 products (3x6 grid), Single row: all products
 
   // Reset currentPage when isMultiType changes
   useEffect(() => {
@@ -47,7 +47,12 @@ const SectionComponent = ({
   }, [data, currentPage, productsPerPage, isMultiType]);
 
   const goToNextPage = () => {
-    if (canGoNext && !isTransitioning) {
+    if (!isMultiType && scrollRef.current) {
+      // For single row, smooth scroll horizontally
+      const scrollAmount = scrollRef.current.clientWidth * 0.8;
+      scrollRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+    } else if (canGoNext && !isTransitioning) {
+      // For multi-type grid, use pagination
       setIsTransitioning(true);
       setCurrentPage((prev) => prev + 1);
       setTimeout(() => setIsTransitioning(false), 400);
@@ -55,7 +60,12 @@ const SectionComponent = ({
   };
 
   const goToPrevPage = () => {
-    if (canGoPrev && !isTransitioning) {
+    if (!isMultiType && scrollRef.current) {
+      // For single row, smooth scroll horizontally
+      const scrollAmount = scrollRef.current.clientWidth * 0.8;
+      scrollRef.current.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+    } else if (canGoPrev && !isTransitioning) {
+      // For multi-type grid, use pagination
       setIsTransitioning(true);
       setCurrentPage((prev) => prev - 1);
       setTimeout(() => setIsTransitioning(false), 400);
@@ -94,7 +104,7 @@ const SectionComponent = ({
 
         <ProductsGrid key={currentPage} ref={scrollRef} $ismultitype={isMultiType}>
           {currentProducts?.map((product, index) => (
-            <CardWrapper key={`${currentPage}-${product._id || product.id || index}`}>
+            <CardWrapper key={`${currentPage}-${product._id || product.id || index}`} $ismultitype={isMultiType}>
               <CardComponent
                 id={product._id || product.id}
                 countInStock={product.countInStock}

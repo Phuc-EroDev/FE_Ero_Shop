@@ -22,7 +22,6 @@ import { useSelector } from 'react-redux';
 import * as DashboardService from '../../services/DashboardService';
 import styled from 'styled-components';
 
-// Custom tooltip component for dark theme
 const CustomTooltip = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
     return (

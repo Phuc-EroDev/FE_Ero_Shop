@@ -1,12 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Col, Image, Rate, Row } from 'antd';
 import * as ProductService from '../../services/ProductService';
-
-import imageSmall1 from '../../assets/images/imageSmall1.png';
-import imageSmall2 from '../../assets/images/imageSmall2.png';
-import imageSmall3 from '../../assets/images/imageSmall3.png';
-import imageSmall4 from '../../assets/images/imageSmall4.png';
-import imageSmall5 from '../../assets/images/imageSmall5.png';
 import FormattedTextComponent from '../FormattedTextComponent/FormattedTextComponent';
 import {
   WrapperAddressProduct,
@@ -26,6 +20,9 @@ import {
   WrapperButtonSection,
   WrapperErrorMessage,
   WrapperCommentContainer,
+  ImageThumbnailContainer,
+  ProductDescriptionHeader,
+  ProductDescriptionText,
 } from './style';
 import ButtonComponent from '../ButtonComponent/ButtonComponent';
 import { PlusOutlined, MinusOutlined } from '@ant-design/icons';
@@ -48,6 +45,7 @@ const ProductDetailsComponent = ({ idProduct }) => {
   const [numProduct, setNumProduct] = useState(1);
   const [amountMessage, setAmountMessage] = useState('');
   const [currentImage, setCurrentImage] = useState(null);
+  const [isExpandedDescription, setIsExpandedDescription] = useState(false);
 
   let smallImages = [];
 
@@ -77,10 +75,10 @@ const ProductDetailsComponent = ({ idProduct }) => {
   // Fetch products with same type
   const fetchProductsByType = async (type) => {
     if (!type) return [];
-    const response = await ProductService.getAllProduct('', 100); // Get more products
+    const response = await ProductService.getProductType(type, 0, 1000);
     return (
       response?.data?.filter(
-        (product) => product.type === type && product._id !== idProduct, // Exclude current product
+        (product) => product._id !== idProduct,
       ) || []
     );
   };
@@ -154,7 +152,7 @@ const ProductDetailsComponent = ({ idProduct }) => {
             <WrapperMainImage>
               <Image src={currentImage || productDetails?.data?.image[0]} alt="Image Product" preview={false} />
             </WrapperMainImage>
-            <Row style={{ paddingTop: '10px', justifyContent: 'space-between' }}>
+            <ImageThumbnailContainer>
               {smallImages.map((image, index) => (
                 <WrapperStyleColImage key={index} span={4}>
                   <WrapperStyleImageSmall
@@ -165,7 +163,7 @@ const ProductDetailsComponent = ({ idProduct }) => {
                   </WrapperStyleImageSmall>
                 </WrapperStyleColImage>
               ))}
-            </Row>
+            </ImageThumbnailContainer>
           </WrapperImageCol>
           <WrapperInfoCol xs={24} md={14}>
             <WrapperStyleNameProduct>{productDetails?.data?.name}</WrapperStyleNameProduct>
@@ -191,25 +189,13 @@ const ProductDetailsComponent = ({ idProduct }) => {
               <WrapperQualityProduct>
                 <ButtonComponent
                   icon={<MinusOutlined />}
-                  style={{
-                    color: '#fdf6ec',
-                    backgroundColor: '#404040',
-                    border: '1px solid #555',
-                    width: 'clamp(28px, 6vw, 36px)',
-                    height: 'clamp(28px, 6vw, 32px)',
-                  }}
+                  className="quantity-button"
                   onClick={() => handleChangeQuantity('decrease', numProduct > 1)}
                 />
                 <WrapperInputNumber value={numProduct} defaultValue={1} min={1} onChange={onChange} />
                 <ButtonComponent
                   icon={<PlusOutlined />}
-                  style={{
-                    color: '#fdf6ec',
-                    backgroundColor: '#404040',
-                    border: '1px solid #555',
-                    width: 'clamp(28px, 6vw, 36px)',
-                    height: 'clamp(28px, 6vw, 32px)',
-                  }}
+                  className="quantity-button"
                   onClick={() => handleChangeQuantity('increase', numProduct < productDetails?.data?.countInStock)}
                 />
               </WrapperQualityProduct>
@@ -229,6 +215,7 @@ const ProductDetailsComponent = ({ idProduct }) => {
                 textbutton={'Mua ngay'}
               />
               <ButtonComponent
+                onClick={handleAddOrderProduct}
                 style={{
                   backgroundColor: 'transparent',
                   borderRadius: '4px',
@@ -249,39 +236,33 @@ const ProductDetailsComponent = ({ idProduct }) => {
               marginTop: '20px',
             }}
           >
-            <div
-              style={{
-                backgroundColor: '#1a1a1a',
-                padding: '16px 24px',
-                borderRadius: '12px',
-                border: '1px solid #333333',
-                marginBottom: '24px',
-              }}
-            >
-              <h3
-                style={{
-                  fontSize: '18px',
-                  fontWeight: 'bold',
-                  color: '#C68642',
-                  margin: '0',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.5px',
-                }}
-              >
-                MÔ TẢ SẢN PHẨM
-              </h3>
+            <ProductDescriptionHeader>
+              <h3>MÔ TẢ SẢN PHẨM</h3>
+            </ProductDescriptionHeader>
+            <div style={{ position: 'relative' }}>
+              <ProductDescriptionText
+                text={isExpandedDescription
+                  ? productDetails?.data?.description
+                  : productDetails?.data?.description?.length > 300
+                    ? `${productDetails?.data?.description.substring(0, 300)}...`
+                    : productDetails?.data?.description
+                }
+              />
+              {productDetails?.data?.description?.length > 300 && (
+                <div
+                  onClick={() => setIsExpandedDescription(!isExpandedDescription)}
+                  style={{
+                    color: '#C68642',
+                    cursor: 'pointer',
+                    marginTop: '8px',
+                    textAlign: 'left',
+                    fontWeight: '500',
+                  }}
+                >
+                  {isExpandedDescription ? '...Rút gọn' : '...Xem thêm'}
+                </div>
+              )}
             </div>
-            <FormattedTextComponent
-              text={productDetails?.data?.description}
-              style={{
-                fontSize: '14px',
-                color: '#D1D1D1',
-                backgroundColor: 'transparent',
-                padding: '0 8px',
-                border: 'none',
-                margin: '0',
-              }}
-            />
           </div>
         </WrapperCommentContainer>
 

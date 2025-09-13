@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { Button, message } from 'antd';
 import { useSelector } from 'react-redux';
 import { useMutationHook } from '../../hooks/useMutationHook';
+import { useResponsive } from '../../hooks/useResponsive';
 import * as OrderService from '../../services/OrderService';
 import {
   OrderSuccessContainer,
@@ -53,6 +54,7 @@ const OrderDetailPage = () => {
   const { state } = location;
   const initialOrderData = state?.orderData;
   const [orderData, setOrderData] = useState(initialOrderData);
+  const { isMobile } = useResponsive();
   const user = useSelector((state) => state?.user);
 
   const fetchOrderDetail = async () => {
@@ -102,11 +104,16 @@ const OrderDetailPage = () => {
 
   if (!orderData) {
     return (
-      <OrderSuccessContainer>
+      <OrderSuccessContainer style={{ marginTop: '-60px' }}>
         <OrderSuccessWrapper>
           <OrderSuccessTitle>Không tìm thấy đơn hàng</OrderSuccessTitle>
           <div style={{ textAlign: 'center', marginTop: '20px' }}>
-            <Button onClick={() => navigate('/my-order')}>Quay lại danh sách đơn hàng</Button>
+            <Button
+              onClick={() => navigate('/my-order')}
+              style={{ fontSize: isMobile ? '13px' : '14px' }}
+            >
+              Quay lại danh sách đơn hàng
+            </Button>
           </div>
         </OrderSuccessWrapper>
       </OrderSuccessContainer>
@@ -133,7 +140,7 @@ const OrderDetailPage = () => {
   };
 
   return (
-    <OrderSuccessContainer>
+    <OrderSuccessContainer style={{ marginTop: '-60px' }}>
       <OrderSuccessWrapper>
         <OrderSuccessTitle>Chi tiết đơn hàng #{orderData?._id?.slice(-8)}</OrderSuccessTitle>
         <OrderSuccessSubtitle>
@@ -254,8 +261,13 @@ const OrderDetailPage = () => {
                 Mã đơn hàng: {orderData?._id}
               </SummaryContact>
 
-              <div style={{ marginTop: '20px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                {!user?.isAdmin && !orderData?.isPaid && orderData?.paymentMethod !== 'paypal' && (
+              <div style={{
+                marginTop: '20px',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '12px'
+              }}>
+                {!user?.isAdmin && !orderData?.isPaid && orderData?.paymentMethod !== 'paypal' && getDeliveryStatus(orderData?.isDelivered) === 'delivered' && (
                   <Button
                     type="primary"
                     onClick={handleConfirmPayment}
@@ -264,8 +276,8 @@ const OrderDetailPage = () => {
                       backgroundColor: '#1890ff',
                       borderColor: '#1890ff',
                       width: '100%',
-                      height: '40px',
-                      fontSize: '14px',
+                      height: isMobile ? '36px' : '40px',
+                      fontSize: isMobile ? '13px' : '14px',
                     }}
                   >
                     Xác nhận thanh toán

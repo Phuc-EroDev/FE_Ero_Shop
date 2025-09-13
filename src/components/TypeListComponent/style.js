@@ -10,6 +10,15 @@ export const WrapperTypeList = styled.div`
   @media (max-width: 768px) {
     padding: 20px 12px;
   }
+  
+  @media (max-width: 576px) {
+    padding: 12px 10px;
+    border-radius: 8px;
+    /* Handle full width on mobile */
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+  }
 `;
 
 export const WrapperTitle = styled.h3`
@@ -37,6 +46,18 @@ export const WrapperTitle = styled.h3`
   @media (max-width: 768px) {
     font-size: 18px;
     margin-bottom: 20px;
+    padding-bottom: 12px;
+  }
+  
+  @media (max-width: 576px) {
+    font-size: 15px;
+    margin-bottom: 14px;
+    padding-bottom: 8px;
+    
+    &::after {
+      width: 40px;
+      height: 2px;
+    }
   }
 `;
 
@@ -70,9 +91,9 @@ export const WrapperTypeItem = styled.div`
 
   &:hover {
     background: ${(props) =>
-      props.$isSelected
-        ? 'linear-gradient(135deg, #B57A38 0%, #C68642 100%)'
-        : 'linear-gradient(145deg, #4a4a4a 0%, #3a3a3a 100%)'};
+    props.$isSelected
+      ? 'linear-gradient(135deg, #B57A38 0%, #C68642 100%)'
+      : 'linear-gradient(145deg, #4a4a4a 0%, #3a3a3a 100%)'};
     transform: translateX(6px) scale(1.02);
     box-shadow: 0 8px 25px rgba(198, 134, 66, 0.15);
     border-color: #c68642;
@@ -93,11 +114,51 @@ export const WrapperTypeItem = styled.div`
 
   @media (max-width: 768px) {
     padding: 12px 16px;
-    font-size: 13px;
+    font-size: 14px;
     margin-bottom: 10px;
 
     &:hover {
       transform: translateX(3px) scale(1.01);
+    }
+  }
+  
+  @media (max-width: 576px) {
+    padding: 8px 14px;
+    font-size: 14px;
+    margin-bottom: 8px;
+    border-radius: 6px;
+    min-height: ${props => props.$isSmallMobile ? '40px' : 'auto'};
+    display: flex;
+    align-items: center;
+    justify-content: ${props => props.$isSmallMobile ? 'center' : 'flex-start'};
+    
+    /* Visual indication for selected item */
+    ${props => props.$isSmallMobile && props.$isSelected && `
+      position: relative;
+      &::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 3px;
+        height: 60%;
+        background: #f0c789;
+        border-radius: 0 3px 3px 0;
+      }
+    `}
+    
+    &:hover {
+      transform: none;
+      background: ${(props) =>
+    props.$isSelected
+      ? 'linear-gradient(135deg, #B57A38 0%, #C68642 100%)'
+      : 'linear-gradient(145deg, #4a4a4a 0%, #3a3a3a 100%)'};
+    }
+    
+    &:active {
+      transform: scale(0.98);
+      opacity: 0.9;
     }
   }
 `;

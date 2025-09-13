@@ -5,6 +5,11 @@ export const WrapperLeft = styled.div`
   background-color: #2a2a2a;
   border-radius: 8px;
   padding: 20px;
+  
+  @media (max-width: 768px) {
+    width: 100%;
+    margin-bottom: 20px;
+  }
 `;
 
 export const WrapperRight = styled.div`
@@ -13,6 +18,11 @@ export const WrapperRight = styled.div`
   display: flex;
   flex-direction: column;
   gap: 16px;
+  
+  @media (max-width: 768px) {
+    width: 100%;
+    margin-left: 0;
+  }
 `;
 
 export const WrapperInfo = styled.div`
@@ -36,6 +46,10 @@ export const WrapperInfo = styled.div`
         font-weight: 600;
       }
     }
+  }
+
+  @media (max-width: 768px) {
+    padding: 15px;
   }
 `;
 
@@ -64,6 +78,20 @@ export const WrapperTotal = styled.div`
     span:last-child {
       color: #cccccc;
       font-size: 12px;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    padding: 15px;
+    
+    > span:first-child {
+      font-size: 15px;
+    }
+    
+    > span:last-child {
+      span:first-child {
+        font-size: 20px;
+      }
     }
   }
 `;
@@ -104,6 +132,15 @@ export const WrapperAddressInfo = styled.div`
       color: #1677ff;
     }
   }
+  
+  @media (max-width: 768px) {
+    padding: 12px;
+    margin-bottom: 12px;
+    
+    .address-container {
+      margin-bottom: 6px;
+    }
+  }
 
   .address-preview {
     color: #d29b63;
@@ -135,6 +172,19 @@ export const WrapperMethodSection = styled.div`
     border-radius: 8px;
     border: 1px solid #404040;
     padding: 16px;
+  }
+  
+  @media (max-width: 768px) {
+    margin-bottom: 20px;
+    
+    .method-title {
+      font-size: 16px;
+      margin-bottom: 12px;
+    }
+    
+    .method-container {
+      padding: 12px;
+    }
   }
 
   .ant-radio-group {
@@ -202,6 +252,10 @@ export const PayPalContainer = styled.div`
   border-radius: 8px;
   border: 1px solid #444;
   overflow: hidden;
+  
+  @media (max-width: 768px) {
+    padding: 12px;
+  }
 `;
 
 export const PayPalFallback = styled.div`

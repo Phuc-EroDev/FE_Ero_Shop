@@ -36,7 +36,9 @@ const ProductListComponent = ({ selectedType }) => {
         setProducts(res?.data || []);
         setPagination((prev) => ({
           ...prev,
-          total: res?.total || res?.data?.length || 0,
+          current: page,
+          pageSize: limit,
+          total: res?.total || 0,
         }));
       }
     } catch (error) {
@@ -75,9 +77,9 @@ const ProductListComponent = ({ selectedType }) => {
       <WrapperProducts>
         {products.length > 0 ? (
           <>
-            <Row gutter={[20, 20]}>
+            <Row gutter={[{ xs: 8, sm: 16, md: 20 }, { xs: 16, sm: 16, md: 20 }]}>
               {products.map((product) => (
-                <Col key={product._id} xs={24} sm={12} md={8} lg={6} xl={6}>
+                <Col key={product._id} xs={12} sm={12} md={8} lg={6} xl={6}>
                   <CardComponent
                     countInStock={product.countInStock}
                     description={product.description}
@@ -95,21 +97,20 @@ const ProductListComponent = ({ selectedType }) => {
               ))}
             </Row>
 
-            {pagination.total > pagination.pageSize && (
-              <Pagination
-                current={pagination.current}
-                pageSize={pagination.pageSize}
-                total={pagination.total}
-                onChange={handlePageChange}
-                showSizeChanger
-                style={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  marginTop: '40px',
-                  padding: '20px 0',
-                }}
-              />
-            )}
+            <Pagination
+              current={pagination.current}
+              pageSize={pagination.pageSize}
+              total={pagination.total}
+              onChange={handlePageChange}
+              showSizeChanger
+              pageSizeOptions={['12', '24', '36', '48']}
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                marginTop: '40px',
+                padding: '20px 0',
+              }}
+            />
           </>
         ) : (
           <Empty

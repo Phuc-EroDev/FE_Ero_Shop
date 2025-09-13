@@ -7,7 +7,7 @@ import TypeProduct from '../../components/TypeProduct/TypeProduct';
 import SliderComponent from '../../components/SliderComponent/SliderComponent';
 import ModalComponent from '../../components/ModalComponent/ModalComponent';
 import SearchResultComponent from '../../components/SearchResultComponent/SearchResultComponent';
-import { WrapperButtonMore, WrapperTypeProduct } from './style';
+import { BodyWrapper, PageContainer, WrapperButtonMore, WrapperTypeProduct } from './style';
 import { useQuery, keepPreviousData } from '@tanstack/react-query';
 import * as ProductService from '../../services/ProductService';
 import Loading from '../../components/LoadingComponent/Loading';
@@ -69,7 +69,7 @@ const HomePage = () => {
   };
 
   const fetchProductAll = async () => {
-    const res = await ProductService.getAllProduct();
+    const res = await ProductService.getAllProduct('', 0, 1000);
     return res;
   };
 
@@ -105,17 +105,17 @@ const HomePage = () => {
 
   return (
     <>
-      <div style={{ margin: '0 auto', padding: '0 120px' }}>
+      <PageContainer>
         <WrapperTypeProduct>
-          <h5 style={{ padding: '8px 0', fontSize: '16px' }}>
+          <h5 style={{ padding: '6px 0', fontSize: '14px' }}>
             <span style={{ color: ' #C68642', cursor: 'pointer', fontWeight: 'bold' }} onClick={() => navigate('/')}>
               {'Trang chủ >'}
             </span>
           </h5>
         </WrapperTypeProduct>
-      </div>
-      <div className="body" style={{ width: '100%', backgroundColor: ' #333131' }}>
-        <div id="container" style={{ margin: '0 auto', padding: '0 120px', minHeight: 'auto', width: '100%' }}>
+      </PageContainer>
+      <BodyWrapper>
+        <PageContainer id="container" style={{ minHeight: 'auto', width: '100%' }}>
           <div style={{ position: 'relative' }}>
             <SliderComponent arrImages={slideUrls} />
             {user?.isAdmin && <WrapperButtonMore textbutton={'Sửa slide'} type="outline" onClick={handleChangeSlide} />}
@@ -150,8 +150,8 @@ const HomePage = () => {
               </Loading>
             </>
           )}
-        </div>
-      </div>
+        </PageContainer>
+      </BodyWrapper>
 
       {/* Slide Management Modal */}
       <ModalComponent

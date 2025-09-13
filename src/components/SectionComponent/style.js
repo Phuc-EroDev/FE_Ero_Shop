@@ -60,6 +60,17 @@ export const SectionWrapper = styled.div`
     border-color: #c68642;
     box-shadow: 0 4px 20px rgba(198, 134, 66, 0.1);
   }
+  
+  @media (max-width: 768px) {
+    padding: 15px 0;
+    margin: 15px 0;
+  }
+  
+  @media (max-width: 480px) {
+    padding: 10px 0;
+    margin: 10px 0;
+    border-radius: 6px;
+  }
 `;
 
 export const SectionHeader = styled.div`
@@ -69,6 +80,16 @@ export const SectionHeader = styled.div`
   padding: 0 20px;
   margin-bottom: 20px;
   animation: ${slideInLeft} 0.6s ease-out 0.2s both;
+  
+  @media (max-width: 768px) {
+    padding: 0 15px;
+    margin-bottom: 15px;
+  }
+  
+  @media (max-width: 480px) {
+    padding: 0 10px;
+    margin-bottom: 10px;
+  }
 `;
 
 export const SectionTitle = styled.h2`
@@ -84,6 +105,26 @@ export const SectionTitle = styled.h2`
     color: #d79334;
     text-shadow: 0 0 10px rgba(198, 134, 66, 0.3);
     transform: translateX(5px);
+  }
+  
+  @media (max-width: 992px) {
+    font-size: 18px;
+  }
+  
+  @media (max-width: 768px) {
+    font-size: 16px;
+    letter-spacing: 0.8px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 14px;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+  }
+  
+  @media (max-width: 375px) {
+    font-size: 13px;
+    letter-spacing: 0.3px;
   }
 `;
 
@@ -114,11 +155,31 @@ export const ViewAllLink = styled.span`
       width: 100%;
     }
   }
+  
+  @media (max-width: 768px) {
+    font-size: 13px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 11px;
+  }
+  
+  @media (max-width: 375px) {
+    font-size: 10px;
+  }
 `;
 export const ProductsContainer = styled.div`
   position: relative;
   padding: 0 20px;
   animation: ${slideInRight} 0.6s ease-out 0.4s both;
+  
+  @media (max-width: 768px) {
+    padding: 0 15px;
+  }
+  
+  @media (max-width: 480px) {
+    padding: 0 10px;
+  }
 `;
 
 // Animation for horizontal slide transition
@@ -142,6 +203,18 @@ export const ProductsGrid = styled.div`
   scroll-behavior: smooth;
   padding: 10px 0;
   animation: ${slideInFromRight} 0.4s ease-out;
+  
+  /* For non-multitype, make it a horizontal scroll with fixed card width */
+  ${(props) =>
+    !props.$ismultitype &&
+    `
+    flex-wrap: nowrap;
+    align-items: stretch;
+    overflow-x: auto;
+    width: 100%;
+    padding-bottom: 15px;
+    `
+  }
 
   /* Hide scrollbar for flex layout */
   ${(props) =>
@@ -157,27 +230,39 @@ export const ProductsGrid = styled.div`
   /* Responsive grid */
   @media (max-width: 1200px) {
     ${(props) =>
-      props.$ismultitype &&
-      `
+    props.$ismultitype &&
+    `
       grid-template-columns: repeat(4, 1fr);
+    `}
+  }
+
+  @media (max-width: 992px) {
+    ${(props) =>
+    props.$ismultitype &&
+    `
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: auto;
     `}
   }
 
   @media (max-width: 768px) {
     gap: 12px;
     ${(props) =>
-      props.$ismultitype &&
-      `
+    props.$ismultitype &&
+    `
       grid-template-columns: repeat(2, 1fr);
       grid-template-rows: auto;
     `}
   }
 
   @media (max-width: 480px) {
+    gap: 8px;
+    padding: 5px 0;
+    
     ${(props) =>
-      props.$ismultitype &&
-      `
-      grid-template-columns: 1fr;
+    props.$ismultitype &&
+    `
+      grid-template-columns: repeat(2, 1fr);
     `}
   }
 `;
@@ -187,12 +272,19 @@ export const NavigationContainer = styled.div`
   top: 50%;
   transform: translateY(-50%);
   z-index: 10;
-  ${(props) => props.$position}: 0;
+  ${(props) => props.$position}: ${(props) => props.$position === 'left' ? '0' : '0'};
   opacity: 0;
   transition: opacity 0.3s ease;
 
   @media (max-width: 768px) {
-    display: none;
+    ${(props) => props.$position}: ${(props) => (props.$position === 'left' ? '5px' : '5px')};
+    opacity: 0.6;
+    display: block;
+  }
+  
+  @media (max-width: 480px) {
+    ${(props) => props.$position}: ${(props) => (props.$position === 'left' ? '0' : '0')};
+    display: ${(props) => (props.$position === 'right' ? 'block' : 'block')};
   }
 
   ${ProductsContainer}:hover & {
@@ -248,6 +340,24 @@ export const NavigationButton = styled.button`
   &:hover:not(:disabled) svg {
     transform: translateX(${(props) => (props.$direction === 'right' ? '2px' : '-2px')});
   }
+  
+  @media (max-width: 768px) {
+    width: 32px;
+    height: 32px;
+    
+    svg {
+      font-size: 14px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    width: 28px;
+    height: 28px;
+    
+    svg {
+      font-size: 12px;
+    }
+  }
 `;
 
 // Animation for card hover
@@ -280,6 +390,13 @@ export const CardWrapper = styled.div`
   border-radius: 8px;
   overflow: hidden;
   position: relative;
+  flex-shrink: 0;
+
+  /* For non-multitype layout (horizontal scroll) */
+  ${({ $ismultitype }) => !$ismultitype && `
+    width: 200px;
+    flex: 0 0 auto;
+  `}
 
   &::before {
     content: '';
@@ -314,5 +431,17 @@ export const CardWrapper = styled.div`
 
   &:active {
     transform: translateY(-4px) scale(1.01);
+  }
+
+  @media (max-width: 768px) {
+    ${({ $ismultitype }) => !$ismultitype && `
+      width: 180px;
+    `}
+  }
+
+  @media (max-width: 480px) {
+    ${({ $ismultitype }) => !$ismultitype && `
+      width: 160px;
+    `}
   }
 `;

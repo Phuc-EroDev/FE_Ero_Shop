@@ -1,8 +1,10 @@
 import React from 'react';
-import { List } from 'antd';
 import { WrapperTypeList, WrapperTypeItem, WrapperTitle } from './style';
+import { useResponsive } from '../../hooks/useResponsive';
 
 const TypeListComponent = ({ typeProducts = [], selectedType, onTypeSelect }) => {
+  const { isSmallMobile } = useResponsive();
+
   const handleItemClick = (type) => {
     onTypeSelect(type === selectedType ? '' : type);
   };
@@ -12,13 +14,18 @@ const TypeListComponent = ({ typeProducts = [], selectedType, onTypeSelect }) =>
       <WrapperTitle>Danh mục</WrapperTitle>
 
       {/* All Products Option */}
-      <WrapperTypeItem $isSelected={selectedType === ''} onClick={() => handleItemClick('')}>
+      <WrapperTypeItem $isSelected={selectedType === ''} onClick={() => handleItemClick('')} $isSmallMobile={isSmallMobile}>
         Tất cả sản phẩm
       </WrapperTypeItem>
 
       {/* Type List */}
       {typeProducts.map((type, index) => (
-        <WrapperTypeItem key={index} $isSelected={selectedType === type} onClick={() => handleItemClick(type)}>
+        <WrapperTypeItem
+          key={index}
+          $isSelected={selectedType === type}
+          onClick={() => handleItemClick(type)}
+          $isSmallMobile={isSmallMobile}
+        >
           {type}
         </WrapperTypeItem>
       ))}

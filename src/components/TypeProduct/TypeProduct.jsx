@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { productConstants } from '../../constant';
 import {
@@ -13,6 +13,7 @@ import {
 
 const TypeProduct = ({ data }) => {
   const navigate = useNavigate();
+  const scrollRef = useRef(null);
 
   const handleNavigateType = (type) => {
     navigate(`/type-product/`, { state: { type } });
@@ -35,7 +36,7 @@ const TypeProduct = ({ data }) => {
     <TypeProductContainer>
       <TypeProductWrapper>
         <SectionTitle>DANH MỤC</SectionTitle>
-        <TypeProductGrid>
+        <TypeProductGrid ref={scrollRef}>
           {data?.map((item, index) => (
             <TypeProductItem key={index} onClick={() => handleNavigateType(item)}>
               <TypeProductImage>

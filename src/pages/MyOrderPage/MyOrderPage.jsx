@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import * as OrderService from '../../services/OrderService';
 import Loading from '../../components/LoadingComponent/Loading';
@@ -153,7 +153,7 @@ const MyOrderPage = () => {
                     <ActionButton variant="detail" onClick={() => handleViewDetail(order)}>
                       Xem chi tiết
                     </ActionButton>
-                    {!order?.isDelivered && (
+                    {!order?.isDelivered && !order?.isPaid && (
                       <ActionButton
                         variant="cancel"
                         onClick={() => handleCancelOrder(order)}

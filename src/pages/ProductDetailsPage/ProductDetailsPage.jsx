@@ -1,21 +1,22 @@
 import React from 'react';
 import ProductDetailsComponent from '../../components/ProductDetailsComponent/ProductDetailsComponent';
 import { useNavigate, useParams } from 'react-router-dom';
+import { ProductDetailsContainer, BreadcrumbWrapper, BreadcrumbLink } from './style';
 
 const ProductDetailsPage = () => {
   const navigate = useNavigate();
   const { id } = useParams();
 
   return (
-    <div style={{ padding: '0 120px', margin: '0 auto', backgroundColor: '#333131', width: '100%', minHeight: '100vh' }}>
-      <h5 style={{ padding: '8px 0', fontSize: '16px' }}>
-        <span style={{ color: ' #C68642', cursor: 'pointer', fontWeight: 'bold' }} onClick={() => navigate('/')}>
+    <ProductDetailsContainer>
+      <BreadcrumbWrapper>
+        <BreadcrumbLink onClick={() => navigate('/')}>
           Trang chủ
-        </span>{' '}
+        </BreadcrumbLink>{' '}
         - Chi tiết sản phẩm
-      </h5>
+      </BreadcrumbWrapper>
       <ProductDetailsComponent idProduct={id} />
-    </div>
+    </ProductDetailsContainer>
   );
 };
 
