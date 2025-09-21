@@ -127,7 +127,10 @@ const HomePage = () => {
           ) : (
             <>
               <Loading isPending={isLoadingPopular}>
-                <SectionComponent data={products?.data} title="SẢN PHẨM NỔI BẬT" />
+                <SectionComponent
+                  data={products?.data?.sort((a, b) => b.selled - a.selled).slice(0, 12)}
+                  title="SẢN PHẨM NỔI BẬT"
+                />
               </Loading>
 
               <TypeProduct data={typeProducts} />
@@ -135,7 +138,7 @@ const HomePage = () => {
               <Loading isPending={isLoadingElectron}>
                 <SectionComponent
                   data={productsElectron?.data}
-                  title="ĐIỆN TỬ"
+                  title="Laptop"
                   viewAllText="Xem thêm >"
                   onViewAll={() => handleNavigateType('laptop')}
                 />

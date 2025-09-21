@@ -57,6 +57,7 @@ const ProductDetailsComponent = ({ idProduct }) => {
     const id = context.queryKey && context.queryKey[1];
     if (id) {
       const response = await ProductService.getDetailsProduct(id);
+      setCurrentImage(response?.data?.image[0]?.url || null);
       return response;
     }
     return null;
@@ -67,10 +68,11 @@ const ProductDetailsComponent = ({ idProduct }) => {
     queryFn: fetchDetailsProduct,
     enabled: !!idProduct,
   });
-
-  if (productDetails?.data?.image) {
-    smallImages = productDetails?.data?.image;
-  }
+  productDetails?.data?.image?.forEach((img) => {
+    if (!smallImages.includes(img.url)) {
+      smallImages.push(img.url);
+    }
+  })
 
   // Fetch products with same type
   const fetchProductsByType = async (type) => {
@@ -150,7 +152,7 @@ const ProductDetailsComponent = ({ idProduct }) => {
         <Row>
           <WrapperImageCol xs={24} md={10}>
             <WrapperMainImage>
-              <Image src={currentImage || productDetails?.data?.image[0]} alt="Image Product" preview={false} />
+              <Image src={currentImage || productDetails?.data?.image[0].url} alt="Image Product" preview={false} />
             </WrapperMainImage>
             <ImageThumbnailContainer>
               {smallImages.map((image, index) => (

@@ -25,7 +25,7 @@ const CardComponent = (props) => {
       hoverable
       cover={
         <div style={{ position: 'relative' }}>
-          <img alt={name} src={image[0]} />
+          <img alt={name} src={image[0].url} />
           {countInStock === 0 && <WrapperOutOfStockLabel>HẾT HÀNG</WrapperOutOfStockLabel>}
         </div>
       }

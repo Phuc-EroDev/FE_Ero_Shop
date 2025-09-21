@@ -202,7 +202,7 @@ const OrderDetailPage = () => {
                 {orderData?.orderItems?.map((orderItem) => (
                   <ProductItem key={orderItem?.product}>
                     <ProductImage
-                      src={Array.isArray(orderItem?.image) ? orderItem?.image[0] : orderItem?.image}
+                      src={Array.isArray(orderItem?.image) ? orderItem?.image[0].url : orderItem?.image}
                       alt="product"
                     />
                     <ProductInfo>

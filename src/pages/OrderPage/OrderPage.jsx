@@ -294,7 +294,7 @@ const OrderPage = () => {
                         value={orderItem?.product}
                       />
                       <img
-                        src={orderItem?.image[0]}
+                        src={orderItem?.image[0].url}
                         alt="product"
                         style={{
                           width: isMobile ? '50px' : '60px',
