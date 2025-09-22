@@ -21,7 +21,6 @@ const SectionComponent = ({
   onViewAll,
   showNavigation = true,
 }) => {
-  console.log(title, data);
   const scrollRef = useRef(null);
   const [currentPage, setCurrentPage] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);

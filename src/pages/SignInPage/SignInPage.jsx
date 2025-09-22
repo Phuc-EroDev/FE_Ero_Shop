@@ -10,7 +10,7 @@ import Loading from '../../components/LoadingComponent/Loading';
 import { jwtDecode } from 'jwt-decode';
 import { useDispatch } from 'react-redux';
 import { updateUser } from '../../redux/slides/userSlide';
-import * as message from '../../components/MessageComponent/Message';
+import { useMessage } from '../../context/MessageContext.jsx';
 
 const SignInPage = () => {
   const [isShowPassword, setIsShowPassword] = useState(false);
@@ -18,7 +18,8 @@ const SignInPage = () => {
   const [password, setPassword] = useState('');
 
   const dispatch = useDispatch();
-  const location = useLocation();
+
+  const { success, error, warning } = useMessage();
 
   const disabled = !email || !password;
 
@@ -55,15 +56,10 @@ const SignInPage = () => {
           handleGetDetailsUser(decoded?.id, data?.access_token);
         }
       }
-      if (location?.state) {
-        navigate(location.state);
-      } else {
-        navigate('/');
-      }
-    } else if (isSuccess && data?.status === 'ERR') {
-      message.error('Đăng nhập thất bại');
-    } else if (isError) {
-      message.error('Đăng nhập thất bại');
+      success('Đăng nhập thành công!');
+      navigate('/');
+    } else if (isError || data?.status === 'ERR') {
+      error('Đăng nhập thất bại!');
     }
   }, [isSuccess, isError, data]);
 
@@ -107,7 +103,11 @@ const SignInPage = () => {
               type={isShowPassword ? 'text' : 'password'}
             />
           </PasswordWrapper>
-          {data?.status === 'ERR' && <span style={{ color: 'red' }}>{data?.message}</span>}
+          {(data?.status === 'ERR' || isError) && (
+            <div style={{ color: 'red', margin: '10px 0', fontSize: '14px' }}>
+              {data?.message || 'Đăng nhập thất bại!'}
+            </div>
+          )}
           <Loading isPending={isPending}>
             <ButtonComponent
               onClick={handleSignIn}

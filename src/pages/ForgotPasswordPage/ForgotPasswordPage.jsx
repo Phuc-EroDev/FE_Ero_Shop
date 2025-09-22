@@ -23,8 +23,7 @@ import * as UserService from '../../services/UserService';
 import * as OtpService from '../../services/OtpService';
 import { useMutationHook } from '../../hooks/useMutationHook';
 import Loading from '../../components/LoadingComponent/Loading';
-import * as message from '../../components/MessageComponent/Message';
-import { success, error, warning } from '../../components/MessageComponent/Message';
+import { useMessage } from '../../context/MessageContext.jsx';
 
 const ForgotPasswordPage = () => {
   const [isShowNewPassword, setIsShowNewPassword] = useState(false);
@@ -34,6 +33,9 @@ const ForgotPasswordPage = () => {
   const [email, setEmail] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmNewPassword, setConfirmNewPassword] = useState('');
+
+  const navigate = useNavigate();
+  const { success, error, warning } = useMessage();
 
   const disabled = !email || !newPassword || !confirmNewPassword || !otp;
 
@@ -63,7 +65,6 @@ const ForgotPasswordPage = () => {
     success('Đã gửi OTP đến email của bạn!');
   };
 
-  const navigate = useNavigate();
   const handleNavigateLogin = () => {
     navigate('/sign-in');
   };
@@ -72,9 +73,7 @@ const ForgotPasswordPage = () => {
     navigate('/');
   };
 
-  // Tạo mutation cho reset password (cần tạo service này)
   const mutation = useMutationHook((data) => {
-    // Sẽ cần tạo service resetPassword trong UserService
     return UserService.resetPassword(data);
   });
 
@@ -165,8 +164,11 @@ const ForgotPasswordPage = () => {
             )}
           </OtpWrapper>
 
-          {data?.status === 'ERR' && <span style={{ color: 'red' }}>{data?.message}</span>}
-
+          {(data?.status === 'ERR' || isError) && (
+            <div style={{ color: 'red', margin: '10px 0', fontSize: '14px' }}>
+              {data?.message || 'Đặt lại mật khẩu thất bại!'}
+            </div>
+          )}
           <Loading isPending={isPending}>
             <ButtonWrapper>
               <ButtonComponent

@@ -146,7 +146,7 @@ const HomePage = () => {
 
               <Loading isPending={isLoadingPopular || isLoadingElectron}>
                 <SectionComponent
-                  data={products?.data?.filter((item) => !productsElectron?.data?.includes(item))}
+                  data={products?.data?.filter((item) => !productsElectron?.data?.some(electronItem => electronItem._id === item._id))}
                   isMultiType={true}
                   title="SẢN PHẨM KHÁC"
                 />

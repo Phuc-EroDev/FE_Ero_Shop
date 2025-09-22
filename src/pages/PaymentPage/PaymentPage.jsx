@@ -22,7 +22,7 @@ import { useMutationHook } from '../../hooks/useMutationHook';
 import * as UserService from '../../services/UserService';
 import * as OrderService from '../../services/OrderService';
 import * as PaymentService from '../../services/PaymentService';
-import * as message from '../../components/MessageComponent/Message';
+import { useMessage } from '../../context/MessageContext.jsx';
 import { useNavigate } from 'react-router-dom';
 import { removeMultiOrderProduct } from '../../redux/slides/orderSlide';
 
@@ -40,6 +40,7 @@ const PaymentPage = () => {
     city: '',
   });
 
+  const { success, error, warning } = useMessage();
   const navigate = useNavigate();
   const [form] = Form.useForm();
 
@@ -229,7 +230,7 @@ const PaymentPage = () => {
         arrOrdered.push(element.product);
       });
       dispatch(removeMultiOrderProduct(arrOrdered));
-      message.success('Đặt hàng thành công');
+      success('Đặt hàng thành công');
       navigate('/order-success', {
         state: {
           user: {
@@ -248,7 +249,7 @@ const PaymentPage = () => {
         },
       });
     } else if (isErrorAddOrder) {
-      message.error('Đặt hàng thất bại');
+      error('Đặt hàng thất bại');
     }
   }, [isSuccessAddOrder, isErrorAddOrder]);
 

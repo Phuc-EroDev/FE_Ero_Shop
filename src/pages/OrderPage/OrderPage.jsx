@@ -31,7 +31,7 @@ import Loading from '../../components/LoadingComponent/Loading';
 import InputComponent from '../../components/InputComponent/InputComponent';
 import { useMutationHook } from '../../hooks/useMutationHook';
 import * as UserService from '../../services/UserService';
-import * as message from '../../components/MessageComponent/Message';
+import { useMessage } from '../../context/MessageContext.jsx';
 import { useNavigate } from 'react-router-dom';
 import StepsComponent from '../../components/StepsComponent/StepsComponent';
 
@@ -44,10 +44,10 @@ const OrderPage = () => {
     address: '',
     city: '',
   });
+
   const { isMobile } = useResponsive();
-
+  const { success, error, warning } = useMessage();
   const [form] = Form.useForm();
-
   const navigate = useNavigate();
 
   const order = useSelector((state) => state?.order);
@@ -155,7 +155,7 @@ const OrderPage = () => {
 
   const handleAddCard = () => {
     if (!order?.orderItemsSelected?.length) {
-      message.error('Vui lòng chọn sản phẩm để thanh toán');
+      error('Vui lòng chọn sản phẩm để thanh toán');
     } else if (!user?.name || !user?.email || !user?.phone || !user?.address || !user?.city) {
       setIsOpenModalUpdateInfo(true);
     } else {

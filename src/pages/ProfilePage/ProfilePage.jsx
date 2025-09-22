@@ -14,7 +14,7 @@ import {
 import InputFormComponent from '../../components/InputFormComponent/InputFormComponent';
 import ButtonComponent from '../../components/ButtonComponent/ButtonComponent';
 import * as UserService from '../../services/UserService';
-import * as message from '../../components/MessageComponent/Message';
+import { useMessage } from '../../context/MessageContext.jsx';
 import { useDispatch, useSelector } from 'react-redux';
 import { useMutationHook } from '../../hooks/useMutationHook';
 import Loading from '../../components/LoadingComponent/Loading';
@@ -32,6 +32,7 @@ const ProfilePage = () => {
   const [avatar, setAvatar] = useState('');
 
   const dispatch = useDispatch();
+  const { success, error, warning } = useMessage();
 
   const mutation = useMutationHook((data) => {
     const { id, access_token, ...rests } = data;
@@ -77,10 +78,10 @@ const ProfilePage = () => {
 
   useEffect(() => {
     if (isSuccess) {
-      message.success();
+      success('Cập nhật thông tin thành công');
       handleGetDetailsUser(user?.id, user?.access_token);
     } else if (isError) {
-      message.error();
+      error('Cập nhật thông tin thất bại');
     }
   }, [isSuccess, isError]);
 

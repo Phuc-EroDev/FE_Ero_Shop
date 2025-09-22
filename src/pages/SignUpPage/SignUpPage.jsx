@@ -22,8 +22,7 @@ import * as UserService from '../../services/UserService';
 import * as OtpService from '../../services/OtpService';
 import { useMutationHook } from '../../hooks/useMutationHook';
 import Loading from '../../components/LoadingComponent/Loading';
-import * as message from '../../components/MessageComponent/Message';
-import { success, error, warning } from '../../components/MessageComponent/Message';
+import { useMessage } from '../../context/MessageContext.jsx';
 
 const SignUpPage = () => {
   const [isShowPassword, setIsShowPassword] = useState(false);
@@ -33,6 +32,9 @@ const SignUpPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+
+  const navigate = useNavigate();
+  const { success, error, warning } = useMessage();
 
   const disabled = !email || !password || !confirmPassword || !otp;
 
@@ -57,7 +59,6 @@ const SignUpPage = () => {
     setIsSentOtp(true);
   };
 
-  const navigate = useNavigate();
   const handleNavigateLogin = () => {
     navigate('/sign-in');
   };
@@ -70,17 +71,21 @@ const SignUpPage = () => {
   const { data, isPending, isSuccess, isError } = mutation;
 
   useEffect(() => {
-    if (isSuccess) {
-      success();
-      // message.success();
+    if (isSuccess && data?.status === 'OK') {
+      success('Đăng ký thành công!');
       handleNavigateLogin();
+    } else if (isSuccess && data?.status === 'ERR') {
+      error('Đăng ký thất bại!');
     } else if (isError) {
-      error();
-      // message.error();
+      error('Đăng ký thất bại!');
     }
-  }, [isSuccess, isError]);
+  }, [isSuccess, isError, data]);
 
   const handleSignUp = () => {
+    if (password !== confirmPassword) {
+      warning('Mật khẩu xác nhận không khớp!');
+      return;
+    }
     mutation.mutate({
       email,
       password,
@@ -146,7 +151,11 @@ const SignUpPage = () => {
               </OtpSuccessMessage>
             )}
           </OtpWrapper>
-          {data?.status === 'ERR' && <span style={{ color: 'red' }}>{data?.message}</span>}
+          {(data?.status === 'ERR' || isError) && (
+            <div style={{ color: 'red', margin: '10px 0', fontSize: '14px' }}>
+              {data?.message || 'Đăng ký thất bại!'}
+            </div>
+          )}
           <Loading isPending={isPending}>
             <ButtonComponent
               onClick={handleSignUp}
