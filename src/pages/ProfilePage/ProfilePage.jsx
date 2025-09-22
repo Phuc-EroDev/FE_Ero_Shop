@@ -1,15 +1,26 @@
 import React, { useEffect, useState } from 'react';
-import { WrapperContentProfile, WrapperHeader, WrapperInput, WrapperLabel, WrapperUploadFile } from './style';
+import {
+  WrapperContainer,
+  WrapperContentProfile,
+  WrapperHeader,
+  WrapperInput,
+  WrapperLabel,
+  WrapperUploadFile,
+  AvatarContainer,
+  AvatarPreview,
+  UpdateButtonContainer,
+  InputStyle
+} from './style';
 import InputFormComponent from '../../components/InputFormComponent/InputFormComponent';
 import ButtonComponent from '../../components/ButtonComponent/ButtonComponent';
 import * as UserService from '../../services/UserService';
-import * as message from '../../components/MessageComponent/Message';
+import { useMessage } from '../../context/MessageContext.jsx';
 import { useDispatch, useSelector } from 'react-redux';
 import { useMutationHook } from '../../hooks/useMutationHook';
 import Loading from '../../components/LoadingComponent/Loading';
 import { updateUser } from '../../redux/slides/userSlide';
 import { Button } from 'antd';
-import { UploadOutlined } from '@ant-design/icons';
+import { UploadOutlined, UserOutlined, MailOutlined, PhoneOutlined, HomeOutlined } from '@ant-design/icons';
 import { getBase64 } from '../../utils';
 
 const ProfilePage = () => {
@@ -21,6 +32,7 @@ const ProfilePage = () => {
   const [avatar, setAvatar] = useState('');
 
   const dispatch = useDispatch();
+  const { success, error, warning } = useMessage();
 
   const mutation = useMutationHook((data) => {
     const { id, access_token, ...rests } = data;
@@ -66,141 +78,86 @@ const ProfilePage = () => {
 
   useEffect(() => {
     if (isSuccess) {
-      message.success();
+      success('Cập nhật thông tin thành công');
       handleGetDetailsUser(user?.id, user?.access_token);
     } else if (isError) {
-      message.error();
+      error('Cập nhật thông tin thất bại');
     }
   }, [isSuccess, isError]);
 
   return (
-    <div style={{ width: '100%', height: '1500px', margin: '0 auto', padding: '0 120px', backgroundColor: ' #333131' }}>
+    <WrapperContainer>
       <WrapperHeader>Thông tin người dùng</WrapperHeader>
       <Loading isPending={isPending}>
         <WrapperContentProfile>
           <WrapperInput>
             <WrapperLabel htmlFor="name">Name</WrapperLabel>
-            <InputFormComponent id="name" style={{ width: '300px' }} value={name} handleOnChange={handleOnChangeName} />
-            <ButtonComponent
-              onClick={handleUpdate}
-              size={'large'}
-              style={{
-                backgroundColor: '#C68642',
-                borderRadius: '4px',
-                color: '#FDF6EC',
-                fontWeight: '600',
-                width: 'fit-content',
-                height: '30px',
-                padding: '4px 6px',
-              }}
-              textbutton={'Cập nhật'}
+            <InputFormComponent
+              id="name"
+              style={InputStyle}
+              value={name}
+              handleOnChange={handleOnChangeName}
+              placeholder="Nhập tên của bạn"
+              prefix={<UserOutlined style={{ color: '#C68642' }} />}
             />
           </WrapperInput>
           <WrapperInput>
             <WrapperLabel htmlFor="email">Email</WrapperLabel>
             <InputFormComponent
               id="email"
-              style={{ width: '300px' }}
+              style={InputStyle}
               value={email}
               handleOnChange={handleOnChangeEmail}
-            />
-            <ButtonComponent
-              onClick={handleUpdate}
-              size={'large'}
-              style={{
-                backgroundColor: '#C68642',
-                borderRadius: '4px',
-                color: '#FDF6EC',
-                fontWeight: '600',
-                width: 'fit-content',
-                height: '30px',
-                padding: '4px 6px',
-              }}
-              textbutton={'Cập nhật'}
+              placeholder="Nhập email của bạn"
+              prefix={<MailOutlined style={{ color: '#C68642' }} />}
             />
           </WrapperInput>
           <WrapperInput>
             <WrapperLabel htmlFor="phone">Phone</WrapperLabel>
             <InputFormComponent
               id="phone"
-              style={{ width: '300px' }}
+              style={InputStyle}
               value={phone}
               handleOnChange={handleOnChangePhone}
-            />
-            <ButtonComponent
-              onClick={handleUpdate}
-              size={'large'}
-              style={{
-                backgroundColor: '#C68642',
-                borderRadius: '4px',
-                color: '#FDF6EC',
-                fontWeight: '600',
-                width: 'fit-content',
-                height: '30px',
-                padding: '4px 6px',
-              }}
-              textbutton={'Cập nhật'}
+              placeholder="Nhập số điện thoại"
+              prefix={<PhoneOutlined style={{ color: '#C68642' }} />}
             />
           </WrapperInput>
           <WrapperInput>
             <WrapperLabel htmlFor="address">Address</WrapperLabel>
             <InputFormComponent
               id="address"
-              style={{ width: '300px' }}
+              style={InputStyle}
               value={address}
               handleOnChange={handleOnChangeAddress}
-            />
-            <ButtonComponent
-              onClick={handleUpdate}
-              size={'large'}
-              style={{
-                backgroundColor: '#C68642',
-                borderRadius: '4px',
-                color: '#FDF6EC',
-                fontWeight: '600',
-                width: 'fit-content',
-                height: '30px',
-                padding: '4px 6px',
-              }}
-              textbutton={'Cập nhật'}
+              placeholder="Nhập địa chỉ của bạn"
+              prefix={<HomeOutlined style={{ color: '#C68642' }} />}
             />
           </WrapperInput>
           <WrapperInput>
             <WrapperLabel htmlFor="avatar">Avatar</WrapperLabel>
-            <WrapperUploadFile onChange={handleOnChangeAvatar} maxCount={1}>
-              <Button icon={<UploadOutlined />}>Select File</Button>
-            </WrapperUploadFile>
-            {avatar && (
-              <img
-                src={avatar}
-                style={{ height: '60px', width: '60px', borderRadius: '50%', objectFit: 'cover' }}
-                alt="Avatar"
-              />
-            )}
-            {/* <InputFormComponent
-              id="avatar"
-              style={{ width: '300px' }}
-              value={avatar}
-              handleOnChange={handleOnChangeAvatar}
-            /> */}
+            <AvatarContainer>
+              <WrapperUploadFile onChange={handleOnChangeAvatar} maxCount={1}>
+                <Button icon={<UploadOutlined />}>Select File</Button>
+              </WrapperUploadFile>
+              {avatar && (
+                <AvatarPreview
+                  src={avatar}
+                  alt="Avatar"
+                />
+              )}
+            </AvatarContainer>
+          </WrapperInput>
+          <UpdateButtonContainer>
             <ButtonComponent
               onClick={handleUpdate}
-              size={'large'}
-              style={{
-                backgroundColor: '#C68642',
-                borderRadius: '4px',
-                color: '#FDF6EC',
-                fontWeight: '600',
-                width: 'fit-content',
-                height: '30px',
-                padding: '4px 6px',
-              }}
+              size={'middle'}
               textbutton={'Cập nhật'}
             />
-          </WrapperInput>
+          </UpdateButtonContainer>
         </WrapperContentProfile>
       </Loading>
-    </div>
+    </WrapperContainer>
   );
 };
 

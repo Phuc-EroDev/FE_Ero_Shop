@@ -3,18 +3,14 @@ import styled from 'styled-components';
 export const MyOrderContainer = styled.div`
   width: 100%;
   min-height: 100vh;
-  background-color: #222222;
-  padding: 24px 0;
-  
-  @media (max-width: 768px) {
-    padding: 16px 0;
-  }
+  padding: 20px;
+  margin-top: -60px; // Fix for DefaultComponent padding
 `;
 
 export const MyOrderWrapper = styled.div`
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 16px;
+  padding: 0 10px;
 `;
 
 export const MyOrderTitle = styled.h1`
@@ -22,6 +18,8 @@ export const MyOrderTitle = styled.h1`
   font-size: 24px;
   font-weight: 600;
   margin-bottom: 24px;
+  text-align: center;
+  font-weight: bold;
   
   @media (max-width: 768px) {
     font-size: 20px;
@@ -35,8 +33,16 @@ export const OrderCard = styled.div`
   border: 1px solid #404040;
   margin-bottom: 24px;
   overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+
+  &:hover {
+    border-color: #C68642;
+    box-shadow: 0 6px 12px rgba(198, 134, 66, 0.1);
+  }
   
   @media (max-width: 768px) {
+    border-radius: 8px;
     margin-bottom: 16px;
   }
 `;
@@ -47,13 +53,12 @@ export const OrderHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid #404040;
   
   @media (max-width: 768px) {
-    padding: 12px 16px;
     flex-direction: column;
     align-items: flex-start;
-    gap: 8px;
+    gap: 10px;
+    padding: 12px 16px;
   }
 `;
 
@@ -76,25 +81,26 @@ export const StatusBadge = styled.span`
   padding: 4px 10px;
   border-radius: 4px;
   font-size: 12px;
-  font-weight: 500;
-  background-color: ${({ status }) => 
-    status === 'paid' ? 'rgba(46, 196, 84, 0.2)' : 
-    status === 'delivered' ? 'rgba(46, 196, 196, 0.2)' : 
-    'rgba(255, 180, 0, 0.2)'};
-  color: ${({ status }) => 
-    status === 'paid' ? '#2ec454' : 
-    status === 'delivered' ? '#2ec4c4' : 
-    '#ffb400'};
+  font-weight: 600;
+  background-color: ${props => {
+    if (props.status === 'paid') return '#4CAF50';
+    if (props.status === 'delivered') return '#2196F3';
+    if (props.status === 'pending') return '#FF9800';
+    if (props.status === 'cancelled') return '#F44336';
+    return '#666';
+  }};
+  color: white;
+  
+  @media (max-width: 768px) {
+    padding: 3px 10px;
+    font-size: 11px;
+  }
 `;
 
 export const OrderBody = styled.div`
   padding: 20px;
   
   @media (max-width: 768px) {
-    padding: 16px;
-  }
-  
-  @media (max-width: 576px) {
     padding: 12px;
   }
 `;
@@ -105,8 +111,8 @@ export const OrderInfo = styled.div`
   margin-bottom: 20px;
   
   @media (max-width: 768px) {
-    flex-direction: column;
-    gap: 16px;
+    grid-template-columns: 1fr;
+    gap: 12px;
     margin-bottom: 16px;
   }
 `;
@@ -173,18 +179,21 @@ export const ProductList = styled.div`
 
 export const ProductItem = styled.div`
   display: flex;
-  gap: 16px;
-  padding: 16px;
-  background-color: #333333;
-  border-radius: 6px;
+  align-items: center;
+  padding: 12px;
+  background-color: #333;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  border: 1px solid #444;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
   
   @media (max-width: 768px) {
     padding: 12px;
-    gap: 12px;
-  }
-  
-  @media (max-width: 576px) {
-    padding: 10px;
+    flex-direction: ${props => props.isMobile ? 'row' : 'row'};
+    align-items: ${props => props.isMobile ? 'center' : 'center'};
     gap: 10px;
   }
 `;
@@ -193,55 +202,54 @@ export const ProductImage = styled.img`
   width: 80px;
   height: 80px;
   object-fit: cover;
-  border-radius: 4px;
+  border-radius: 8px;
+  border: 1px solid #C68642;
+  margin-right: 16px;
   
   @media (max-width: 768px) {
-    width: 70px;
-    height: 70px;
-  }
-  
-  @media (max-width: 576px) {
+    margin-right: 0;
     width: 60px;
     height: 60px;
+    flex-shrink: 0;
   }
 `;
 
 export const ProductInfo = styled.div`
   flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  min-width: 0;
+  
+  @media (max-width: 768px) {
+    width: calc(100% - 70px);
+    flex: 1;
+    min-width: 0;
+  }
 `;
 
-export const ProductName = styled.h4`
-  color: #ffffff;
-  font-size: 15px;
-  font-weight: 500;
-  margin-bottom: 8px;
+export const ProductName = styled.div`
+  color: #E5E5E5;
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 4px;
   
   @media (max-width: 768px) {
     font-size: 14px;
     margin-bottom: 6px;
-  }
-  
-  @media (max-width: 576px) {
-    font-size: 13px;
-    margin-bottom: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 `;
 
 export const ProductDetails = styled.div`
   display: flex;
-  flex-direction: column;
-  gap: 4px;
+  gap: 20px;
+  color: #B8B8B8;
+  font-size: 14px;
   
-  span {
-    color: #cccccc;
-    font-size: 13px;
-    
-    @media (max-width: 576px) {
-      font-size: 12px;
-    }
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 4px;
+    font-size: 12px;
   }
 `;
 
@@ -253,20 +261,22 @@ export const OrderFooter = styled.div`
   align-items: center;
   
   @media (max-width: 768px) {
-    padding: 12px 16px;
     flex-direction: column;
-    gap: 12px;
     align-items: flex-start;
+    gap: 12px;
+    padding: 12px 16px;
   }
 `;
 
 export const TotalPrice = styled.div`
-  color: #ffffff;
-  font-size: 16px;
-  font-weight: 600;
+  color: #C68642;
+  font-size: 18px;
+  font-weight: bold;
   
   @media (max-width: 768px) {
-    font-size: 15px;
+    width: 100%;
+    font-size: 16px;
+    margin-bottom: 0;
   }
 `;
 
@@ -276,14 +286,13 @@ export const ActionButtons = styled.div`
   
   @media (max-width: 768px) {
     width: 100%;
-    justify-content: flex-end;
     gap: 10px;
-  }
-  
-  @media (max-width: 576px) {
-    flex-direction: column;
-    width: 100%;
-    gap: 8px;
+    display: flex;
+    justify-content: space-between;
+    
+    button {
+      flex: 1;
+    }
   }
 `;
 
@@ -293,44 +302,45 @@ export const ActionButton = styled.button`
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.3s;
-  border: none;
-  
-  background-color: ${({ variant }) => 
-    variant === 'detail' ? '#333333' : 
-    variant === 'cancel' ? 'rgba(220, 53, 69, 0.1)' : 
-    '#c68642'};
-  
-  color: ${({ variant }) => 
-    variant === 'detail' ? '#ffffff' : 
-    variant === 'cancel' ? '#dc3545' : 
-    '#ffffff'};
-  
-  border: ${({ variant }) => 
-    variant === 'detail' ? '1px solid #444444' : 
-    variant === 'cancel' ? '1px solid rgba(220, 53, 69, 0.3)' : 
-    'none'};
-  
-  &:hover {
-    background-color: ${({ variant }) => 
-      variant === 'detail' ? '#444444' : 
-      variant === 'cancel' ? 'rgba(220, 53, 69, 0.2)' : 
-      '#b67535'};
-  }
-  
+  transition: all 0.3s ease;
+  text-align: center;
+
+  ${props => {
+    if (props.variant === 'cancel') {
+      return `
+        background-color: #F44336;
+        color: white;
+        
+        &:hover {
+          background-color: #D32F2F;
+        }
+      `;
+    }
+    if (props.variant === 'detail') {
+      return `
+        background-color: transparent;
+        color: #C68642;
+        border: 1px solid #C68642;
+        
+        &:hover {
+          background-color: #C68642;
+          color: white;
+        }
+      `;
+    }
+    return '';
+  }}
+
   &:disabled {
     opacity: 0.6;
     cursor: not-allowed;
   }
   
   @media (max-width: 768px) {
-    padding: 6px 14px;
-    font-size: 13px;
-  }
-  
-  @media (max-width: 576px) {
-    width: 100%;
-    padding: 8px 12px;
+    padding: 8px 10px;
+    font-size: 12px;
+    white-space: nowrap;
+    min-width: 100px;
   }
 `;
 
@@ -349,19 +359,18 @@ export const EmptyState = styled.div`
   }
   
   p {
-    color: #cccccc;
-    font-size: 14px;
+    font-size: 16px;
   }
   
   @media (max-width: 768px) {
-    padding: 30px 16px;
+    padding: 40px 15px;
     
     h3 {
-      font-size: 16px;
+      font-size: 18px;
     }
     
     p {
-      font-size: 13px;
+      font-size: 14px;
     }
   }
 `;

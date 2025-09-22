@@ -3,8 +3,15 @@ import axios from 'axios';
 export const axiosJWT = axios.create();
 
 export const loginUser = async (data) => {
-  const res = await axios.post(`${import.meta.env.VITE_BACKEND_API}/user/sign-in`, data, { withCredentials: true });
-  return res.data;
+  try {
+    const res = await axios.post(`${import.meta.env.VITE_BACKEND_API}/user/sign-in`, data, { withCredentials: true });
+    return res.data;
+  } catch (error) {
+    if (error.response && error.response.data) {
+      return error.response.data;
+    }
+    return { status: 'ERR', message: 'Đã xảy ra lỗi khi đăng nhập' };
+  }
 };
 
 export const logoutUser = async () => {
@@ -19,10 +26,18 @@ export const logoutUser = async () => {
 };
 
 export const registerUser = async (data) => {
-  const res = await axios.post(`${import.meta.env.VITE_BACKEND_API}/user/sign-up`, data, {
-    withCredentials: true,
-  });
-  return res.data;
+  try {
+    const res = await axios.post(`${import.meta.env.VITE_BACKEND_API}/user/sign-up`, data, {
+      withCredentials: true,
+    });
+    return res.data;
+  } catch (error) {
+    if (error.response && error.response.data) {
+      return error.response.data;
+    }
+    return { status: 'ERR', message: 'Đã xảy ra lỗi khi đăng ký' };
+  }
+
 };
 
 export const updateUser = async (id, data, access_token) => {
@@ -86,8 +101,16 @@ export const refreshToken = async (refreshToken) => {
 };
 
 export const resetPassword = async (data) => {
-  const res = await axios.post(`${import.meta.env.VITE_BACKEND_API}/user/reset-password`, data, {
-    withCredentials: true,
-  });
-  return res.data;
+  try {
+    const res = await axios.post(`${import.meta.env.VITE_BACKEND_API}/user/reset-password`, data, {
+      withCredentials: true,
+    });
+    return res.data;
+  } catch (error) {
+    if (error.response && error.response.data) {
+      return error.response.data;
+    }
+    return { status: 'ERR', message: 'Đã xảy ra lỗi khi đặt lại mật khẩu' };
+  }
+
 };

@@ -6,7 +6,7 @@ import TableComponent from '../TableComponent/TableComponent';
 import InputComponent from '../InputComponent/InputComponent';
 import Loading from '../LoadingComponent/Loading';
 import ModalComponent from '../ModalComponent/ModalComponent';
-import * as message from '../../components/MessageComponent/Message';
+import { useMessage } from '../../context/MessageContext.jsx';
 import * as OrderService from '../../services/OrderService';
 import { useSelector } from 'react-redux';
 import { useMutationHook } from '../../hooks/useMutationHook';
@@ -16,6 +16,7 @@ import PieChartComponent from '../PieChartComponent/PieChartComponent';
 
 const AdminOrder = () => {
   const user = useSelector((state) => state?.user);
+  const { success, error, warning } = useMessage();
 
   const searchInput = useRef(null);
 
@@ -96,14 +97,14 @@ const AdminOrder = () => {
       {
         onSuccess: (data) => {
           if (data?.status === 'OK') {
-            message.success('Xác nhận giao hàng thành công!');
+            success('Xác nhận giao hàng thành công!');
             queryOrder.refetch();
           } else {
-            message.error(data?.message || 'Có lỗi xảy ra');
+            error(data?.message || 'Có lỗi xảy ra');
           }
         },
         onError: () => {
-          message.error('Có lỗi xảy ra khi xác nhận giao hàng');
+          error('Có lỗi xảy ra khi xác nhận giao hàng');
         },
       },
     );

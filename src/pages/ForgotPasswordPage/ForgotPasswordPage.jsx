@@ -1,5 +1,20 @@
 import React, { useEffect, useState } from 'react';
-import { TextWelcomeShop, WrapperContainerLeft, WrapperContainerRight, WrapperTextLight } from './style';
+import {
+  TextWelcomeShop,
+  WrapperContainerLeft,
+  WrapperContainerRight,
+  WrapperTextLight,
+  MainContainer,
+  ReturnHomeButton,
+  ForgotPasswordContainer,
+  PasswordWrapper,
+  PasswordIcon,
+  EmailWrapper,
+  OtpButton,
+  OtpWrapper,
+  OtpSuccessMessage,
+  ButtonWrapper
+} from './style';
 import InputFormComponent from '../../components/InputFormComponent/InputFormComponent';
 import ButtonComponent from '../../components/ButtonComponent/ButtonComponent';
 import { EyeFilled, EyeInvisibleFilled, LeftOutlined } from '@ant-design/icons';
@@ -8,8 +23,7 @@ import * as UserService from '../../services/UserService';
 import * as OtpService from '../../services/OtpService';
 import { useMutationHook } from '../../hooks/useMutationHook';
 import Loading from '../../components/LoadingComponent/Loading';
-import * as message from '../../components/MessageComponent/Message';
-import { success, error, warning } from '../../components/MessageComponent/Message';
+import { useMessage } from '../../context/MessageContext.jsx';
 
 const ForgotPasswordPage = () => {
   const [isShowNewPassword, setIsShowNewPassword] = useState(false);
@@ -19,6 +33,9 @@ const ForgotPasswordPage = () => {
   const [email, setEmail] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmNewPassword, setConfirmNewPassword] = useState('');
+
+  const navigate = useNavigate();
+  const { success, error, warning } = useMessage();
 
   const disabled = !email || !newPassword || !confirmNewPassword || !otp;
 
@@ -48,7 +65,6 @@ const ForgotPasswordPage = () => {
     success('Đã gửi OTP đến email của bạn!');
   };
 
-  const navigate = useNavigate();
   const handleNavigateLogin = () => {
     navigate('/sign-in');
   };
@@ -57,9 +73,7 @@ const ForgotPasswordPage = () => {
     navigate('/');
   };
 
-  // Tạo mutation cho reset password (cần tạo service này)
   const mutation = useMutationHook((data) => {
-    // Sẽ cần tạo service resetPassword trong UserService
     return UserService.resetPassword(data);
   });
 
@@ -89,130 +103,53 @@ const ForgotPasswordPage = () => {
   };
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: 'rgba(0, 0, 0, 0.53)',
-        height: '100vh',
-        position: 'relative',
-      }}
-    >
-      <div
-        onClick={handleNavigateHome}
-        style={{
-          position: 'absolute',
-          top: '20px',
-          left: '20px',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '8px',
-          color: '#C68642',
-          cursor: 'pointer',
-          fontSize: '14px',
-          fontWeight: '500',
-          transition: 'all 0.3s ease',
-          zIndex: 10,
-        }}
-        onMouseEnter={(e) => {
-          e.target.style.color = '#D4A574';
-        }}
-        onMouseLeave={(e) => {
-          e.target.style.color = '#C68642';
-        }}
-      >
+    <MainContainer>
+      <ReturnHomeButton onClick={handleNavigateHome}>
         <LeftOutlined style={{ fontSize: '16px' }} />
         <span>Return Home</span>
-      </div>
+      </ReturnHomeButton>
 
-      <div
-        style={{
-          width: '800px',
-          height: '500px',
-          borderRadius: '6px',
-          display: 'flex',
-          justifyContent: 'space-between',
-          backgroundColor: '#333131',
-        }}
-      >
+      <ForgotPasswordContainer>
         <WrapperContainerLeft>
           <h1>Quên mật khẩu</h1>
           <p>Nhập thông tin để đặt lại mật khẩu</p>
 
-          <div style={{ position: 'relative' }}>
-            <span
-              style={{
-                zIndex: 10,
-                position: 'absolute',
-                color: '#C68642',
-                top: '1px',
-                right: '10px',
-                fontSize: '12px',
-                cursor: 'pointer',
-                padding: '6px 8px',
-                backgroundColor: '#fff',
-                borderLeft: '1px solid #C68642',
-              }}
-              onClick={sendOtp}
-            >
+          <EmailWrapper>
+            <OtpButton onClick={sendOtp}>
               Nhận OTP
-            </span>
+            </OtpButton>
             <InputFormComponent
               value={email}
               handleOnChange={handleOnChangeEmail}
               placeholder="Nhập email của bạn"
-              style={{ marginBottom: '10px' }}
             />
-          </div>
+          </EmailWrapper>
 
-          <div style={{ position: 'relative', marginBottom: '10px' }}>
-            <span
-              style={{
-                zIndex: 10,
-                position: 'absolute',
-                color: '#655e5e',
-                top: '6px',
-                right: '10px',
-                fontSize: '14px',
-                cursor: 'pointer',
-              }}
-              onClick={() => setIsShowNewPassword(!isShowNewPassword)}
-            >
+          <PasswordWrapper>
+            <PasswordIcon onClick={() => setIsShowNewPassword(!isShowNewPassword)}>
               {isShowNewPassword ? <EyeFilled /> : <EyeInvisibleFilled />}
-            </span>
+            </PasswordIcon>
             <InputFormComponent
               value={newPassword}
               handleOnChange={handleOnChangeNewPassword}
               placeholder="Mật khẩu mới"
               type={isShowNewPassword ? 'text' : 'password'}
             />
-          </div>
+          </PasswordWrapper>
 
-          <div style={{ position: 'relative', marginBottom: '10px' }}>
-            <span
-              style={{
-                zIndex: 10,
-                position: 'absolute',
-                color: '#655e5e',
-                top: '6px',
-                right: '10px',
-                fontSize: '14px',
-                cursor: 'pointer',
-              }}
-              onClick={() => setIsShowConfirmNewPassword(!isShowConfirmNewPassword)}
-            >
+          <PasswordWrapper>
+            <PasswordIcon onClick={() => setIsShowConfirmNewPassword(!isShowConfirmNewPassword)}>
               {isShowConfirmNewPassword ? <EyeFilled /> : <EyeInvisibleFilled />}
-            </span>
+            </PasswordIcon>
             <InputFormComponent
               value={confirmNewPassword}
               handleOnChange={handleOnChangeConfirmNewPassword}
               placeholder="Nhập lại mật khẩu mới"
               type={isShowConfirmNewPassword ? 'text' : 'password'}
             />
-          </div>
+          </PasswordWrapper>
 
-          <div style={{ display: 'flex', alignItems: 'center' }}>
+          <OtpWrapper>
             <InputFormComponent
               style={{ width: '80%' }}
               value={otp}
@@ -221,36 +158,33 @@ const ForgotPasswordPage = () => {
               type="text"
             />
             {isSentOtp && (
-              <span
-                style={{
-                  width: '100%',
-                  marginLeft: '15px',
-                  fontSize: '12px',
-                  color: '#C68642',
-                }}
-              >
+              <OtpSuccessMessage>
                 Đã gửi thành công OTP!
-              </span>
+              </OtpSuccessMessage>
             )}
-          </div>
+          </OtpWrapper>
 
-          {data?.status === 'ERR' && <span style={{ color: 'red' }}>{data?.message}</span>}
-
+          {(data?.status === 'ERR' || isError) && (
+            <div style={{ color: 'red', margin: '10px 0', fontSize: '14px' }}>
+              {data?.message || 'Đặt lại mật khẩu thất bại!'}
+            </div>
+          )}
           <Loading isPending={isPending}>
-            <ButtonComponent
-              onClick={handleResetPassword}
-              disabled={disabled}
-              size={'large'}
-              style={{
-                backgroundColor: disabled ? '#ccc' : '#C68642',
-                borderRadius: '4px',
-                color: '#FDF6EC',
-                fontWeight: '600',
-                width: '100%',
-                margin: '26px 0 10px',
-              }}
-              textbutton={'Xác nhận đặt lại mật khẩu'}
-            />
+            <ButtonWrapper>
+              <ButtonComponent
+                onClick={handleResetPassword}
+                disabled={disabled}
+                size={'large'}
+                style={{
+                  backgroundColor: disabled ? '#ccc' : '#C68642',
+                  borderRadius: '4px',
+                  color: '#FDF6EC',
+                  fontWeight: '600',
+                  width: '100%',
+                }}
+                textbutton={'Xác nhận đặt lại mật khẩu'}
+              />
+            </ButtonWrapper>
           </Loading>
 
           <p>
@@ -261,8 +195,8 @@ const ForgotPasswordPage = () => {
         <WrapperContainerRight>
           <TextWelcomeShop>Mua sắm tại Ero_Shop</TextWelcomeShop>
         </WrapperContainerRight>
-      </div>
-    </div>
+      </ForgotPasswordContainer>
+    </MainContainer>
   );
 };
 

@@ -278,6 +278,11 @@ export const OrderSuccessContainer = styled.div`
   width: 100%;
   min-height: 100vh;
   padding: 40px;
+  margin-top: -8px;
+  
+  @media (max-width: 768px) {
+    padding: 20px 15px;
+  }
 `;
 
 export const OrderSuccessWrapper = styled.div`
@@ -293,6 +298,10 @@ export const OrderSuccessTitle = styled.h3`
   font-weight: bold;
   text-transform: uppercase;
   letter-spacing: 1px;
+  
+  @media (max-width: 768px) {
+    font-size: 22px;
+  }
 `;
 
 export const OrderSuccessSubtitle = styled.p`
@@ -300,22 +309,41 @@ export const OrderSuccessSubtitle = styled.p`
   font-size: 16px;
   text-align: center;
   margin-bottom: 32px;
+  
+  @media (max-width: 768px) {
+    font-size: 14px;
+    margin-bottom: 24px;
+  }
 `;
 
 export const OrderSuccessLayout = styled.div`
   display: flex;
   gap: 24px;
   align-items: flex-start;
+  
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 16px;
+  }
 `;
 
 export const OrderSuccessLeftColumn = styled.div`
   flex: 2;
   min-width: 0;
+  
+  @media (max-width: 768px) {
+    width: 100%;
+  }
 `;
 
 export const OrderSuccessRightColumn = styled.div`
   flex: 1;
   min-width: 300px;
+  
+  @media (max-width: 768px) {
+    width: 100%;
+    min-width: auto;
+  }
 `;
 
 export const OrderSuccessCard = styled.div`
@@ -324,6 +352,11 @@ export const OrderSuccessCard = styled.div`
   border-radius: 12px;
   border: 1px solid #333;
   margin-bottom: 20px;
+  
+  @media (max-width: 768px) {
+    padding: 15px;
+    margin-bottom: 16px;
+  }
 `;
 
 export const OrderSuccessCardTitle = styled.h4`
@@ -344,6 +377,10 @@ export const StatusBadgeContainer = styled.div`
   display: flex;
   gap: 16px;
   flex-wrap: wrap;
+  
+  @media (max-width: 768px) {
+    gap: 10px;
+  }
 `;
 
 export const StatusBadge = styled.span`
@@ -358,6 +395,11 @@ export const StatusBadge = styled.span`
     if (props.type === 'preparing') return '#2196F3';
     return '#666';
   }};
+  
+  @media (max-width: 768px) {
+    padding: 4px 10px;
+    font-size: 11px;
+  }
 `;
 
 export const UserInfoGrid = styled.div`
@@ -368,11 +410,20 @@ export const UserInfoGrid = styled.div`
 export const UserInfoRow = styled.div`
   display: flex;
   justify-content: space-between;
+  
+  @media (max-width: 768px) {
+    flex-direction: column;
+    margin-bottom: 8px;
+  }
 `;
 
 export const UserInfoLabel = styled.span`
   color: #B8B8B8;
   font-size: 14px;
+  
+  @media (max-width: 768px) {
+    margin-bottom: 4px;
+  }
 `;
 
 export const UserInfoValue = styled.span`
@@ -381,6 +432,12 @@ export const UserInfoValue = styled.span`
   font-weight: 600;
   text-align: right;
   max-width: 60%;
+  
+  @media (max-width: 768px) {
+    text-align: left;
+    max-width: 100%;
+    overflow-wrap: break-word;
+  }
 `;
 
 export const MethodGrid = styled.div`
@@ -388,6 +445,12 @@ export const MethodGrid = styled.div`
   grid-template-columns: 1fr 1fr;
   gap: 16px;
   margin-bottom: 20px;
+  
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
 `;
 
 export const MethodCard = styled.div`
@@ -436,6 +499,10 @@ export const ProductItem = styled.div`
   border-radius: 8px;
   margin-bottom: 8px;
   border: 1px solid #444;
+  
+  @media (max-width: 768px) {
+    padding: 10px;
+  }
 `;
 
 export const ProductImage = styled.img`
@@ -463,11 +530,20 @@ export const ProductPriceRow = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 `;
 
 export const ProductPrice = styled.span`
   color: #B8B8B8;
   font-size: 12px;
+  
+  @media (max-width: 768px) {
+    margin-bottom: 4px;
+  }
 `;
 
 export const ProductTotal = styled.span`
@@ -483,6 +559,12 @@ export const SummaryCard = styled.div`
   border: 1px solid #333;
   position: sticky;
   top: 20px;
+  
+  @media (max-width: 768px) {
+    position: relative;
+    top: 0;
+    padding: 15px;
+  }
 `;
 
 export const SummaryTitle = styled.h4`
@@ -528,18 +610,30 @@ export const SummaryTotal = styled.div`
   background-color: #333;
   border-radius: 8px;
   border: 1px solid #C68642;
+  
+  @media (max-width: 768px) {
+    padding: 10px;
+  }
 `;
 
 export const SummaryTotalLabel = styled.span`
   color: #C68642;
   font-size: 16px;
   font-weight: bold;
+  
+  @media (max-width: 768px) {
+    font-size: 15px;
+  }
 `;
 
 export const SummaryTotalValue = styled.span`
   color: #C68642;
   font-size: 20px;
   font-weight: bold;
+  
+  @media (max-width: 768px) {
+    font-size: 18px;
+  }
 `;
 
 export const SummaryContact = styled.div`

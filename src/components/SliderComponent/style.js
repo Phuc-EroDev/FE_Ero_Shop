@@ -2,31 +2,18 @@ import Slider from 'react-slick';
 import styled from "styled-components";
 
 export const WrapperSliderStyle = styled(Slider)`
-    margin-bottom: 30px;
+    position: relative;
     border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
-    
-    & .slick-slide {
-        img {
-            object-fit: cover;
-            max-height: 400px;
-            width: 100%;
-            
-            @media (max-width: 768px) {
-                max-height: 300px;
-            }
-            
-            @media (max-width: 576px) {
-                max-height: 200px;
-            }
-        }
+    overflow: hidden; /* keep dots and images inside rounded corners */
+
+    /* ensure inner list respects radius */
+    .slick-list {
+      border-radius: inherit;
     }
-    
+
     & .slick-dots {
         z-index: 1;
-        bottom: 10px !important;
-        
+        bottom: 12px !important;
         li {
             margin: 0 3px;
             
@@ -37,37 +24,35 @@ export const WrapperSliderStyle = styled(Slider)`
                     font-size: 10px;
                 }
             }
-            
-            &.slick-active {
-                button {
-                    &::before {
-                        color: #C68642;
-                        opacity: 1;
-                    }
-                }
+        }
+    }
+    
+        .slide-item {
+            padding: 0; /* remove bottom padding that pushed dots below image */
+        }
+    
+        .slide-image {
+            height: 420px !important;
+        }
+
+        @media (max-width: 992px) {
+            .slide-image {
+                height: 360px !important;
             }
         }
-        
+
+        @media (max-width: 768px) {
+            .slide-image {
+                height: 260px !important;
+            }
+        }
+
         @media (max-width: 576px) {
-            bottom: 5px !important;
-            
-            li {
-                margin: 0 2px;
-                
-                button {
-                    &::before {
-                        font-size: 8px;
-                    }
-                }
+            .slide-image {
+                height: 200px !important;
+            }
+            & .slick-dots {
+                bottom: 8px !important; /* still inside on mobile */
             }
         }
-    }
-    
-    @media (max-width: 768px) {
-        margin-bottom: 20px;
-    }
-    
-    @media (max-width: 576px) {
-        margin-bottom: 15px;
-    }
 `

@@ -8,7 +8,7 @@ import DrawerComponent from '../DrawerComponent/DrawerComponent';
 import Loading from '../LoadingComponent/Loading';
 import ModalComponent from '../ModalComponent/ModalComponent';
 import { getBase64 } from '../../utils';
-import * as message from '../../components/MessageComponent/Message';
+import { useMessage } from '../../context/MessageContext.jsx';
 import * as UserService from '../../services/UserService';
 import { useSelector } from 'react-redux';
 import { useMutationHook } from '../../hooks/useMutationHook';
@@ -33,6 +33,7 @@ const AdminUser = () => {
 
   const user = useSelector((state) => state?.user);
 
+  const { success, error, warning } = useMessage();
   const [form] = Form.useForm();
 
   const mutationUpdate = useMutationHook((data) => {
@@ -337,28 +338,28 @@ const AdminUser = () => {
 
   useEffect(() => {
     if (isSuccessUpdated && dataUpdated.status === 'OK') {
-      message.success('Cập nhật người dùng thành công');
+      success('Cập nhật người dùng thành công');
       handleCloseDrawer();
     } else if (isErrorUpdated) {
-      message.error('Cập nhật người dùng thất bại');
+      error('Cập nhật người dùng thất bại');
     }
   }, [isSuccessUpdated, isErrorUpdated]);
 
   useEffect(() => {
     if (isSuccessDeleted && dataDeleted.status === 'OK') {
-      message.success('Xoá người dùng thành công');
+      success('Xoá người dùng thành công');
       handleCancelDelete();
     } else if (isErrorDeleted) {
-      message.error('Xoá người dùng thất bại');
+      error('Xoá người dùng thất bại');
     }
   }, [isSuccessDeleted, isErrorDeleted]);
 
   useEffect(() => {
     if (isSuccessDeletedMany && dataDeletedMany.status === 'OK') {
-      message.success('Xoá nhiều tài khoản thành công');
+      success('Xoá nhiều tài khoản thành công');
       handleCancelDeleteMany();
     } else if (isErrorDeletedMany) {
-      message.error('Xoá nhiều tài khoản thất bại');
+      error('Xoá nhiều tài khoản thất bại');
     }
   }, [isSuccessDeletedMany, isErrorDeletedMany]);
 

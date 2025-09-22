@@ -8,7 +8,7 @@ import InputTextAreaComponent from '../InputTextAreaComponent/InputTextAreaCompo
 import ButtonComponent from '../ButtonComponent/ButtonComponent';
 import { getBase64, renderOptions } from '../../utils';
 import * as ProductService from '../../services/ProductService';
-import * as message from '../../components/MessageComponent/Message';
+import { useMessage } from '../../context/MessageContext.jsx';
 import { useMutationHook } from '../../hooks/useMutationHook';
 import Loading from '../LoadingComponent/Loading';
 import { useQuery } from '@tanstack/react-query';
@@ -29,6 +29,7 @@ const AdminProduct = () => {
     image: [],
   });
 
+  const { success, error, warning } = useMessage();
   const searchInput = useRef(null);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -71,7 +72,7 @@ const AdminProduct = () => {
   };
 
   const fetchProductAll = async () => {
-    const response = await ProductService.getAllProduct();
+    const response = await ProductService.getAllProduct('', 0, 1000);
     return response;
   };
 
@@ -440,37 +441,37 @@ const AdminProduct = () => {
 
   useEffect(() => {
     if (isSuccess && data.status === 'OK') {
-      message.success('Tạo sản phẩm thành công');
+      success('Tạo sản phẩm thành công');
       handleCancel();
     } else if (isError) {
-      message.error('Tạo sản phẩm thất bại');
+      error('Tạo sản phẩm thất bại');
     }
   }, [isSuccess, isError]);
 
   useEffect(() => {
     if (isSuccessUpdated && dataUpdated.status === 'OK') {
-      message.success('Cập nhật sản phẩm thành công');
+      success('Cập nhật sản phẩm thành công');
       handleCloseDrawer();
     } else if (isErrorUpdated) {
-      message.error('Cập nhật sản phẩm thất bại');
+      error('Cập nhật sản phẩm thất bại');
     }
   }, [isSuccessUpdated, isErrorUpdated]);
 
   useEffect(() => {
     if (isSuccessDeleted && dataDeleted.status === 'OK') {
-      message.success('Xoá sản phẩm thành công');
+      success('Xoá sản phẩm thành công');
       handleCancelDelete();
     } else if (isErrorDeleted) {
-      message.error('Xoá sản phẩm thất bại');
+      error('Xoá sản phẩm thất bại');
     }
   }, [isSuccessDeleted, isErrorDeleted]);
 
   useEffect(() => {
     if (isSuccessDeletedMany && dataDeletedMany.status === 'OK') {
-      message.success('Xoá nhiều sản phẩm thành công');
+      success('Xoá nhiều sản phẩm thành công');
       handleCancelDeleteMany();
     } else if (isErrorDeletedMany) {
-      message.error('Xoá nhiều sản phẩm thất bại');
+      error('Xoá nhiều sản phẩm thất bại');
     }
   }, [isSuccessDeletedMany, isErrorDeletedMany]);
 
@@ -497,7 +498,7 @@ const AdminProduct = () => {
       <ModalComponent forceRender title="Tạo sản phẩm" open={isModalOpen} onCancel={handleCancel} footer={null}>
         <Loading isPending={isPending}>
           <Form
-            name="basic"
+            name="product-create"
             labelCol={{ span: 6 }}
             wrapperCol={{ span: 18 }}
             style={{ maxWidth: 600 }}
@@ -584,20 +585,24 @@ const AdminProduct = () => {
                 },
               ]}
             >
-              <WrapperUploadFile onChange={handleOnChangeImage} maxCount={5} multiple fileList={[]}>
-                <ButtonComponent
-                  textbutton={
-                    stateProduct?.image && stateProduct.image.length > 0 ? 'Chọn lại 5 ảnh mới' : 'Chọn 5 ảnh sản phẩm'
-                  }
-                  style={{
-                    backgroundColor: '#C68642',
-                    color: '#FDF6EC',
-                    border: 'none',
-                    borderRadius: '4px',
-                  }}
-                />
-              </WrapperUploadFile>
-              {stateProduct?.image && stateProduct.image.length > 0 && (
+              <div>
+                <WrapperUploadFile onChange={handleOnChangeImage} maxCount={5} multiple fileList={[]}>
+                  <ButtonComponent
+                    textbutton={
+                      stateProduct?.image && stateProduct.image.length > 0 ? 'Chọn lại 5 ảnh mới' : 'Chọn 5 ảnh sản phẩm'
+                    }
+                    style={{
+                      backgroundColor: '#C68642',
+                      color: '#FDF6EC',
+                      border: 'none',
+                      borderRadius: '4px',
+                    }}
+                  />
+                </WrapperUploadFile>
+              </div>
+            </Form.Item>
+            {stateProduct?.image && stateProduct.image.length > 0 && (
+              <Form.Item label=" " colon={false}>
                 <div style={{ marginTop: '10px', display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
                   {stateProduct.image.map((img, index) => (
                     <img
@@ -614,11 +619,11 @@ const AdminProduct = () => {
                     />
                   ))}
                 </div>
-              )}
-              <div style={{ marginTop: '8px', fontSize: '12px', color: '#666' }}>
-                Đã chọn: {stateProduct?.image?.length || 0}/5 ảnh
-              </div>
-            </Form.Item>
+                <div style={{ marginTop: '8px', fontSize: '12px', color: '#666' }}>
+                  Đã chọn: {stateProduct?.image?.length || 0}/5 ảnh
+                </div>
+              </Form.Item>
+            )}
 
             <Form.Item label={null} wrapperCol={{ offset: 20, span: 16 }}>
               <Button type="primary" htmlType="submit">
@@ -636,7 +641,7 @@ const AdminProduct = () => {
       >
         <Loading isPending={isPendingUpdated}>
           <Form
-            name="basic"
+            name="product-update"
             labelCol={{ span: 2 }}
             wrapperCol={{ span: 22 }}
             onFinish={onUpdateProduct}
@@ -709,27 +714,31 @@ const AdminProduct = () => {
                 },
               ]}
             >
-              <WrapperUploadFile onChange={handleOnChangeImageDetails} maxCount={5} multiple fileList={[]}>
-                <ButtonComponent
-                  textbutton={
-                    stateProductDetails?.image && stateProductDetails.image.length > 0
-                      ? 'Chọn lại 5 ảnh mới'
-                      : 'Chọn 5 ảnh sản phẩm'
-                  }
-                  style={{
-                    backgroundColor: '#C68642',
-                    color: '#FDF6EC',
-                    border: 'none',
-                    borderRadius: '4px',
-                  }}
-                />
-              </WrapperUploadFile>
-              {stateProductDetails?.image && stateProductDetails.image.length > 0 && (
+              <div>
+                <WrapperUploadFile onChange={handleOnChangeImageDetails} maxCount={5} multiple fileList={[]}>
+                  <ButtonComponent
+                    textbutton={
+                      stateProductDetails?.image && stateProductDetails.image.length > 0
+                        ? 'Chọn lại 5 ảnh mới'
+                        : 'Chọn 5 ảnh sản phẩm'
+                    }
+                    style={{
+                      backgroundColor: '#C68642',
+                      color: '#FDF6EC',
+                      border: 'none',
+                      borderRadius: '4px',
+                    }}
+                  />
+                </WrapperUploadFile>
+              </div>
+            </Form.Item>
+            {stateProductDetails?.image && stateProductDetails.image.length > 0 && (
+              <Form.Item label=" " colon={false}>
                 <div style={{ marginTop: '10px', display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
                   {stateProductDetails.image.map((img, index) => (
                     <img
                       key={index}
-                      src={img}
+                      src={img.url ? img.url : img}
                       style={{
                         height: '60px',
                         width: '60px',
@@ -741,11 +750,11 @@ const AdminProduct = () => {
                     />
                   ))}
                 </div>
-              )}
-              <div style={{ marginTop: '8px', fontSize: '12px', color: '#666' }}>
-                Đã chọn: {stateProductDetails?.image?.length || 0}/5 ảnh
-              </div>
-            </Form.Item>
+                <div style={{ marginTop: '8px', fontSize: '12px', color: '#666' }}>
+                  Đã chọn: {stateProductDetails?.image?.length || 0}/5 ảnh
+                </div>
+              </Form.Item>
+            )}
 
             <Form.Item label={null} wrapperCol={{ offset: 20, span: 16 }}>
               <Button type="primary" htmlType="submit">
@@ -777,7 +786,7 @@ const AdminProduct = () => {
           <div>Bạn chắc chắn XOÁ nhiều sản phẩm này?</div>
         </Loading>
       </ModalComponent>
-    </div>
+    </div >
   );
 };
 

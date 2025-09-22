@@ -1,7 +1,8 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState, useLayoutEffect } from 'react';
 import { Button, Checkbox, Form } from 'antd';
 import { DeleteOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons';
 import ButtonComponent from '../../components/ButtonComponent/ButtonComponent';
+import { useResponsive } from '../../hooks/useResponsive';
 import {
   WrapperAddressInfo,
   WrapperCountOrder,
@@ -30,7 +31,7 @@ import Loading from '../../components/LoadingComponent/Loading';
 import InputComponent from '../../components/InputComponent/InputComponent';
 import { useMutationHook } from '../../hooks/useMutationHook';
 import * as UserService from '../../services/UserService';
-import * as message from '../../components/MessageComponent/Message';
+import { useMessage } from '../../context/MessageContext.jsx';
 import { useNavigate } from 'react-router-dom';
 import StepsComponent from '../../components/StepsComponent/StepsComponent';
 
@@ -44,6 +45,8 @@ const OrderPage = () => {
     city: '',
   });
 
+  const { isMobile } = useResponsive();
+  const { success, error, warning } = useMessage();
   const [form] = Form.useForm();
   const navigate = useNavigate();
 
@@ -152,7 +155,7 @@ const OrderPage = () => {
 
   const handleAddCard = () => {
     if (!order?.orderItemsSelected?.length) {
-      message.error('Vui lòng chọn sản phẩm để thanh toán');
+      error('Vui lòng chọn sản phẩm để thanh toán');
     } else if (!user?.name || !user?.email || !user?.phone || !user?.address || !user?.city) {
       setIsOpenModalUpdateInfo(true);
     } else {
@@ -215,10 +218,26 @@ const OrderPage = () => {
   }, [stateUserDetails, form]);
 
   return (
-    <div style={{ backgroundColor: '#1a1a1a', width: '100%', minHeight: '100vh', padding: '40px 120px' }}>
+    <div style={{
+      backgroundColor: '#1a1a1a',
+      width: '100%',
+      minHeight: '100vh',
+      padding: isMobile ? '20px 15px' : '40px 120px',
+      marginTop: '-8px'
+    }}>
       <div>
-        <h3 style={{ color: '#ffffff', fontSize: '28px', marginBottom: '10px', textAlign: 'left' }}>Giỏ hàng</h3>
-        <div style={{ display: 'flex', justifyContent: 'space-between', gap: '20px' }}>
+        <h3 style={{
+          color: '#ffffff',
+          fontSize: isMobile ? '22px' : '28px',
+          marginBottom: '10px',
+          textAlign: 'left'
+        }}>Giỏ hàng</h3>
+        <div style={{
+          display: 'flex',
+          flexDirection: isMobile ? 'column' : 'row',
+          justifyContent: 'space-between',
+          gap: '20px'
+        }}>
           <WrapperLeft>
             <WrapperStyleHeaderShipping>
               <StepsComponent
@@ -227,7 +246,11 @@ const OrderPage = () => {
               />
             </WrapperStyleHeaderShipping>
             <WrapperStyleHeader>
-              <span style={{ display: 'flex', alignItems: 'center', width: '40%' }}>
+              <span style={{
+                display: 'flex',
+                alignItems: 'center',
+                width: isMobile ? '100%' : '40%'
+              }}>
                 <Checkbox
                   onChange={handleOnChangeCheckAll}
                   checked={listChecked?.length === order?.orderItems?.length}
@@ -237,7 +260,7 @@ const OrderPage = () => {
               </span>
               <div
                 style={{
-                  display: 'flex',
+                  display: isMobile ? 'none' : 'flex',
                   flex: 1,
                   alignItems: 'center',
                   justifyContent: 'space-between',
@@ -258,23 +281,33 @@ const OrderPage = () => {
               {order?.orderItems?.map((orderItem) => {
                 return (
                   <WrapperItemOrder key={orderItem?.product}>
-                    <div style={{ width: '40%', display: 'flex', alignItems: 'center', gap: '12px' }}>
+                    <div style={{
+                      width: isMobile ? '100%' : '40%',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '12px',
+                      marginBottom: isMobile ? '12px' : 0
+                    }}>
                       <Checkbox
                         onChange={onChange}
                         checked={listChecked?.includes(orderItem?.product)}
                         value={orderItem?.product}
                       />
                       <img
-                        src={orderItem?.image[0]}
+                        src={orderItem?.image[0].url}
                         alt="product"
                         style={{
-                          width: '60px',
-                          height: '60px',
+                          width: isMobile ? '50px' : '60px',
+                          height: isMobile ? '50px' : '60px',
                           objectFit: 'cover',
                           borderRadius: '6px',
                         }}
                       />
-                      <div style={{ color: '#ffffff', fontSize: '14px', fontWeight: '500' }}>{orderItem?.name}</div>
+                      <div style={{
+                        color: '#ffffff',
+                        fontSize: isMobile ? '13px' : '14px',
+                        fontWeight: '500'
+                      }}>{orderItem?.name}</div>
                     </div>
 
                     <div
@@ -283,7 +316,8 @@ const OrderPage = () => {
                         flex: 1,
                         alignItems: 'center',
                         justifyContent: 'space-between',
-                        paddingLeft: '20px',
+                        paddingLeft: isMobile ? '0' : '20px',
+                        width: isMobile ? '100%' : 'auto',
                       }}
                     >
                       <div style={{ display: 'flex', flexDirection: 'column' }}>
@@ -395,12 +429,12 @@ const OrderPage = () => {
               size={40}
               style={{
                 backgroundColor: '#D29B63',
-                height: '48px',
+                height: isMobile ? '44px' : '48px',
                 width: '100%',
                 border: 'none',
                 borderRadius: '8px',
                 color: '#ffffff',
-                fontSize: '16px',
+                fontSize: isMobile ? '15px' : '16px',
                 fontWeight: '600',
                 transition: 'all 0.3s ease',
               }}
@@ -415,12 +449,14 @@ const OrderPage = () => {
         open={isOpenModalUpdateInfo}
         onCancel={handleCancelModalUpdateInfo}
         onOk={handleUpdateInfoUser}
+        width={isMobile ? '90%' : '520px'}
       >
         <Loading isPending={isPending}>
           <Form
             name="basic"
-            labelCol={{ span: 4 }}
-            wrapperCol={{ span: 20 }}
+            labelCol={isMobile ? { span: 24 } : { span: 4 }}
+            wrapperCol={isMobile ? { span: 24 } : { span: 20 }}
+            layout={isMobile ? 'vertical' : 'horizontal'}
             // onFinish={onUpdateUser}
             autoComplete="on"
             form={form}

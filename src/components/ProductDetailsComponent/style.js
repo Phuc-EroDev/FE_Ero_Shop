@@ -1,5 +1,6 @@
-import { Col, InputNumber } from 'antd';
+import { Col, InputNumber, Row } from 'antd';
 import styled from 'styled-components';
+import FormattedTextComponent from '../FormattedTextComponent/FormattedTextComponent';
 
 export const WrapperStyleImageSmall = styled.div`
   width: 100%;
@@ -45,13 +46,26 @@ export const WrapperStyleImageSmall = styled.div`
   }
 
   @media (max-width: 576px) {
-    height: 50px;
+    height: 45px;
+    border-width: 1px;
+    border-radius: 6px;
   }
 `;
 
 export const WrapperStyleColImage = styled(Col)`
-  flex-basis: unset;
+  flex: 0 0 calc(20% - 8px);
   display: flex;
+  
+  @media (max-width: 768px) {
+    flex: 0 0 calc(20% - 6px);
+  }
+  
+  @media (max-width: 576px) {
+    padding: 0;
+    margin: 0;
+    flex: 0 0 calc(20% - 5px);
+    min-width: 60px;
+  }
 `;
 
 export const WrapperStyleNameProduct = styled.h1`
@@ -68,6 +82,8 @@ export const WrapperStyleNameProduct = styled.h1`
 
   @media (max-width: 576px) {
     margin-bottom: 10px;
+    font-size: 18px;
+    line-height: 1.2;
   }
 `;
 
@@ -78,7 +94,8 @@ export const WrapperStyleTextSell = styled.span`
 
   @media (max-width: 576px) {
     display: block;
-    margin-top: 4px;
+    margin-top: 6px;
+    font-size: 13px;
   }
 `;
 
@@ -95,7 +112,7 @@ export const WrapperPriceProduct = styled.div`
 
   @media (max-width: 576px) {
     margin: 12px 0;
-    padding: 10px;
+    border-radius: 6px;
   }
 `;
 
@@ -185,24 +202,45 @@ export const WrapperMainContainer = styled.div`
   padding: 0 24px;
   
   @media (max-width: 768px) {
-    padding: 0 16px;
-    gap: 20px;
+    padding: 10px 8px;
   }
   
   @media (max-width: 576px) {
-    padding: 0 12px;
-    gap: 16px;
+    padding: 6px 4px;
+    border-radius: 4px;
   }
 `;
 
 export const WrapperMainImage = styled.div`
-  display: flex;
-  flex-direction: row;
-  gap: 24px;
-  
+  width: 100%;
+  max-width: 502px;
+  aspect-ratio: 1/1;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #3b3a38;
+
+  .ant-image {
+    width: 100%;
+    height: 100%;
+    border-radius: 8px;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      object-position: center;
+    }
+  }
+
   @media (max-width: 768px) {
-    flex-direction: column;
-    gap: 20px;
+    max-width: 100%;
+  }
+
+  @media (max-width: 576px) {
+    max-width: 100%;
+    margin: 0 auto;
+    border-radius: 6px;
+    border: none;
   }
 `;
 
@@ -210,7 +248,17 @@ export const WrapperImageCol = styled.div`
   width: 50%;
   
   @media (max-width: 768px) {
-    width: 100%;
+    padding-right: 0;
+    border-right: none;
+    border-bottom: 1px solid #3b3a38;
+    padding-bottom: 16px;
+    margin-bottom: 16px;
+  }
+  
+  @media (max-width: 576px) {
+    padding: 0 2px 10px 2px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #333;
   }
 `;
 
@@ -218,7 +266,11 @@ export const WrapperInfoCol = styled.div`
   width: 50%;
   
   @media (max-width: 768px) {
-    width: 100%;
+    padding-left: 0;
+  }
+  
+  @media (max-width: 576px) {
+    padding: 0 2px;
   }
 `;
 
@@ -229,24 +281,62 @@ export const WrapperQuantitySection = styled.div`
   margin: 16px 0;
   
   @media (max-width: 576px) {
-    flex-wrap: wrap;
-    gap: 10px;
+    margin: 14px 0 18px;
+    padding: 12px;
+    background-color: #2a2a2a;
+    border-radius: 8px;
+    border: none;
+    
+    .quantity-label {
+      font-size: 16px;
+      margin-bottom: 14px;
+    }
   }
 `;
 
 export const WrapperButtonSection = styled.div`
   display: flex;
-  gap: 16px;
-  margin-top: 24px;
-  
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+
+  .ant-btn {
+    flex: 1;
+    min-width: 180px;
+    height: 44px;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: clamp(14px, 2vw, 16px);
+    transition: all 0.3s ease;
+
+    &:hover {
+      transform: translateY(-1px);
+    }
+  }
+
+  @media (max-width: 768px) {
+    gap: 10px;
+
+    .ant-btn {
+      min-width: 160px;
+      height: 40px;
+    }
+
+    button {
+      font-size: 20px !important;
+    }
+  }
+
   @media (max-width: 576px) {
     flex-direction: column;
     gap: 12px;
-  }
-  
-  button {
-    @media (max-width: 576px) {
+
+    .ant-btn {
       width: 100%;
+      min-width: 100%;
+      height: 48px;
+      font-size: 16px;
+      border-radius: 6px;
     }
   }
 `;
@@ -265,16 +355,142 @@ export const WrapperCommentContainer = styled.div`
   }
   
   @media (max-width: 576px) {
-    margin-top: 24px;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid #2a2a2a;
   }
-  
-  h2 {
-    font-size: clamp(18px, 3vw, 24px);
+`;
+
+export const WrapperQualityProduct = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+
+  .quantity-button {
     color: #fdf6ec;
+    background-color: #404040;
+    border: 1px solid #555;
+    width: clamp(28px, 6vw, 36px);
+    height: clamp(28px, 6vw, 32px);
+    border-radius: 4px;
+  }
+
+  @media (max-width: 576px) {
+    gap: 4px;
+    justify-content: center;
+    
+    .quantity-button {
+      width: 24px;
+      height: 24px;
+      border-radius: 4px;
+      font-size: 16px;
+    }
+  }
+`;
+
+export const WrapperInputNumber = styled(InputNumber)`
+  width: clamp(50px, 8vw, 80px);
+  height: 32px;
+  border-radius: 8px;
+  border: 1px solid #404040;
+
+  .ant-input-number-handler-wrap {
+    display: none;
+  }
+
+  .ant-input-number-input {
+    text-align: center;
+    background: #404040;
+    border: 1px solid #404040;
+    color: #fdf6ec;
+    font-weight: 500;
+
+    &:focus {
+      border-color: #c68642;
+      background: #2a2a2a;
+    }
+
+    &:hover {
+      border-color: #c68642;
+      background: #2a2a2a;
+    }
+  }
+
+  @media (max-width: 576px) {
+    width: 60px;
+    height: 24px;
+    font-size: 14px;
+
+    input {
+      padding: 0 11px !important;
+      border-radius: 4px;
+    }
+  }
+`;
+
+export const ImageThumbnailContainer = styled(Row)`
+  padding-top: 10px;
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+
+  @media (max-width: 576px) {
+    justify-content: space-between;
+    padding-top: 10px;
+    margin: 0;
+    gap: 6px;
+    overflow-x: auto;
+    
+    &::-webkit-scrollbar {
+      height: 3px;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+      background-color: #c68642;
+      border-radius: 10px;
+    }
+  }
+`;
+
+export const ProductDescriptionHeader = styled.div`
+  background-color: #1a1a1a;
+  padding: 16px 24px;
+  border-radius: 12px;
+  border: 1px solid #333333;
+  margin-bottom: 24px;
+
+  h3 {
+    font-size: 18px;
+    font-weight: bold;
+    color: #C68642;
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  @media (max-width: 576px) {
+    padding: 12px 16px;
+    border-radius: 8px;
     margin-bottom: 16px;
     
-    @media (max-width: 576px) {
-      margin-bottom: 12px;
+    h3 {
+      font-size: 16px;
     }
+  }
+`;
+
+export const ProductDescriptionText = styled(FormattedTextComponent)`
+  font-size: 14px;
+  color: #D1D1D1;
+  background-color: transparent;
+  padding: 0 8px;
+  border: none;
+  margin: 0;
+
+  @media (max-width: 576px) {
+    font-size: 13px;
+    padding: 0 4px;
+    line-height: 1.6;
   }
 `;

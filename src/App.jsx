@@ -8,7 +8,7 @@ import * as UserService from './services/UserService';
 import { updateUser, resetUser } from './redux/slides/userSlide';
 import { useDispatch, useSelector } from 'react-redux';
 import Loading from './components/LoadingComponent/Loading';
-// import { contextHolder } from './components/MessageComponent/Message';
+import ScrollToTop from './components/ScrollToTop/ScrollToTop';
 
 function App() {
   const [isLoading, setIsLoading] = useState(false);
@@ -76,9 +76,9 @@ function App() {
 
   return (
     <div>
-      {/* {contextHolder} */}
       <Loading isPending={isLoading}>
         <Router>
+          <ScrollToTop />
           <Routes>
             {routes.map((route, index) => {
               const Page = route.page;

@@ -1,5 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import { TextWelcomeShop, WrapperContainerLeft, WrapperContainerRight, WrapperTextLight } from './style';
+import {
+  TextWelcomeShop,
+  WrapperContainerLeft,
+  WrapperContainerRight,
+  WrapperTextLight,
+  MainContainer,
+  ReturnHomeButton,
+  SignUpContainer,
+  PasswordWrapper,
+  PasswordIcon,
+  EmailWrapper,
+  OtpButton,
+  OtpWrapper,
+  OtpSuccessMessage
+} from './style';
 import InputFormComponent from '../../components/InputFormComponent/InputFormComponent';
 import ButtonComponent from '../../components/ButtonComponent/ButtonComponent';
 import { EyeFilled, EyeInvisibleFilled, LeftOutlined } from '@ant-design/icons';
@@ -8,8 +22,7 @@ import * as UserService from '../../services/UserService';
 import * as OtpService from '../../services/OtpService';
 import { useMutationHook } from '../../hooks/useMutationHook';
 import Loading from '../../components/LoadingComponent/Loading';
-import * as message from '../../components/MessageComponent/Message';
-import { success, error, warning } from '../../components/MessageComponent/Message';
+import { useMessage } from '../../context/MessageContext.jsx';
 
 const SignUpPage = () => {
   const [isShowPassword, setIsShowPassword] = useState(false);
@@ -19,6 +32,9 @@ const SignUpPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+
+  const navigate = useNavigate();
+  const { success, error, warning } = useMessage();
 
   const disabled = !email || !password || !confirmPassword || !otp;
 
@@ -43,7 +59,6 @@ const SignUpPage = () => {
     setIsSentOtp(true);
   };
 
-  const navigate = useNavigate();
   const handleNavigateLogin = () => {
     navigate('/sign-in');
   };
@@ -56,17 +71,21 @@ const SignUpPage = () => {
   const { data, isPending, isSuccess, isError } = mutation;
 
   useEffect(() => {
-    if (isSuccess) {
-      success();
-      // message.success();
+    if (isSuccess && data?.status === 'OK') {
+      success('Đăng ký thành công!');
       handleNavigateLogin();
+    } else if (isSuccess && data?.status === 'ERR') {
+      error('Đăng ký thất bại!');
     } else if (isError) {
-      error();
-      // message.error();
+      error('Đăng ký thất bại!');
     }
-  }, [isSuccess, isError]);
+  }, [isSuccess, isError, data]);
 
   const handleSignUp = () => {
+    if (password !== confirmPassword) {
+      warning('Mật khẩu xác nhận không khớp!');
+      return;
+    }
     mutation.mutate({
       email,
       password,
@@ -76,145 +95,67 @@ const SignUpPage = () => {
   };
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: 'rgba(0, 0, 0, 0.53)',
-        height: '100vh',
-        position: 'relative',
-      }}
-    >
-      <div
-        onClick={handleNavigateHome}
-        style={{
-          position: 'absolute',
-          top: '20px',
-          left: '20px',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '8px',
-          color: '#C68642',
-          cursor: 'pointer',
-          fontSize: '14px',
-          fontWeight: '500',
-          transition: 'all 0.3s ease',
-          zIndex: 10,
-        }}
-        onMouseEnter={(e) => {
-          e.target.style.color = '#D4A574';
-        }}
-        onMouseLeave={(e) => {
-          e.target.style.color = '#C68642';
-        }}
-      >
+    <MainContainer>
+      <ReturnHomeButton onClick={handleNavigateHome}>
         <LeftOutlined style={{ fontSize: '16px' }} />
         <span>Return Home</span>
-      </div>
+      </ReturnHomeButton>
 
-      <div
-        style={{
-          width: '800px',
-          height: '450px',
-          borderRadius: '6px',
-          display: 'flex',
-          justifyContent: 'space-between',
-          backgroundColor: '#333131',
-        }}
-      >
+      <SignUpContainer>
         <WrapperContainerLeft>
           <h1>Xin chào</h1>
           <p>Đăng ký tài khoản của bạn</p>
-          <div style={{ position: 'relative' }}>
-            <span
-              style={{
-                zIndex: 10,
-                position: 'absolute',
-                color: '#C68642',
-                top: '1px',
-                right: '10px',
-                fontSize: '12px',
-                cursor: 'pointer',
-                padding: '6px 8px',
-                backgroundColor: '#fff',
-                borderLeft: '1px solid #C68642',
-              }}
-              onClick={sendOtp}
-            >
+          <EmailWrapper>
+            <OtpButton onClick={sendOtp}>
               Nhận OTP
-            </span>
+            </OtpButton>
             <InputFormComponent
               value={email}
               handleOnChange={handleOnChangeEmail}
               placeholder="abc@email.com"
-              style={{ marginBottom: '10px' }}
             />
-          </div>
-          <div style={{ position: 'relative', marginBottom: '10px' }}>
-            <span
-              style={{
-                zIndex: 10,
-                position: 'absolute',
-                color: '#655e5e',
-                top: '6px',
-                right: '10px',
-                fontSize: '14px',
-              }}
-              onClick={() => setIsShowPassword(!isShowPassword)}
-            >
+          </EmailWrapper>
+          <PasswordWrapper>
+            <PasswordIcon onClick={() => setIsShowPassword(!isShowPassword)}>
               {isShowPassword ? <EyeFilled /> : <EyeInvisibleFilled />}
-            </span>
+            </PasswordIcon>
             <InputFormComponent
               value={password}
               handleOnChange={handleOnChangePassword}
               placeholder="Mật khẩu"
               type={isShowPassword ? 'text' : 'password'}
             />
-          </div>
-          <div style={{ position: 'relative', marginBottom: '10px' }}>
-            <span
-              style={{
-                zIndex: 10,
-                position: 'absolute',
-                color: '#655e5e',
-                top: '6px',
-                right: '10px',
-                fontSize: '14px',
-              }}
-              onClick={() => setIsShowConfirmPassword(!isShowConfirmPassword)}
-            >
+          </PasswordWrapper>
+          <PasswordWrapper>
+            <PasswordIcon onClick={() => setIsShowConfirmPassword(!isShowConfirmPassword)}>
               {isShowConfirmPassword ? <EyeFilled /> : <EyeInvisibleFilled />}
-            </span>
+            </PasswordIcon>
             <InputFormComponent
               value={confirmPassword}
               handleOnChange={handleOnChangeConfirmPassword}
               placeholder="Nhập lại mật khẩu"
               type={isShowConfirmPassword ? 'text' : 'password'}
             />
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center' }}>
+          </PasswordWrapper>
+          <OtpWrapper>
             <InputFormComponent
-              style={{ width: '80%' }}
+              style={{ width: '80%', '@media (maxWidth: 768px)': { width: '100%' } }}
               value={otp}
               handleOnChange={handleOnChangeOTP}
               placeholder="Nhập OTP"
               type="text"
             />
             {isSentOtp && (
-              <span
-                style={{
-                  width: '100%',
-                  marginLeft: '15px',
-                  fontSize: '12px',
-                  color: '#C68642',
-                }}
-              >
+              <OtpSuccessMessage>
                 Đã gửi thành công OTP !
-              </span>
+              </OtpSuccessMessage>
             )}
-          </div>
-          {data?.status === 'ERR' && <span style={{ color: 'red' }}>{data?.message}</span>}
+          </OtpWrapper>
+          {(data?.status === 'ERR' || isError) && (
+            <div style={{ color: 'red', margin: '10px 0', fontSize: '14px' }}>
+              {data?.message || 'Đăng ký thất bại!'}
+            </div>
+          )}
           <Loading isPending={isPending}>
             <ButtonComponent
               onClick={handleSignUp}
@@ -226,7 +167,7 @@ const SignUpPage = () => {
                 color: '#FDF6EC',
                 fontWeight: '600',
                 width: '100%',
-                margin: '26px 0 10px',
+                margin: '20px 0 10px',
               }}
               textbutton={'Đăng ký'}
             />
@@ -239,8 +180,8 @@ const SignUpPage = () => {
         <WrapperContainerRight>
           <TextWelcomeShop>Mua sắm tại Ero_Shop</TextWelcomeShop>
         </WrapperContainerRight>
-      </div>
-    </div>
+      </SignUpContainer>
+    </MainContainer>
   );
 };
 

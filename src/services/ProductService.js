@@ -1,8 +1,8 @@
 import axios from 'axios';
 import { axiosJWT } from './UserService';
 
-export const getAllProduct = async (limit = 1000) => {
-  const res = await axios.get(`${import.meta.env.VITE_BACKEND_API}/product/get-all?limit=${limit}`);
+export const getAllProduct = async (search, page = 0, limit = 12) => {
+  const res = await axios.get(`${import.meta.env.VITE_BACKEND_API}/product/get-all?limit=${limit}&page=${page}`);
   return res.data;
 };
 

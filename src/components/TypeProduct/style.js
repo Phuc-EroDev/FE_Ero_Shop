@@ -8,14 +8,14 @@ export const TypeProductContainer = styled.div`
   margin: 20px 0;
   
   @media (max-width: 768px) {
-    margin: 16px 0;
     border-radius: 12px;
+    margin: 15px 0;
   }
   
   @media (max-width: 576px) {
-    margin: 12px 0;
-    border-radius: 10px;
     border-width: 1px;
+    border-radius: 10px;
+    margin: 10px 0;
   }
 `;
 
@@ -29,7 +29,7 @@ export const TypeProductWrapper = styled.div`
   }
   
   @media (max-width: 576px) {
-    padding: 16px 0;
+    padding: 15px 0;
   }
 `;
 
@@ -40,17 +40,21 @@ export const SectionTitle = styled.h2`
   margin-bottom: 25px;
   text-transform: uppercase;
   letter-spacing: 1px;
-  padding: 0 16px;
+  text-align: left;
+  padding-left: 20px;
   
   @media (max-width: 768px) {
     font-size: 18px;
-    margin-bottom: 20px;
+    margin-bottom: 18px;
+    letter-spacing: 0.8px;
+    padding-left: 15px;
   }
   
   @media (max-width: 576px) {
     font-size: 16px;
-    margin-bottom: 16px;
+    margin-bottom: 15px;
     letter-spacing: 0.5px;
+    padding-left: 12px;
   }
 `;
 
@@ -61,11 +65,19 @@ export const TypeProductGrid = styled.div`
   flex-wrap: nowrap;
   overflow-x: auto;
   width: 100%;
-  padding: 0 16px;
-  
-  /* Hide scrollbar for Chrome, Safari and Opera */
+  padding: 5px 10px;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  -webkit-overflow-scrolling: touch;
+
   &::-webkit-scrollbar {
     display: none;
+  }
+  
+  &:after {
+    content: '';
+    padding-right: 10px;
   }
   
   /* Hide scrollbar for IE, Edge and Firefox */
@@ -73,13 +85,14 @@ export const TypeProductGrid = styled.div`
   scrollbar-width: none;  /* Firefox */
 
   @media (max-width: 768px) {
-    gap: 8px;
+    gap: 10px;
+    padding: 5px 15px;
     justify-content: flex-start;
   }
   
   @media (max-width: 576px) {
-    gap: 6px;
-    padding: 0 12px;
+    gap: 8px;
+    padding: 5px 12px;
   }
 `;
 
@@ -94,7 +107,7 @@ export const TypeProductItem = styled.div`
   transition: all 0.3s ease;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   flex: 0 0 auto;
-  width: 110px;
+  width: 100px;
   border: 1px solid #404040;
 
   &:hover {
@@ -103,24 +116,38 @@ export const TypeProductItem = styled.div`
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
     border-color: #555555;
   }
-
-  @media (max-width: 768px) {
-    padding: 12px 8px;
-    width: 100px;
-    border-radius: 10px;
+  
+  &:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
   }
 
-  @media (max-width: 576px) {
+  @media (max-width: 992px) {
+    width: 90px;
+    padding: 12px 8px;
+  }
+
+  @media (max-width: 768px) {
+    width: 80px;
     padding: 10px 6px;
-    width: 85px;
+    border-radius: 10px;
+  }
+  
+  @media (max-width: 576px) {
+    width: 70px;
+    padding: 8px 5px;
     border-radius: 8px;
+  }
+  
+  @media (max-width: 375px) {
+    width: 65px;
   }
 `;
 
 export const TypeProductImage = styled.div`
   width: 60px;
   height: 60px;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
   border-radius: 8px;
   overflow: hidden;
   display: flex;
@@ -131,21 +158,37 @@ export const TypeProductImage = styled.div`
   img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
     transition: transform 0.3s ease;
+  }
+
+  ${TypeProductItem}:hover & img {
+    transform: scale(1.05);
+  }
+
+  @media (max-width: 992px) {
+    width: 55px;
+    height: 55px;
+    margin-bottom: 8px;
   }
   
   @media (max-width: 768px) {
     width: 50px;
     height: 50px;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
+    border-radius: 6px;
   }
   
   @media (max-width: 576px) {
     width: 45px;
     height: 45px;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
     border-radius: 6px;
+  }
+  
+  @media (max-width: 375px) {
+    width: 40px;
+    height: 40px;
   }
 `;
 
@@ -154,7 +197,7 @@ export const TypeProductName = styled.div`
   font-weight: 500;
   color: #ffffff;
   text-align: center;
-  line-height: 1.3;
+  line-height: 1.2;
   max-width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -165,5 +208,15 @@ export const TypeProductName = styled.div`
   @media (max-width: 576px) {
     font-size: 11px;
     line-height: 1.2;
+  }
+  
+  @media (max-width: 576px) {
+    font-size: 10px;
+    line-height: 1.1;
+  }
+  
+  @media (max-width: 375px) {
+    font-size: 9px;
+    -webkit-line-clamp: 1;
   }
 `;

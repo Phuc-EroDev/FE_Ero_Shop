@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { TextWelcomeShop, WrapperContainerLeft, WrapperContainerRight, WrapperTextLight } from './style';
+import { TextWelcomeShop, WrapperContainerLeft, WrapperContainerRight, WrapperTextLight, MainContainer, ReturnHomeButton, LoginContainer, PasswordWrapper, PasswordIcon } from './style';
 import InputFormComponent from '../../components/InputFormComponent/InputFormComponent';
 import ButtonComponent from '../../components/ButtonComponent/ButtonComponent';
 import { EyeFilled, EyeInvisibleFilled, LeftOutlined } from '@ant-design/icons';
@@ -10,7 +10,7 @@ import Loading from '../../components/LoadingComponent/Loading';
 import { jwtDecode } from 'jwt-decode';
 import { useDispatch } from 'react-redux';
 import { updateUser } from '../../redux/slides/userSlide';
-import * as message from '../../components/MessageComponent/Message';
+import { useMessage } from '../../context/MessageContext.jsx';
 
 const SignInPage = () => {
   const [isShowPassword, setIsShowPassword] = useState(false);
@@ -18,7 +18,8 @@ const SignInPage = () => {
   const [password, setPassword] = useState('');
 
   const dispatch = useDispatch();
-  const location = useLocation();
+
+  const { success, error, warning } = useMessage();
 
   const disabled = !email || !password;
 
@@ -56,15 +57,10 @@ const SignInPage = () => {
           handleGetDetailsUser(decoded?.id, data?.access_token);
         }
       }
-      if (location?.state) {
-        navigate(location.state);
-      } else {
-        navigate('/');
-      }
-    } else if (isSuccess && data?.status === 'ERR') {
-      message.error('Đăng nhập thất bại');
-    } else if (isError) {
-      message.error('Đăng nhập thất bại');
+      success('Đăng nhập thành công!');
+      navigate('/');
+    } else if (isError || data?.status === 'ERR') {
+      error('Đăng nhập thất bại!');
     }
   }, [isSuccess, isError, data]);
 
@@ -83,53 +79,13 @@ const SignInPage = () => {
   };
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: 'rgba(0, 0, 0, 0.53)',
-        height: '100vh',
-        position: 'relative',
-      }}
-    >
-      <div
-        onClick={handleNavigateHome}
-        style={{
-          position: 'absolute',
-          top: '20px',
-          left: '20px',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '8px',
-          color: '#C68642',
-          cursor: 'pointer',
-          fontSize: '14px',
-          fontWeight: '500',
-          transition: 'all 0.3s ease',
-          zIndex: 10,
-        }}
-        onMouseEnter={(e) => {
-          e.target.style.color = '#D4A574';
-        }}
-        onMouseLeave={(e) => {
-          e.target.style.color = '#C68642';
-        }}
-      >
+    <MainContainer>
+      <ReturnHomeButton onClick={handleNavigateHome}>
         <LeftOutlined style={{ fontSize: '16px' }} />
         <span>Return Home</span>
-      </div>
+      </ReturnHomeButton>
 
-      <div
-        style={{
-          width: '800px',
-          height: '450px',
-          borderRadius: '6px',
-          display: 'flex',
-          justifyContent: 'space-between',
-          backgroundColor: '#333131',
-        }}
-      >
+      <LoginContainer>
         <WrapperContainerLeft>
           <h1>Xin chào</h1>
           <p>Đăng nhập tài khoản của bạn</p>
@@ -139,28 +95,22 @@ const SignInPage = () => {
             placeholder="abc@email.com"
             style={{ marginBottom: '10px' }}
           />
-          <div style={{ position: 'relative' }}>
-            <span
-              style={{
-                zIndex: 10,
-                position: 'absolute',
-                color: '#655e5e',
-                top: '6px',
-                left: '386px',
-                fontSize: '14px',
-              }}
-              onClick={() => setIsShowPassword(!isShowPassword)}
-            >
+          <PasswordWrapper>
+            <PasswordIcon onClick={() => setIsShowPassword(!isShowPassword)}>
               {isShowPassword ? <EyeFilled /> : <EyeInvisibleFilled />}
-            </span>
+            </PasswordIcon>
             <InputFormComponent
               value={password}
               handleOnChange={handleOnChangePassword}
               placeholder="Mật khẩu"
               type={isShowPassword ? 'text' : 'password'}
             />
-          </div>
-          {data?.status === 'ERR' && <span style={{ color: 'red' }}>{data?.message}</span>}
+          </PasswordWrapper>
+          {(data?.status === 'ERR' || isError) && (
+            <div style={{ color: 'red', margin: '10px 0', fontSize: '14px' }}>
+              {data?.message || 'Đăng nhập thất bại!'}
+            </div>
+          )}
           <Loading isPending={isPending}>
             <ButtonComponent
               onClick={handleSignIn}
@@ -172,7 +122,7 @@ const SignInPage = () => {
                 color: '#FDF6EC',
                 fontWeight: '600',
                 width: '100%',
-                margin: '26px 0 10px',
+                margin: '20px 0 10px',
               }}
               textbutton={'Đăng nhập'}
             />
@@ -186,8 +136,8 @@ const SignInPage = () => {
         <WrapperContainerRight>
           <TextWelcomeShop>Mua sắm tại Ero_Shop</TextWelcomeShop>
         </WrapperContainerRight>
-      </div>
-    </div>
+      </LoginContainer>
+    </MainContainer>
   );
 };
 

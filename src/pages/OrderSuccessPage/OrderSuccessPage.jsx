@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { useResponsive } from '../../hooks/useResponsive';
 
 import {
   WrapperContainer,
@@ -52,10 +53,10 @@ import { useLocation } from 'react-router-dom';
 import { orderConstants } from '../../constant';
 
 const OrderSuccessPage = () => {
+  const { isMobile } = useResponsive();
   const order = useSelector((state) => state?.order);
   const location = useLocation();
   const { state } = location;
-  console.log(state);
 
   return (
     <OrderSuccessContainer>
@@ -124,7 +125,7 @@ const OrderSuccessPage = () => {
                     return (
                       <ProductItem key={orderItem?.product}>
                         <ProductImage
-                          src={Array.isArray(orderItem?.image) ? orderItem?.image[0] : orderItem?.image}
+                          src={Array.isArray(orderItem?.image) ? orderItem?.image[0].url : orderItem?.image}
                           alt="product"
                         />
 

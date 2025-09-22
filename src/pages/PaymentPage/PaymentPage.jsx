@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Form, Radio } from 'antd';
 import ButtonComponent from '../../components/ButtonComponent/ButtonComponent';
 import { PayPalScriptProvider, PayPalButtons } from '@paypal/react-paypal-js';
+import { useResponsive } from '../../hooks/useResponsive';
 import {
   PayPalContainer,
   PayPalFallback,
@@ -21,7 +22,7 @@ import { useMutationHook } from '../../hooks/useMutationHook';
 import * as UserService from '../../services/UserService';
 import * as OrderService from '../../services/OrderService';
 import * as PaymentService from '../../services/PaymentService';
-import * as message from '../../components/MessageComponent/Message';
+import { useMessage } from '../../context/MessageContext.jsx';
 import { useNavigate } from 'react-router-dom';
 import { removeMultiOrderProduct } from '../../redux/slides/orderSlide';
 
@@ -31,6 +32,7 @@ const PaymentPage = () => {
   const [listChecked, setListChecked] = useState([]);
   const [payment, setPayment] = useState('cod');
   const [shipping, setShipping] = useState('fast');
+  const { isMobile } = useResponsive();
   const [stateUserDetails, setStateUserDetails] = useState({
     name: '',
     phone: '',
@@ -38,6 +40,7 @@ const PaymentPage = () => {
     city: '',
   });
 
+  const { success, error, warning } = useMessage();
   const navigate = useNavigate();
   const [form] = Form.useForm();
 
@@ -198,7 +201,7 @@ const PaymentPage = () => {
         } else {
           setPaypalClientId('AWebD9EGY2bLQRWxKUSPyyyWX8huQVzszGupRr3sMzsB3TllON1GYKpU_ok1Uu7dXQMrJTNKiIG9V9UP');
         }
-      } catch (error) {}
+      } catch (error) { }
     };
 
     getPayPalConfig();
@@ -227,7 +230,7 @@ const PaymentPage = () => {
         arrOrdered.push(element.product);
       });
       dispatch(removeMultiOrderProduct(arrOrdered));
-      message.success('Đặt hàng thành công');
+      success('Đặt hàng thành công');
       navigate('/order-success', {
         state: {
           user: {
@@ -246,16 +249,27 @@ const PaymentPage = () => {
         },
       });
     } else if (isErrorAddOrder) {
-      message.error('Đặt hàng thất bại');
+      error('Đặt hàng thất bại');
     }
   }, [isSuccessAddOrder, isErrorAddOrder]);
 
   return (
-    <div style={{ backgroundColor: '#1a1a1a', width: '100%', minHeight: '100vh', padding: '40px 120px' }}>
+    <div style={{
+      backgroundColor: '#1a1a1a',
+      width: '100%',
+      minHeight: '100vh',
+      padding: isMobile ? '20px 15px' : '40px 120px',
+      marginTop: '-8px'
+    }}>
       <Loading isPending={isPendingAddOrder}>
         <div>
-          <h3 style={{ color: '#ffffff', fontSize: '28px', marginBottom: '10px', textAlign: 'left' }}>Thanh toán:</h3>
-          <div style={{ display: 'flex', justifyContent: 'space-between', gap: '20px' }}>
+          <h3 style={{ color: '#ffffff', fontSize: isMobile ? '24px' : '28px', marginBottom: '10px', textAlign: 'left' }}>Thanh toán:</h3>
+          <div style={{
+            display: 'flex',
+            flexDirection: isMobile ? 'column' : 'row',
+            justifyContent: 'space-between',
+            gap: '20px'
+          }}>
             <WrapperLeft>
               <WrapperMethodSection>
                 <h4 className="method-title">Chọn phương thức giao hàng</h4>
@@ -368,7 +382,7 @@ const PaymentPage = () => {
                       onError={(err) => {
                         setPayment('cod');
                       }}
-                      onCancel={(data) => {}}
+                      onCancel={(data) => { }}
                     />
                   </PayPalScriptProvider>
 
@@ -382,15 +396,15 @@ const PaymentPage = () => {
               ) : (
                 <ButtonComponent
                   onClick={() => handleAddOrder()}
-                  size={40}
+                  size={isMobile ? 36 : 40}
                   style={{
                     backgroundColor: '#D29B63',
-                    height: '48px',
+                    height: isMobile ? '42px' : '48px',
                     width: '100%',
                     border: 'none',
                     borderRadius: '8px',
                     color: '#ffffff',
-                    fontSize: '16px',
+                    fontSize: isMobile ? '15px' : '16px',
                     fontWeight: '600',
                     transition: 'all 0.3s ease',
                   }}
@@ -406,12 +420,13 @@ const PaymentPage = () => {
           open={isOpenModalUpdateInfo}
           onCancel={handleCancelModalUpdateInfo}
           onOk={handleUpdateInfoUser}
+          width={isMobile ? '90%' : 520}
         >
           <Loading isPending={isPending}>
             <Form
               name="basic"
-              labelCol={{ span: 4 }}
-              wrapperCol={{ span: 20 }}
+              labelCol={{ span: isMobile ? 6 : 4 }}
+              wrapperCol={{ span: isMobile ? 18 : 20 }}
               // onFinish={onUpdateUser}
               autoComplete="on"
               form={form}
