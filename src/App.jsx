@@ -5,7 +5,7 @@ import DefaultComponent from './components/DefaultComponent/DefaultComponent';
 import { isJsonString } from './utils';
 import { jwtDecode } from 'jwt-decode';
 import * as UserService from './services/UserService';
-import { updateUser } from './redux/slides/userSlide';
+import { updateUser, resetUser } from './redux/slides/userSlide';
 import { useDispatch, useSelector } from 'react-redux';
 import Loading from './components/LoadingComponent/Loading';
 import ScrollToTop from './components/ScrollToTop/ScrollToTop';
@@ -29,7 +29,13 @@ function App() {
     let decoded = {};
     if (storageData && isJsonString(storageData)) {
       storageData = JSON.parse(storageData);
-      decoded = jwtDecode(storageData);
+      try {
+        decoded = jwtDecode(storageData);
+      } catch (error) {
+        // Clear invalid token
+        localStorage.removeItem('access_token');
+        localStorage.removeItem('refresh_token');
+      }
     }
     return { decoded, storageData };
   };
@@ -38,9 +44,16 @@ function App() {
     async function (config) {
       const currentTime = new Date();
       const { decoded } = handleDecoded();
+      let storageRefreshToken = localStorage.getItem('refresh_token');
+      const refreshToken = storageRefreshToken ? JSON.parse(storageRefreshToken) : null;
+      const decodedRefreshToken = jwtDecode(refreshToken);
       if (decoded?.exp < currentTime.getTime() / 1000) {
-        const data = await UserService.refreshToken();
-        config.headers['token'] = `Bearer ${data?.access_token}`;
+        if (decodedRefreshToken?.exp > currentTime.getTime() / 1000) {
+          const data = await UserService.refreshToken(refreshToken);
+          config.headers['token'] = `Bearer ${data?.access_token}`;
+        } else {
+          dispatch(resetUser());
+        }
       }
       // Do something before request is sent
       return config;
@@ -52,8 +65,10 @@ function App() {
   );
 
   const handleGetDetailsUser = async (id, token) => {
+    let storageRefreshToken = localStorage.getItem('refresh_token');
+    const refreshToken = storageRefreshToken ? JSON.parse(storageRefreshToken) : null;
     const res = await UserService.getDetailsUser(id, token);
-    dispatch(updateUser({ ...res?.data, access_token: token }));
+    dispatch(updateUser({ ...res?.data, access_token: token, refreshToken }));
   };
 
   return (

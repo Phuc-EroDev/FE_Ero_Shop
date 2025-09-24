@@ -86,11 +86,14 @@ export const getAllUser = async (access_token) => {
   return res.data;
 };
 
-export const refreshToken = async () => {
+export const refreshToken = async (refreshToken) => {
   const res = await axios.post(
     `${import.meta.env.VITE_BACKEND_API}/user/refresh-token`,
     {},
     {
+      headers: {
+        token: `Bearer ${refreshToken}`,
+      },
       withCredentials: true,
     },
   );
