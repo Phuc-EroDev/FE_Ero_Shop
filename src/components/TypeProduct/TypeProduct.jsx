@@ -29,7 +29,7 @@ const TypeProduct = ({ data }) => {
 
   const getTypeImage = (type) => {
     const typeKey = type?.toLowerCase()?.replace(/\s+/g, '');
-    return productConstants.productTypeImage[typeKey] || productConstants.productTypeImage.cool;
+    return productConstants.productTypeImage[typeKey] || productConstants.productTypeImage.other;
   };
 
   return (

@@ -1,4 +1,13 @@
-import image from './assets/images/signIn_signUp.png';
+import laptop from './assets/images/typeProduct/laptop.png';
+import component from './assets/images/typeProduct/component.png';
+import camera from './assets/images/typeProduct/camera.png';
+import accessory from './assets/images/typeProduct/accessory.png';
+import book from './assets/images/typeProduct/book.png';
+import bike from './assets/images/typeProduct/bike.png';
+import phone from './assets/images/typeProduct/phone.png';
+import household from './assets/images/typeProduct/household.png';
+import watch from './assets/images/typeProduct/watch.png';
+import other from './assets/images/typeProduct/other.png';
 
 export const orderConstants = {
   shipping: {
@@ -19,15 +28,15 @@ export const orderConstants = {
 
 export const productConstants = {
   productTypeImage: {
-    cool: image,
-    fuuuu: image,
-    internet: image,
-    laptop: image,
-    light: image,
-    music: image,
-    phone: image,
-    quan: image,
-    quat: image,
-    table: image,
+    laptop: laptop,
+    linhkiện: component,
+    máyảnh: camera,
+    phụkiện: accessory,
+    sách: book,
+    xemáy: bike,
+    điệnthoại: phone,
+    đồgiadụng: household,
+    đồnghồ: watch,
+    khác: other,
   },
 };

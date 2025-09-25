@@ -101,22 +101,18 @@ export const StyleNameProduct = styled.div`
   color: #171414;
   overflow: hidden;
   text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
+  white-space: nowrap;
   margin-bottom: 1px;
   
   @media (max-width: 768px) {
     font-size: 11px;
     line-height: 15px;
-    -webkit-line-clamp: 2;
     margin-bottom: 1px;
   }
   
   @media (max-width: 576px) {
     font-size: 12px;
     line-height: 14px;
-    -webkit-line-clamp: 2;
     margin-bottom: 0;
   }
   

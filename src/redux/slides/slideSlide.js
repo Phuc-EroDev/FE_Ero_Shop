@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
-import slider1 from '../../assets/images/slider1.png';
-import slider2 from '../../assets/images/slider2.png';
+import slider1 from '../../assets/images/slider/slider1.png';
+import slider2 from '../../assets/images/slider/slider2.png';
 
 const initialState = {
   slides: [
