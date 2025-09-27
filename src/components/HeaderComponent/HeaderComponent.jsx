@@ -40,6 +40,9 @@ const HeaderComponent = ({ isHiddenSearch = false, isHiddenCard = false }) => {
     setLoading(true);
     await UserService.logoutUser();
     dispatch(resetUser());
+    // xoa token khoi localstorage
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('refresh_token');
     setLoading(false);
   };
 
